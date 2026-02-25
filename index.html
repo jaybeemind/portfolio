@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="JB – Full-Stack Developer | SaaS Builder | AI-Focused Engineer" />
+  <title>JB | Full-Stack Developer</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===================== NAVIGATION ===================== -->
+  <header class="nav-header" id="nav-header">
+    <nav class="nav-container">
+      <a href="#hero" class="nav-logo">JB</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ===================== HERO ===================== -->
+    <section id="hero" class="hero section">
+      <div class="hero-content">
+        <p class="hero-greeting reveal">Hey, I'm</p>
+        <h1 class="hero-name reveal">JB</h1>
+        <h2 class="hero-title reveal">
+          Full-Stack Developer <span class="separator">|</span>
+          SaaS Builder <span class="separator">|</span>
+          AI-Focused Engineer
+        </h2>
+        <p class="hero-intro reveal">
+          Full-stack developer with 12+ years building scalable SaaS platforms,
+          admin systems, and AI-driven web applications.
+        </p>
+        <div class="hero-cta reveal">
+          <a href="#projects" class="btn btn-primary">View Projects</a>
+          <a href="#contact" class="btn btn-outline">Contact Me</a>
+        </div>
+      </div>
+      <!-- Decorative code snippet -->
+      <div class="hero-code reveal">
+        <pre><code><span class="code-keyword">const</span> <span class="code-var">developer</span> = {
+  <span class="code-prop">name</span>: <span class="code-string">'JB'</span>,
+  <span class="code-prop">experience</span>: <span class="code-string">'12+ years'</span>,
+  <span class="code-prop">focus</span>: [<span class="code-string">'SaaS'</span>, <span class="code-string">'AI'</span>, <span class="code-string">'Backend'</span>],
+  <span class="code-prop">available</span>: <span class="code-keyword">true</span>
+};</code></pre>
+      </div>
+    </section>
+
+    <!-- ===================== ABOUT ===================== -->
+    <section id="about" class="about section">
+      <div class="section-container">
+        <h2 class="section-title reveal">About <span class="accent">Me</span></h2>
+        <div class="about-grid">
+          <div class="about-text reveal">
+            <p>
+              I'm a full-stack developer with over <strong>12 years of experience</strong>
+              building production-grade web applications, SaaS platforms, and internal admin systems.
+            </p>
+            <p>
+              My core stack spans <strong>JavaScript</strong> and <strong>Python</strong>
+              on both the frontend and backend, backed by deep experience with
+              <strong>relational databases</strong> and <strong>MongoDB</strong>.
+            </p>
+            <p>
+              I specialize in <strong>backend architecture</strong>, complex admin dashboards,
+              and scalable SaaS products. More recently I've been focused on integrating
+              <strong>AI systems and automation</strong> workflows into real-world applications.
+            </p>
+          </div>
+          <div class="about-stats reveal">
+            <div class="stat-card">
+              <span class="stat-number">12+</span>
+              <span class="stat-label">Years Experience</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">50+</span>
+              <span class="stat-label">Projects Shipped</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-number">∞</span>
+              <span class="stat-label">Problems Solved</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SKILLS ===================== -->
+    <section id="skills" class="skills section">
+      <div class="section-container">
+        <h2 class="section-title reveal">Tech <span class="accent">Stack</span></h2>
+        <div class="skills-grid">
+
+          <div class="skill-category reveal">
+            <h3 class="skill-category-title">
+              <span class="skill-icon">🎨</span> Frontend
+            </h3>
+            <ul class="skill-list">
+              <li class="skill-tag">Nuxt 3</li>
+              <li class="skill-tag">Vue.js</li>
+              <li class="skill-tag">Tailwind CSS</li>
+              <li class="skill-tag">HTML5 / CSS3</li>
+              <li class="skill-tag">JavaScript (ES6+)</li>
+            </ul>
+          </div>
+
+          <div class="skill-category reveal">
+            <h3 class="skill-category-title">
+              <span class="skill-icon">⚙️</span> Backend
+            </h3>
+            <ul class="skill-list">
+              <li class="skill-tag">Node.js</li>
+              <li class="skill-tag">Python</li>
+              <li class="skill-tag">REST APIs</li>
+              <li class="skill-tag">Express.js</li>
+              <li class="skill-tag">FastAPI</li>
+            </ul>
+          </div>
+
+          <div class="skill-category reveal">
+            <h3 class="skill-category-title">
+              <span class="skill-icon">🗄️</span> Databases
+            </h3>
+            <ul class="skill-list">
+              <li class="skill-tag">PostgreSQL</li>
+              <li class="skill-tag">Supabase</li>
+              <li class="skill-tag">MongoDB</li>
+              <li class="skill-tag">Oracle</li>
+              <li class="skill-tag">MySQL</li>
+            </ul>
+          </div>
+
+          <div class="skill-category reveal">
+            <h3 class="skill-category-title">
+              <span class="skill-icon">🚀</span> DevOps &amp; Tools
+            </h3>
+            <ul class="skill-list">
+              <li class="skill-tag">Git / GitHub</li>
+              <li class="skill-tag">Self-hosted Apps</li>
+              <li class="skill-tag">n8n (Automation)</li>
+              <li class="skill-tag">Windows Server</li>
+              <li class="skill-tag">Linux</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PROJECTS ===================== -->
+    <section id="projects" class="projects section">
+      <div class="section-container">
+        <h2 class="section-title reveal">Featured <span class="accent">Projects</span></h2>
+        <div class="projects-grid">
+
+          <article class="project-card reveal">
+            <div class="project-card-header">
+              <span class="project-icon">📦</span>
+              <div class="project-links">
+                <a href="#" class="project-link" aria-label="View on GitHub">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <h3 class="project-title">SaaS Admin Platform</h3>
+            <p class="project-description">
+              Multi-tenant admin dashboard with role-based access control, analytics,
+              and real-time notifications. Built for enterprise-level scale.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">Nuxt 3</span>
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">PostgreSQL</span>
+              <span class="tech-tag">Supabase</span>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-card-header">
+              <span class="project-icon">🤖</span>
+              <div class="project-links">
+                <a href="#" class="project-link" aria-label="View on GitHub">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <h3 class="project-title">AI Automation Workflow Engine</h3>
+            <p class="project-description">
+              Orchestrated n8n-based automation pipelines integrated with OpenAI,
+              processing thousands of tasks daily with webhook-driven triggers.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">n8n</span>
+              <span class="tech-tag">REST APIs</span>
+              <span class="tech-tag">OpenAI</span>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-card-header">
+              <span class="project-icon">🗃️</span>
+              <div class="project-links">
+                <a href="#" class="project-link" aria-label="View on GitHub">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <h3 class="project-title">Data Migration &amp; ETL Pipeline</h3>
+            <p class="project-description">
+              Large-scale ETL pipeline migrating Oracle legacy data to PostgreSQL,
+              handling complex transformations with near-zero downtime.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">Oracle</span>
+              <span class="tech-tag">PostgreSQL</span>
+              <span class="tech-tag">Node.js</span>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-card-header">
+              <span class="project-icon">🌐</span>
+              <div class="project-links">
+                <a href="#" class="project-link" aria-label="View on GitHub">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <h3 class="project-title">Self-Hosted SaaS Infrastructure</h3>
+            <p class="project-description">
+              Full self-hosted stack running on Windows Server — reverse proxy, auth,
+              database, and monitoring — deployed for production SaaS clients.
+            </p>
+            <div class="project-tech">
+              <span class="tech-tag">Windows Server</span>
+              <span class="tech-tag">Nginx</span>
+              <span class="tech-tag">Docker</span>
+              <span class="tech-tag">Node.js</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CONTACT ===================== -->
+    <section id="contact" class="contact section">
+      <div class="section-container">
+        <h2 class="section-title reveal">Get In <span class="accent">Touch</span></h2>
+        <p class="contact-intro reveal">
+          Have a project in mind or just want to connect? I'd love to hear from you.
+        </p>
+
+        <div class="contact-grid">
+          <!-- Contact info -->
+          <div class="contact-info reveal">
+            <div class="contact-item">
+              <span class="contact-icon">📧</span>
+              <div>
+                <p class="contact-label">Email</p>
+                <a href="mailto:hello@jb.dev" class="contact-value">hello@jb.dev</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="contact-icon">🐙</span>
+              <div>
+                <p class="contact-label">GitHub</p>
+                <a href="https://github.com/jaybeemind" target="_blank" rel="noopener noreferrer" class="contact-value">github.com/jaybeemind</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact form -->
+          <form class="contact-form reveal" action="mailto:hello@jb.dev" method="post" enctype="text/plain">
+            <div class="form-group">
+              <label for="name" class="form-label">Name</label>
+              <input type="text" id="name" name="name" class="form-input" placeholder="Your name" required />
+            </div>
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" name="email" class="form-input" placeholder="your@email.com" required />
+            </div>
+            <div class="form-group">
+              <label for="message" class="form-label">Message</label>
+              <textarea id="message" name="message" class="form-input form-textarea" placeholder="Tell me about your project..." rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="footer-container">
+      <p class="footer-copy">&copy; <span id="year"></span> JB. All rights reserved.</p>
+      <p class="footer-built">Built with <span class="accent">HTML &amp; CSS</span> — no frameworks, no fuss.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
