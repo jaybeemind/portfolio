@@ -351,11 +351,11 @@ svg {
 
 /* Code block decoration */
 .hero-code {
-  flex: 0 0 auto;
+  flex: 0 0 max-content;
   background: var(--color-bg-alt);
   border: 1px solid var(--color-border);
   border-radius: 12px;
-  padding: 1.5rem 2rem;
+  padding: 1.5rem calc(2rem + 20px);
   font-family: var(--font-mono);
   font-size: 0.88rem;
   line-height: 1.9;
