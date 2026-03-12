@@ -675,8 +675,11 @@ svg {
   .hero {
     flex-direction: column;
     gap: 2rem;
-    text-align: center;
     padding-top: calc(var(--nav-height) + 2rem);
+  }
+
+  .hero-content {
+    text-align: center;
   }
 
   .hero-intro {
