@@ -274,6 +274,9 @@
         const building = document.createElement("article")
         building.className = "experience-building"
 
+        const label = document.createElement("div")
+        label.className = "building-label"
+
         const sign = document.createElement("div")
         sign.className = "building-sign"
         sign.textContent = job.buildingLabel
@@ -294,7 +297,8 @@
           "repeating-linear-gradient(180deg, rgba(255, 214, 102, 0.08) 0 16px, transparent 16px 28px)",
         ].join(", ")
 
-        building.append(sign, years)
+        label.append(sign, years)
+        building.append(label)
         fragment.appendChild(building)
 
         return {
