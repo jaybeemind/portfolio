@@ -92,41 +92,6 @@
     revealEls.forEach((el) => el.classList.add("visible"))
   }
 
-  // ---------------------- Workflow art ----------------------
-  const workflowArts = qsa(".workflow-art")
-
-  workflowArts.forEach((art) => {
-    const statusEl = qs(".workflow-art-status", art)
-    const stages = [
-      { id: "capture", label: "Capture requests" },
-      { id: "process", label: "Route with rules" },
-      { id: "approval", label: "Validate approvals" },
-      { id: "delivery", label: "Deliver and notify" },
-    ]
-
-    let currentIndex = stages.findIndex((stage) => stage.id === art.dataset.stage)
-    if (currentIndex < 0) currentIndex = 0
-
-    const setStage = (index) => {
-      const stage = stages[index]
-      art.dataset.stage = stage.id
-      if (statusEl) statusEl.textContent = stage.label
-    }
-
-    const advanceStage = () => {
-      currentIndex = (currentIndex + 1) % stages.length
-      setStage(currentIndex)
-    }
-
-    setStage(currentIndex)
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
-
-    window.setInterval(advanceStage, 1800)
-    art.addEventListener("mouseenter", advanceStage)
-    art.addEventListener("focusin", advanceStage)
-  })
-
   // ---------------------- Active nav link on scroll ----------------------
   /**
    * Highlights the nav link that corresponds to the currently visible section.
