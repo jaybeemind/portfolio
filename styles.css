@@ -480,6 +480,289 @@ svg {
   animation: accent-pulse 2.8s ease-in-out infinite;
 }
 
+.what-i-do-card-workflow {
+  align-items: stretch;
+}
+
+.workflow-card {
+  display: grid;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.workflow-automation-art {
+  --workflow-core-offset: 14px;
+  --workflow-core-offset-neg: calc(var(--workflow-core-offset) * -1);
+  --workflow-check-offset: 9px;
+  --workflow-check-offset-neg: calc(var(--workflow-check-offset) * -1);
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  gap: 0.5rem;
+  min-height: 150px;
+  padding: 1rem 0 0.25rem;
+  overflow: hidden;
+}
+
+.workflow-line,
+.workflow-line-glow {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 42px;
+  height: 2px;
+  border-radius: 999px;
+}
+
+.workflow-line {
+  background: linear-gradient(90deg, rgba(88, 166, 255, 0.2), rgba(126, 231, 135, 0.45), rgba(88, 166, 255, 0.2));
+}
+
+.workflow-line-glow {
+  background: linear-gradient(90deg, transparent, rgba(88, 166, 255, 0.45), transparent);
+  filter: blur(10px);
+  opacity: 0.65;
+  animation: workflow-line-shift 6s linear infinite;
+}
+
+.workflow-token {
+  position: absolute;
+  top: 20px;
+  left: 12%;
+  width: 58px;
+  height: 38px;
+  border: 1px solid rgba(88, 166, 255, 0.38);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(230, 237, 243, 0.2), transparent 48%),
+    linear-gradient(135deg, rgba(88, 166, 255, 0.35), rgba(126, 231, 135, 0.16));
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.24),
+    0 0 18px rgba(88, 166, 255, 0.2);
+  transform: translateX(-50%);
+  animation: workflow-token-travel 8s ease-in-out infinite;
+}
+
+.workflow-token::before,
+.workflow-token::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.workflow-token::before {
+  inset: 9px 12px;
+  border-radius: inherit;
+  border: 1px solid rgba(230, 237, 243, 0.18);
+  background:
+    linear-gradient(180deg, transparent 0 30%, rgba(230, 237, 243, 0.15) 30% 38%, transparent 38% 62%, rgba(230, 237, 243, 0.1) 62% 70%, transparent 70% 100%);
+  animation: workflow-token-inner 8s ease-in-out infinite;
+}
+
+.workflow-token::after {
+  inset: auto;
+  width: 14px;
+  height: 14px;
+  top: 50%;
+  left: 50%;
+  border-radius: 5px;
+  background: rgba(126, 231, 135, 0.9);
+  box-shadow: 0 0 14px rgba(126, 231, 135, 0.32);
+  transform: translate(-50%, -50%);
+  animation: workflow-token-core 8s ease-in-out infinite;
+}
+
+.workflow-stage {
+  position: relative;
+  padding-top: 56px;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-transform: uppercase;
+  transition: transform var(--transition), color var(--transition);
+  animation: workflow-stage-label 8s ease-in-out infinite;
+}
+
+.workflow-stage::before {
+  content: '';
+  position: absolute;
+  top: 34px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(139, 148, 158, 0.45);
+  border-radius: 50%;
+  background: rgba(13, 17, 23, 0.95);
+  box-shadow: 0 0 0 6px rgba(13, 17, 23, 0.95);
+  transform: translateX(-50%);
+  animation: workflow-stage-glow 8s ease-in-out infinite;
+}
+
+.workflow-stage-intake::before,
+.workflow-stage-intake {
+  animation-delay: 0s;
+}
+
+.workflow-stage-rules::before,
+.workflow-stage-rules {
+  animation-delay: 2s;
+}
+
+.workflow-stage-approve::before,
+.workflow-stage-approve {
+  animation-delay: 4s;
+}
+
+.workflow-stage-deliver::before,
+.workflow-stage-deliver {
+  animation-delay: 6s;
+}
+
+.what-i-do-card-workflow:hover .workflow-stage {
+  color: var(--color-heading);
+  transform: translateY(-2px);
+}
+
+.what-i-do-card-workflow:hover .workflow-line {
+  background: linear-gradient(90deg, rgba(88, 166, 255, 0.35), rgba(126, 231, 135, 0.65), rgba(88, 166, 255, 0.35));
+}
+
+.what-i-do-card-workflow:hover .workflow-token {
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.28),
+    0 0 26px rgba(88, 166, 255, 0.28);
+}
+
+@keyframes workflow-line-shift {
+  0% {
+    transform: translateX(-18%);
+  }
+  100% {
+    transform: translateX(18%);
+  }
+}
+
+@keyframes workflow-token-travel {
+  0%, 18% {
+    left: 12%;
+    width: 58px;
+    height: 38px;
+    border-radius: 14px;
+    transform: translateX(-50%) rotate(0deg);
+  }
+  25%, 43% {
+    left: 38%;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    transform: translateX(-50%) rotate(45deg);
+  }
+  50%, 68% {
+    left: 63%;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    transform: translateX(-50%) rotate(0deg);
+  }
+  75%, 100% {
+    left: 88%;
+    width: 68px;
+    height: 34px;
+    border-radius: 999px;
+    transform: translateX(-50%) rotate(0deg);
+  }
+}
+
+@keyframes workflow-token-inner {
+  0%, 18% {
+    inset: 9px 12px;
+    border-radius: 8px;
+    transform: scale(1);
+  }
+  25%, 43% {
+    inset: 12px;
+    border-radius: 12px;
+    transform: rotate(-45deg);
+  }
+  50%, 68% {
+    inset: 11px;
+    border-radius: 50%;
+    transform: scale(1);
+  }
+  75%, 100% {
+    inset: 9px 18px;
+    border-radius: 999px;
+    transform: scaleX(1.05);
+  }
+}
+
+@keyframes workflow-token-core {
+  0%, 18% {
+    width: 14px;
+    height: 14px;
+    border-radius: 5px;
+    transform: translate(-50%, -50%) rotate(0deg);
+    background: rgba(126, 231, 135, 0.9);
+  }
+  25%, 43% {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    background: rgba(88, 166, 255, 0.92);
+    box-shadow:
+      var(--workflow-core-offset) 0 0 rgba(126, 231, 135, 0.45),
+      var(--workflow-core-offset-neg) 0 0 rgba(126, 231, 135, 0.28);
+  }
+  50%, 68% {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(126, 231, 135, 0.95);
+    box-shadow: 0 0 0 10px rgba(126, 231, 135, 0.12);
+  }
+  75%, 100% {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    transform: translate(-50%, -50%) rotate(45deg);
+    background: rgba(126, 231, 135, 0.9);
+    box-shadow:
+      var(--workflow-check-offset) var(--workflow-check-offset-neg) 0 -3px rgba(126, 231, 135, 0.7),
+      var(--workflow-check-offset-neg) var(--workflow-check-offset) 0 -3px rgba(126, 231, 135, 0.42);
+  }
+}
+
+@keyframes workflow-stage-glow {
+  0%, 12%, 100% {
+    border-color: rgba(139, 148, 158, 0.45);
+    background: rgba(13, 17, 23, 0.95);
+    box-shadow: 0 0 0 6px rgba(13, 17, 23, 0.95);
+    transform: translateX(-50%) scale(1);
+  }
+  16%, 24% {
+    border-color: var(--color-accent-2);
+    background: rgba(126, 231, 135, 0.24);
+    box-shadow: 0 0 0 6px rgba(13, 17, 23, 0.95), 0 0 18px rgba(126, 231, 135, 0.18);
+    transform: translateX(-50%) scale(1.12);
+  }
+}
+
+@keyframes workflow-stage-label {
+  0%, 12%, 100% {
+    color: var(--color-text-muted);
+    transform: translateY(0);
+  }
+  16%, 24% {
+    color: var(--color-heading);
+    transform: translateY(-4px);
+  }
+}
+
 /* ---------------------- SKILLS ---------------------- */
 .skills-grid {
   display: grid;
@@ -1212,6 +1495,15 @@ svg {
 
 /* Mobile */
 @media (max-width: 480px) {
+  .workflow-automation-art {
+    min-height: 138px;
+  }
+
+  .workflow-stage {
+    font-size: 0.64rem;
+    letter-spacing: 0.04em;
+  }
+
   .hero-name {
     font-size: 3.5rem;
   }
@@ -1253,5 +1545,17 @@ svg {
   .footer-container {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .what-i-do-title-animated,
+  .workflow-line-glow,
+  .workflow-token,
+  .workflow-token::before,
+  .workflow-token::after,
+  .workflow-stage,
+  .workflow-stage::before {
+    animation: none;
   }
 }
