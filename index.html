@@ -179,8 +179,27 @@
         <div class="section-container">
           <h2 class="section-title reveal">What I <span class="accent">Do</span></h2>
           <div class="what-i-do-grid">
-            <article class="what-i-do-card reveal">
-              <h3 class="what-i-do-title what-i-do-title-animated">Workflow &amp; Process Automation</h3>
+            <article class="what-i-do-card what-i-do-card-workflow reveal">
+              <div
+                class="workflow-art"
+                data-stage="capture"
+                aria-label="Animated workflow showing intake, routing, approvals, and delivery"
+              >
+                <div class="workflow-art-copy">
+                  <h3 class="what-i-do-title what-i-do-title-animated">Workflow &amp; Process Automation</h3>
+                  <p class="workflow-art-status">Capture requests</p>
+                </div>
+                <div class="workflow-art-visual" aria-hidden="true">
+                  <span class="workflow-art-glow"></span>
+                  <span class="workflow-art-track"></span>
+                  <span class="workflow-art-pulse"></span>
+                  <span class="workflow-node workflow-node-capture">Trigger</span>
+                  <span class="workflow-node workflow-node-process">Rules</span>
+                  <span class="workflow-node workflow-node-approval">Approve</span>
+                  <span class="workflow-node workflow-node-delivery">Done</span>
+                  <span class="workflow-morph"></span>
+                </div>
+              </div>
             </article>
             <article class="what-i-do-card reveal">
               <h3 class="what-i-do-title">Develop scalable web and line-of-business applications</h3>

@@ -480,6 +480,323 @@ svg {
   animation: accent-pulse 2.8s ease-in-out infinite;
 }
 
+.what-i-do-card-workflow {
+  align-items: stretch;
+}
+
+.workflow-art {
+  display: grid;
+  gap: 1.1rem;
+  width: 100%;
+}
+
+.workflow-art-copy {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.workflow-art-status {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  min-height: 1.5em;
+  transition: color var(--transition);
+}
+
+.workflow-art-visual {
+  position: relative;
+  min-height: 180px;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(88, 166, 255, 0.14);
+  background:
+    radial-gradient(circle at 18% 20%, rgba(88, 166, 255, 0.18), transparent 24%),
+    radial-gradient(circle at 82% 18%, rgba(126, 231, 135, 0.12), transparent 20%),
+    linear-gradient(180deg, rgba(9, 13, 23, 0.94), rgba(12, 17, 28, 0.98));
+  box-shadow: inset 0 -36px 80px rgba(0, 0, 0, 0.28);
+  isolation: isolate;
+}
+
+.workflow-art-glow {
+  position: absolute;
+  inset: auto auto 24px 50%;
+  width: 180px;
+  height: 72px;
+  background: radial-gradient(circle, rgba(88, 166, 255, 0.18), transparent 70%);
+  transform: translateX(-50%);
+  opacity: 0.9;
+  transition: transform 0.75s ease, opacity 0.75s ease, background 0.75s ease;
+}
+
+.workflow-art-track {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: 54px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(88, 166, 255, 0.2), rgba(126, 231, 135, 0.45), rgba(88, 166, 255, 0.2));
+}
+
+.workflow-art-track::before {
+  content: '';
+  position: absolute;
+  inset: -6px 0;
+  background: linear-gradient(90deg, transparent, rgba(88, 166, 255, 0.15), transparent);
+  filter: blur(10px);
+}
+
+.workflow-art-pulse,
+.workflow-morph {
+  position: absolute;
+  left: 18%;
+  transition:
+    transform 0.75s ease,
+    left 0.75s ease,
+    width 0.75s ease,
+    height 0.75s ease,
+    border-radius 0.75s ease,
+    background 0.75s ease,
+    box-shadow 0.75s ease,
+    opacity 0.75s ease;
+}
+
+.workflow-art-pulse {
+  bottom: 39px;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(126, 231, 135, 0.95) 0 24%, rgba(88, 166, 255, 0.65) 38%, rgba(88, 166, 255, 0.08) 72%, transparent 74%);
+  box-shadow: 0 0 24px rgba(88, 166, 255, 0.4);
+  animation: workflow-pulse 1.8s ease-in-out infinite;
+}
+
+.workflow-node {
+  position: absolute;
+  bottom: 16px;
+  margin-left: -42px;
+  width: 84px;
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+  transition: color var(--transition), transform var(--transition);
+}
+
+.workflow-node::before {
+  content: '';
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 0 auto 0.45rem;
+  border-radius: 50%;
+  border: 2px solid rgba(139, 148, 158, 0.45);
+  background: rgba(13, 17, 23, 0.95);
+  box-shadow: 0 0 0 5px rgba(13, 17, 23, 0.95);
+  transition: border-color var(--transition), background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.workflow-node-capture { left: 18%; }
+.workflow-node-process { left: 41%; }
+.workflow-node-approval { left: 66%; }
+.workflow-node-delivery { left: 88%; }
+
+.workflow-morph {
+  bottom: 90px;
+  width: 90px;
+  height: 54px;
+  margin-left: -45px;
+  border: 1px solid rgba(88, 166, 255, 0.28);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(88, 166, 255, 0.28), rgba(88, 166, 255, 0.08));
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.24),
+    0 0 0 1px rgba(88, 166, 255, 0.08);
+}
+
+.workflow-morph::before,
+.workflow-morph::after {
+  content: '';
+  position: absolute;
+  transition:
+    inset 0.75s ease,
+    width 0.75s ease,
+    height 0.75s ease,
+    border-radius 0.75s ease,
+    transform 0.75s ease,
+    background 0.75s ease,
+    opacity 0.75s ease,
+    border-color 0.75s ease,
+    box-shadow 0.75s ease;
+}
+
+.workflow-morph::before {
+  inset: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(230, 237, 243, 0.2);
+  background:
+    linear-gradient(180deg, transparent 0 24%, rgba(230, 237, 243, 0.16) 24% 30%, transparent 30% 54%, rgba(230, 237, 243, 0.12) 54% 60%, transparent 60% 100%);
+}
+
+.workflow-morph::after {
+  width: 18px;
+  height: 18px;
+  top: 50%;
+  left: 50%;
+  border-radius: 7px;
+  background: rgba(126, 231, 135, 0.7);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 16px rgba(126, 231, 135, 0.25);
+}
+
+.workflow-art[data-stage="capture"] .workflow-node-capture,
+.workflow-art[data-stage="process"] .workflow-node-process,
+.workflow-art[data-stage="approval"] .workflow-node-approval,
+.workflow-art[data-stage="delivery"] .workflow-node-delivery {
+  color: var(--color-heading);
+  transform: translateY(-4px);
+}
+
+.workflow-art[data-stage="capture"] .workflow-node-capture::before,
+.workflow-art[data-stage="process"] .workflow-node-process::before,
+.workflow-art[data-stage="approval"] .workflow-node-approval::before,
+.workflow-art[data-stage="delivery"] .workflow-node-delivery::before {
+  border-color: var(--color-accent-2);
+  background: rgba(126, 231, 135, 0.22);
+  transform: scale(1.12);
+  box-shadow: 0 0 0 5px rgba(13, 17, 23, 0.95), 0 0 18px rgba(126, 231, 135, 0.18);
+}
+
+.workflow-art[data-stage="capture"] .workflow-art-pulse,
+.workflow-art[data-stage="capture"] .workflow-morph {
+  left: 18%;
+}
+
+.workflow-art[data-stage="process"] .workflow-art-pulse,
+.workflow-art[data-stage="process"] .workflow-morph {
+  left: 41%;
+}
+
+.workflow-art[data-stage="approval"] .workflow-art-pulse,
+.workflow-art[data-stage="approval"] .workflow-morph {
+  left: 66%;
+}
+
+.workflow-art[data-stage="delivery"] .workflow-art-pulse,
+.workflow-art[data-stage="delivery"] .workflow-morph {
+  left: 88%;
+}
+
+.workflow-art[data-stage="capture"] .workflow-art-glow {
+  transform: translateX(-84px);
+}
+
+.workflow-art[data-stage="process"] .workflow-art-glow {
+  transform: translateX(-20px);
+}
+
+.workflow-art[data-stage="approval"] .workflow-art-glow {
+  transform: translateX(38px);
+  background: radial-gradient(circle, rgba(126, 231, 135, 0.18), transparent 70%);
+}
+
+.workflow-art[data-stage="delivery"] .workflow-art-glow {
+  transform: translateX(108px);
+  background: radial-gradient(circle, rgba(88, 166, 255, 0.2), transparent 70%);
+}
+
+.workflow-art[data-stage="process"] .workflow-morph {
+  width: 62px;
+  height: 62px;
+  margin-left: -31px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(126, 231, 135, 0.24), rgba(88, 166, 255, 0.08));
+  transform: rotate(45deg);
+}
+
+.workflow-art[data-stage="process"] .workflow-morph::before {
+  inset: 13px;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, transparent 0 42%, rgba(230, 237, 243, 0.2) 42% 58%, transparent 58% 100%);
+  transform: rotate(-45deg);
+}
+
+.workflow-art[data-stage="process"] .workflow-morph::after {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(88, 166, 255, 0.88);
+  transform: translate(-50%, -50%) rotate(-45deg);
+  box-shadow:
+    18px 0 0 rgba(126, 231, 135, 0.68),
+    -18px 0 0 rgba(126, 231, 135, 0.32);
+}
+
+.workflow-art[data-stage="approval"] .workflow-morph {
+  width: 70px;
+  height: 70px;
+  margin-left: -35px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(126, 231, 135, 0.4), rgba(88, 166, 255, 0.08));
+  transform: none;
+}
+
+.workflow-art[data-stage="approval"] .workflow-morph::before {
+  inset: 14px;
+  border-radius: 50%;
+  background: none;
+  border-color: rgba(230, 237, 243, 0.26);
+}
+
+.workflow-art[data-stage="approval"] .workflow-morph::after {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-accent-2);
+  box-shadow: 0 0 0 10px rgba(126, 231, 135, 0.16);
+}
+
+.workflow-art[data-stage="delivery"] .workflow-morph {
+  width: 102px;
+  height: 46px;
+  margin-left: -51px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(88, 166, 255, 0.14), rgba(126, 231, 135, 0.3), rgba(88, 166, 255, 0.1));
+  transform: none;
+}
+
+.workflow-art[data-stage="delivery"] .workflow-morph::before {
+  inset: 12px 20px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent 0 18%, rgba(230, 237, 243, 0.2) 18% 82%, transparent 82% 100%);
+}
+
+.workflow-art[data-stage="delivery"] .workflow-morph::after {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--color-accent-2);
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-shadow:
+    10px -10px 0 -3px rgba(126, 231, 135, 0.8),
+    -10px 10px 0 -3px rgba(126, 231, 135, 0.55);
+}
+
+@keyframes workflow-pulse {
+  0%, 100% {
+    transform: scale(0.92);
+    box-shadow: 0 0 18px rgba(88, 166, 255, 0.3);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 28px rgba(88, 166, 255, 0.48);
+  }
+}
+
 /* ---------------------- SKILLS ---------------------- */
 .skills-grid {
   display: grid;
@@ -1212,6 +1529,16 @@ svg {
 
 /* Mobile */
 @media (max-width: 480px) {
+  .workflow-art-visual {
+    min-height: 168px;
+  }
+
+  .workflow-node {
+    width: 66px;
+    margin-left: -33px;
+    font-size: 0.62rem;
+  }
+
   .hero-name {
     font-size: 3.5rem;
   }
@@ -1253,5 +1580,21 @@ svg {
   .footer-container {
     flex-direction: column;
     text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workflow-art-pulse,
+  .what-i-do-title-animated {
+    animation: none;
+  }
+
+  .workflow-art-pulse,
+  .workflow-morph,
+  .workflow-art-glow,
+  .workflow-node,
+  .workflow-node::before,
+  .workflow-art-status {
+    transition: none;
   }
 }
