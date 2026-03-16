@@ -13,6 +13,7 @@
 - Keep the site dependency-free unless the user explicitly asks for a new dependency or framework.
 - Preserve the existing style:
   - semantic HTML sections with stable `id` values used by navigation
+  - existing `id` hooks used by JavaScript; do not rename `nav-header`, `nav-toggle`, `nav-links`, `experience-scene`, `experience-world`, `experience-person`, `experience-details`, `experience-points`, `experience-stack`, `move-left`, `move-right`, or `year` without updating `script.js`
   - CSS custom properties for theme values
   - vanilla JS inside the existing strict-mode IIFE in `script.js`
   - small DOM helpers such as `qs` and `qsa`
@@ -20,6 +21,7 @@
 ## Key code layout
 - `index.html` contains all sections of the one-page site, including the fixed navigation, hero, skills, experience timeline, projects, contact, and footer.
 - `styles.css` is the single stylesheet. It is dark-mode first, mobile-first, and uses CSS variables throughout.
+- When adding or adjusting styles, prefer the existing CSS custom properties in `:root` and follow the current naming patterns such as `--color-*`, `--font-*`, `--transition*`, and `--nav-height`.
 - `script.js` handles:
   - fixed-nav scroll state
   - mobile navigation toggle
@@ -38,5 +40,5 @@
 - For documentation or configuration-only changes, verify the file path and markdown contents directly.
 
 ## Repo-specific gotchas
-- `index.html` references static assets with cache-busting query strings (`styles.css?v=...` and `script.js?v=...`). If you change either asset, update the version string in `index.html`.
+- `index.html` references static assets with cache-busting query strings (`styles.css?v=...` and `script.js?v=...`). If you change either asset, update both version strings in `index.html` using the existing `YYYYMMDD` date format.
 - Trust these instructions first and only search further when they are incomplete or inconsistent with the current files.
