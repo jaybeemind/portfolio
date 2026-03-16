@@ -30,7 +30,7 @@
 
     <link
       rel="stylesheet"
-      href="styles.css?v=20260316"
+      href="styles.css?v=20260317"
     />
   </head>
 
@@ -186,13 +186,36 @@
                   <h3 class="what-i-do-title what-i-do-title-animated">Workflow &amp; Process Automation</h3>
                 </div>
                 <div class="workflow-automation-art" aria-hidden="true">
-                  <span class="workflow-line"></span>
+                  <span class="workflow-line workflow-line-main"></span>
+                  <span class="workflow-line workflow-line-branch-up"></span>
+                  <span class="workflow-line workflow-line-branch-down"></span>
                   <span class="workflow-line-glow"></span>
+                  <span class="workflow-branch-label workflow-branch-label-true">true</span>
+                  <span class="workflow-branch-label workflow-branch-label-false">false</span>
+                  <span class="workflow-node workflow-node-trigger">
+                    <span class="workflow-node-title">Create user</span>
+                    <span class="workflow-node-meta">Form submit</span>
+                  </span>
+                  <span class="workflow-node workflow-node-agent">
+                    <span class="workflow-node-title">AI Agent</span>
+                    <span class="workflow-node-meta">Routes · validates · enriches</span>
+                  </span>
+                  <span class="workflow-node workflow-node-decision">
+                    <span class="workflow-node-title">Manager?</span>
+                    <span class="workflow-node-meta">Decision</span>
+                  </span>
+                  <span class="workflow-node workflow-node-output workflow-node-output-top">
+                    <span class="workflow-node-title">Notify</span>
+                    <span class="workflow-node-meta">Slack channel</span>
+                  </span>
+                  <span class="workflow-node workflow-node-output workflow-node-output-bottom">
+                    <span class="workflow-node-title">Update</span>
+                    <span class="workflow-node-meta">User profile</span>
+                  </span>
+                  <span class="workflow-resource workflow-resource-model">Model</span>
+                  <span class="workflow-resource workflow-resource-memory">Memory</span>
+                  <span class="workflow-resource workflow-resource-tools">Tools</span>
                   <span class="workflow-token"></span>
-                  <span class="workflow-stage workflow-stage-intake">Intake</span>
-                  <span class="workflow-stage workflow-stage-rules">Rules</span>
-                  <span class="workflow-stage workflow-stage-approve">Approve</span>
-                  <span class="workflow-stage workflow-stage-deliver">Deliver</span>
                 </div>
               </div>
             </article>
@@ -591,7 +614,7 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260316"></script>
+    <script src="script.js?v=20260317"></script>
   </body>
 
 </html>
