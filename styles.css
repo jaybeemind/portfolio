@@ -1298,6 +1298,26 @@ svg {
   to { transform: rotate(18deg); }
 }
 
+/* ---------------------- COMMUNITY ---------------------- */
+.community-intro {
+  color: var(--color-text-muted);
+  max-width: 720px;
+  margin-bottom: 3rem;
+}
+
+.community-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  color: var(--color-accent);
+  font-size: 0.95rem;
+}
+
+.community-link svg {
+  flex-shrink: 0;
+}
+
 /* ---------------------- PROJECTS ---------------------- */
 .projects {
   background: var(--color-bg-alt);
