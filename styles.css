@@ -735,7 +735,8 @@ svg {
   width: 120px;
 }
 
-.app-foundation {
+.app-foundation,
+.ai-foundation {
   justify-content: center;
 }
 
@@ -823,10 +824,6 @@ svg {
   top: 156px;
   left: 50%;
   transform: translateX(-50%);
-}
-
-.ai-foundation {
-  justify-content: center;
 }
 
 .integration-diagram {
