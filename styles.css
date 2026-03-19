@@ -739,6 +739,96 @@ svg {
   justify-content: center;
 }
 
+.ai-diagram {
+  min-height: 252px;
+  padding: 1rem;
+}
+
+.ai-line-left {
+  top: 84px;
+  left: 25%;
+  width: 19%;
+}
+
+.ai-line-right {
+  top: 84px;
+  right: 25%;
+  width: 19%;
+}
+
+.ai-line-up,
+.ai-line-down {
+  left: calc(50% - 1px);
+  width: 2px;
+  background: linear-gradient(180deg, rgba(88, 166, 255, 0.22), rgba(230, 237, 243, 0.88), rgba(126, 231, 135, 0.24));
+}
+
+.ai-line-up {
+  top: 34px;
+  height: 26px;
+}
+
+.ai-line-down {
+  top: 136px;
+  height: 46px;
+}
+
+.ai-orbit {
+  position: absolute;
+  left: 50%;
+  top: 84px;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(88, 166, 255, 0.16);
+  background: radial-gradient(circle, rgba(88, 166, 255, 0.08), transparent 72%);
+  z-index: 0;
+}
+
+.ai-orbit-primary {
+  width: 188px;
+  height: 188px;
+}
+
+.ai-orbit-secondary {
+  width: 126px;
+  height: 126px;
+  border-color: rgba(126, 231, 135, 0.14);
+}
+
+.ai-users,
+.ai-systems,
+.ai-automation {
+  width: 122px;
+}
+
+.ai-users {
+  top: 48px;
+  left: 0.9rem;
+}
+
+.ai-core {
+  top: 52px;
+  left: 50%;
+  width: 170px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.ai-systems {
+  top: 48px;
+  right: 0.9rem;
+}
+
+.ai-automation {
+  top: 156px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ai-foundation {
+  justify-content: center;
+}
+
 .integration-diagram {
   min-height: 220px;
   padding: 1rem;
