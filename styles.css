@@ -611,39 +611,44 @@ svg {
 .workflow-diagram {
   min-height: 250px;
   padding: 1rem;
+  --workflow-trigger-width: 88px;
+  --workflow-decision-width: 88px;
+  --workflow-output-width: 108px;
+  --workflow-side-offset: 0.85rem;
 }
 
 .workflow-line-main {
   top: 114px;
-  left: 18%;
-  width: 55%;
+  left: calc(var(--workflow-side-offset) + var(--workflow-trigger-width) + 0.55rem);
+  right: calc(var(--workflow-output-width) + var(--workflow-side-offset) + var(--workflow-decision-width) + 1.15rem);
+  width: auto;
 }
 
 .workflow-line-branch-up,
 .workflow-line-branch-down {
-  left: 72%;
-  width: 13%;
+  left: calc(100% - (var(--workflow-output-width) + var(--workflow-side-offset) + 1.35rem));
+  width: 4.4rem;
   transform-origin: left center;
 }
 
 .workflow-line-branch-up {
-  top: 86px;
-  transform: rotate(-58deg);
+  top: 121px;
+  transform: rotate(-72deg);
 }
 
 .workflow-line-branch-down {
-  top: 136px;
-  transform: rotate(52deg);
+  top: 121px;
+  transform: rotate(72deg);
 }
 
 .workflow-branch-label-true {
   top: 72px;
-  right: 17%;
+  right: 5.8rem;
 }
 
 .workflow-branch-label-false {
-  top: 146px;
-  right: 18%;
+  top: 156px;
+  right: 6rem;
 }
 
 .workflow-trigger {
@@ -671,9 +676,9 @@ svg {
 }
 
 .workflow-decision {
-  top: 80px;
-  left: 70%;
-  width: 88px;
+  top: 82px;
+  right: calc(var(--workflow-output-width) + var(--workflow-side-offset) + 1.35rem);
+  width: var(--workflow-decision-width);
   text-align: center;
 }
 
@@ -741,20 +746,25 @@ svg {
 }
 
 .ai-diagram {
-  min-height: 252px;
+  min-height: 272px;
   padding: 1rem;
+  --ai-side-width: 122px;
+  --ai-side-offset: 0.9rem;
+  --ai-core-half-width: 85px;
 }
 
 .ai-line-left {
   top: 84px;
-  left: 25%;
-  width: 19%;
+  left: calc(var(--ai-side-offset) + var(--ai-side-width));
+  right: calc(50% + var(--ai-core-half-width));
+  width: auto;
 }
 
 .ai-line-right {
   top: 84px;
-  right: 25%;
-  width: 19%;
+  left: calc(50% + var(--ai-core-half-width));
+  right: calc(var(--ai-side-offset) + var(--ai-side-width));
+  width: auto;
 }
 
 .ai-line-up,
@@ -766,12 +776,12 @@ svg {
 
 .ai-line-up {
   top: 34px;
-  height: 26px;
+  height: 18px;
 }
 
 .ai-line-down {
-  top: 136px;
-  height: 46px;
+  top: 162px;
+  height: 12px;
 }
 
 .ai-orbit {
@@ -821,7 +831,7 @@ svg {
 }
 
 .ai-automation {
-  top: 156px;
+  top: 174px;
   left: 50%;
   transform: translateX(-50%);
 }
