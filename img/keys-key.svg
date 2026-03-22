@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="110" height="48" viewBox="0 0 110 48" role="img" aria-labelledby="title desc">
+  <title id="title">Keyboard key labeled keys</title>
+  <desc id="desc">A rounded keyboard key with the word keys centered inside.</desc>
+  <defs>
+    <linearGradient id="keyFill" x1="55" y1="0" x2="55" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#23466d"/>
+      <stop offset="1" stop-color="#13273f"/>
+    </linearGradient>
+    <linearGradient id="keyBorder" x1="55" y1="4" x2="55" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#78b4ff" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#4f8cd6" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="104" height="42" rx="13" fill="#0b1522" stroke="url(#keyBorder)" stroke-width="2"/>
+  <rect x="8" y="8" width="94" height="30" rx="10" fill="url(#keyFill)" opacity="0.9"/>
+  <path d="M16 15h78" stroke="#b9d8ff" stroke-opacity="0.2" stroke-linecap="round"/>
+  <text x="55" y="29" text-anchor="middle" fill="#f4f8ff" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="0.2">keys</text>
+  <path d="M18 39h74" stroke="#050a11" stroke-opacity="0.45" stroke-linecap="round"/>
+</svg>
