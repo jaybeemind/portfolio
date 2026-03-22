@@ -272,7 +272,8 @@
 
       world.items = experiences.map((job, index) => {
         const building = document.createElement("article")
-        building.className = "experience-building"
+        const variant = index % 2 === 0 ? "variant-brick" : "variant-metal"
+        building.className = `experience-building ${variant}`
 
         const label = document.createElement("div")
         label.className = "building-label"
@@ -287,15 +288,9 @@
 
         const x = layout.startX + index * layout.spacing
         const height = heights[index % heights.length]
-        const hue = 205 + index * 6
         building.style.left = `${x}px`
         building.style.width = `${layout.width}px`
         building.style.height = `${height}px`
-        building.style.background = [
-          `linear-gradient(180deg, hsla(${hue}, 38%, 34%, 0.95), hsla(${hue - 10}, 42%, 16%, 0.96))`,
-          "repeating-linear-gradient(90deg, rgba(255, 214, 102, 0.09) 0 16px, transparent 16px 32px)",
-          "repeating-linear-gradient(180deg, rgba(255, 214, 102, 0.08) 0 16px, transparent 16px 28px)",
-        ].join(", ")
 
         label.append(sign, years)
         building.append(label)
