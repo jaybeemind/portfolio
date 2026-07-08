@@ -54,13 +54,13 @@
       crossorigin
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&family=Press+Start+2P&display=swap"
       rel="stylesheet"
     />
 
     <link
       rel="stylesheet"
-      href="styles.css?v=20260708"
+      href="styles.css?v=20260708.2"
     />
   </head>
 
@@ -541,7 +541,8 @@
               />, or the on-screen controls, and jump with <span class="keycap">W</span> /
               <span class="keycap">Space</span>. You can also tap a building to walk straight to it.
               When the character gets close to a building, the role details appear on the right —
-              visit every building to collect all the stars and complete the journey.
+              visit every building to collect all the stars, bump the <strong>?</strong> blocks for
+              coins, and reach the flag at the end to complete the journey.
             </p>
           </div>
 
@@ -560,6 +561,8 @@
                   aria-hidden="true"
                 >
                   <span id="hud-progress">ROLES 0/9</span>
+                  <span class="hud-coin"></span>
+                  <span id="hud-coins">×0</span>
                 </div>
                 <div
                   class="experience-world"
@@ -898,7 +901,7 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260708"></script>
+    <script src="script.js?v=20260708.2"></script>
   </body>
 
 </html>
