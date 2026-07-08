@@ -133,6 +133,10 @@
   const datesEl = qs(".experience-dates", detailsEl || document)
   const moveLeftBtn = qs("#move-left")
   const moveRightBtn = qs("#move-right")
+  const moveJumpBtn = qs("#move-jump")
+  const skylineEl = qs(".experience-skyline")
+  const hudEl = qs("#experience-hud")
+  const hudProgressEl = qs("#hud-progress")
 
   if (sceneEl && worldEl && personEl && detailsEl && pointsEl && stackEl && roleEl && companyEl && datesEl) {
     const experiences = [
@@ -259,13 +263,23 @@
       sceneWidth: 0,
       width: 0,
       personX: 92,
+      personY: 0,
+      velocityY: 0,
+      facing: 1,
+      autoTarget: null,
       cameraX: 0,
       speed: 240,
+      gravity: 1500,
+      jumpImpulse: 560,
       lastTime: 0,
       activeIndex: -1,
       buildingNodes: [],
       items: [],
+      visited: new Set(),
+      completed: false,
     }
+
+    let rafId = null
 
     function renderExperienceWorld() {
       const fragment = document.createDocumentFragment()
@@ -294,6 +308,10 @@
 
         label.append(sign, years)
         building.append(label)
+        building.title = `Walk to ${job.buildingLabel}`
+        building.addEventListener("click", () => {
+          walkTo(x + layout.width / 2 - 20)
+        })
         fragment.appendChild(building)
 
         return {
@@ -318,7 +336,8 @@
         datesEl.textContent = "Latest roles are placed on the left."
         pointsEl.innerHTML = [
           "<li>Tip: hold the movement buttons on mobile for continuous walking.</li>",
-          "<li>Keyboard support: Left Arrow, Right Arrow, A, and D.</li>",
+          "<li>Keyboard: ← / → or A / D to walk, W or Space to jump.</li>",
+          "<li>Tap any building to walk straight to it and collect its star.</li>",
         ].join("")
         stackEl.innerHTML = ""
         return
@@ -348,6 +367,7 @@
         if (world.activeIndex !== closestIndex) {
           world.activeIndex = closestIndex
           setDetails(world.items[closestIndex])
+          markVisited(closestIndex)
         }
       } else if (world.activeIndex !== -1) {
         world.activeIndex = -1
@@ -359,11 +379,56 @@
       })
     }
 
+    function walkTo(targetX) {
+      world.autoTarget = Math.max(40, Math.min(world.width - 54, targetX))
+      sceneEl.focus({ preventScroll: true })
+    }
+
+    function markVisited(index) {
+      if (world.visited.has(index)) return
+      world.visited.add(index)
+
+      const flag = document.createElement("span")
+      flag.className = "building-flag"
+      flag.textContent = "★"
+      world.items[index].node.appendChild(flag)
+
+      updateHud()
+      if (world.visited.size === world.items.length) celebrate()
+    }
+
+    function updateHud() {
+      if (!hudProgressEl) return
+      hudProgressEl.textContent = `ROLES ${world.visited.size}/${world.items.length}`
+    }
+
+    function celebrate() {
+      if (world.completed) return
+      world.completed = true
+      if (hudEl) hudEl.classList.add("complete")
+
+      const toast = document.createElement("div")
+      toast.className = "experience-toast"
+      toast.textContent = "🏆 Career journey complete!"
+      sceneEl.appendChild(toast)
+      window.setTimeout(() => toast.remove(), 4200)
+    }
+
+    function jump() {
+      if (world.personY > 0 || world.velocityY > 0) return
+      world.velocityY = world.jumpImpulse
+    }
+
     function updateSceneMetrics() {
       world.sceneWidth = sceneEl.clientWidth
       world.width = Math.max(world.sceneWidth + 220, layout.startX + (experiences.length - 1) * layout.spacing + 260)
       worldEl.style.width = `${world.width}px`
       world.personX = Math.min(world.personX, world.width - 60)
+      if (skylineEl) {
+        // Skyline scrolls slower than the world (parallax), so it needs extra width to stay covered.
+        const maxCamera = Math.max(0, world.width - world.sceneWidth)
+        skylineEl.style.width = `${world.sceneWidth + maxCamera * 0.22 + 40}px`
+      }
       updateTransforms()
       updateActiveBuilding()
     }
@@ -374,13 +439,26 @@
       world.cameraX = Math.max(0, Math.min(maxCamera, targetCamera))
       worldEl.style.transform = `translateX(${-world.cameraX}px)`
       personEl.style.left = `${world.personX - world.cameraX}px`
+      personEl.style.transform = `translateY(${-world.personY}px) scaleX(${world.facing})`
+      if (skylineEl) skylineEl.style.transform = `translateX(${-world.cameraX * 0.22}px)`
     }
 
     function getDirection() {
       const left = keyState.left || touchState.left
       const right = keyState.right || touchState.right
-      if (left === right) return 0
-      return left ? -1 : 1
+      if (left !== right) {
+        world.autoTarget = null
+        return left ? -1 : 1
+      }
+      if (world.autoTarget !== null) {
+        const dx = world.autoTarget - world.personX
+        if (Math.abs(dx) <= 6) {
+          world.autoTarget = null
+          return 0
+        }
+        return dx < 0 ? -1 : 1
+      }
+      return 0
     }
 
     function tick(timestamp) {
@@ -395,22 +473,51 @@
       if (direction !== 0) {
         world.personX += direction * world.speed * delta
         world.personX = Math.max(40, Math.min(world.width - 54, world.personX))
-        personEl.classList.add("walking")
-        personEl.classList.toggle("facing-left", direction < 0)
-      } else {
-        personEl.classList.remove("walking")
+        world.facing = direction < 0 ? -1 : 1
       }
+
+      const airborne = world.personY > 0 || world.velocityY > 0
+      if (airborne) {
+        world.velocityY -= world.gravity * delta
+        world.personY += world.velocityY * delta
+        if (world.personY <= 0) {
+          world.personY = 0
+          world.velocityY = 0
+        }
+      }
+
+      personEl.classList.toggle("walking", direction !== 0 && world.personY <= 0)
+      personEl.classList.toggle("airborne", world.personY > 0)
 
       updateTransforms()
       updateActiveBuilding()
-      window.requestAnimationFrame(tick)
+      rafId = window.requestAnimationFrame(tick)
+    }
+
+    function startLoop() {
+      if (rafId !== null) return
+      world.lastTime = 0
+      rafId = window.requestAnimationFrame(tick)
+    }
+
+    function stopLoop() {
+      if (rafId === null) return
+      window.cancelAnimationFrame(rafId)
+      rafId = null
+      keyState.left = false
+      keyState.right = false
+      touchState.left = false
+      touchState.right = false
     }
 
     function handleKeyChange(event, isPressed) {
+      // Only capture keys while the game loop is running (scene on screen).
+      if (rafId === null) return
+
       const tagName = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : ""
       if (tagName === "input" || tagName === "textarea") return
 
-      const key = event.key.toLowerCase()
+      const key = event.key === " " ? "space" : event.key.toLowerCase()
       if (key === "arrowleft" || key === "a") {
         keyState.left = isPressed
         event.preventDefault()
@@ -418,6 +525,14 @@
 
       if (key === "arrowright" || key === "d") {
         keyState.right = isPressed
+        event.preventDefault()
+      }
+
+      // Space and ArrowUp normally scroll the page, so they only jump
+      // while the scene itself is focused. W is safe to handle globally.
+      const sceneFocused = document.activeElement === sceneEl
+      if (key === "w" || ((key === "space" || key === "arrowup") && sceneFocused)) {
+        if (isPressed) jump()
         event.preventDefault()
       }
     }
@@ -428,7 +543,7 @@
       const activate = () => {
         touchState[direction] = true
         button.classList.add("pressed")
-        sceneEl.focus()
+        sceneEl.focus({ preventScroll: true })
       }
 
       const deactivate = () => {
@@ -445,9 +560,10 @@
 
     renderExperienceWorld()
     setDetails(null)
+    updateHud()
     updateSceneMetrics()
     updateActiveBuilding()
-    sceneEl.addEventListener("click", () => sceneEl.focus())
+    sceneEl.addEventListener("click", () => sceneEl.focus({ preventScroll: true }))
     window.addEventListener("resize", updateSceneMetrics)
     window.addEventListener("keydown", (event) => handleKeyChange(event, true))
     window.addEventListener("keyup", (event) => handleKeyChange(event, false))
@@ -461,6 +577,24 @@
     })
     bindHoldControl(moveLeftBtn, "left")
     bindHoldControl(moveRightBtn, "right")
-    window.requestAnimationFrame(tick)
+    if (moveJumpBtn) {
+      moveJumpBtn.addEventListener("pointerdown", () => {
+        jump()
+        sceneEl.focus({ preventScroll: true })
+      })
+    }
+
+    // Run the game loop only while the scene is on screen.
+    if ("IntersectionObserver" in window) {
+      const loopObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => (entry.isIntersecting ? startLoop() : stopLoop()))
+        },
+        { threshold: 0.05 },
+      )
+      loopObserver.observe(sceneEl)
+    } else {
+      startLoop()
+    }
   }
 })()
