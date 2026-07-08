@@ -137,6 +137,7 @@
   const skylineEl = qs(".experience-skyline")
   const hudEl = qs("#experience-hud")
   const hudProgressEl = qs("#hud-progress")
+  const hudCoinsEl = qs("#hud-coins")
 
   if (sceneEl && worldEl && personEl && detailsEl && pointsEl && stackEl && roleEl && companyEl && datesEl) {
     const experiences = [
@@ -277,6 +278,9 @@
       items: [],
       visited: new Set(),
       completed: false,
+      coins: 0,
+      qblocks: [],
+      flagpole: null,
     }
 
     let rafId = null
@@ -323,6 +327,38 @@
           node: building,
         }
       })
+
+      // Decorative pipes in the gaps between buildings
+      const pipes = [
+        { gapAfter: 1, height: 58 },
+        { gapAfter: 4, height: 74 },
+        { gapAfter: 7, height: 64 },
+      ]
+      pipes.forEach((pipe) => {
+        const node = document.createElement("div")
+        node.className = "experience-pipe"
+        node.style.left = `${layout.startX + pipe.gapAfter * layout.spacing + layout.width + 14}px`
+        node.style.height = `${pipe.height}px`
+        fragment.appendChild(node)
+      })
+
+      // Bumpable ? blocks (world x of each block's center)
+      world.qblocks = [112, 338, 968, 1598].map((center) => {
+        const node = document.createElement("div")
+        node.className = "experience-qblock"
+        node.textContent = "?"
+        node.style.left = `${center - 17}px`
+        fragment.appendChild(node)
+        return { center, node, used: false }
+      })
+
+      // Flagpole past the last building marks the end of the journey
+      const pole = document.createElement("div")
+      pole.className = "experience-flagpole"
+      pole.innerHTML = '<span class="flagpole-ball"></span><span class="flagpole-flag"></span>'
+      pole.style.left = `${layout.startX + (experiences.length - 1) * layout.spacing + layout.width + 36}px`
+      fragment.appendChild(pole)
+      world.flagpole = pole
 
       worldEl.innerHTML = ""
       worldEl.appendChild(fragment)
@@ -398,14 +434,15 @@
     }
 
     function updateHud() {
-      if (!hudProgressEl) return
-      hudProgressEl.textContent = `ROLES ${world.visited.size}/${world.items.length}`
+      if (hudProgressEl) hudProgressEl.textContent = `ROLES ${world.visited.size}/${world.items.length}`
+      if (hudCoinsEl) hudCoinsEl.textContent = `×${world.coins}`
     }
 
     function celebrate() {
       if (world.completed) return
       world.completed = true
       if (hudEl) hudEl.classList.add("complete")
+      if (world.flagpole) world.flagpole.classList.add("down")
 
       const toast = document.createElement("div")
       toast.className = "experience-toast"
@@ -417,6 +454,33 @@
     function jump() {
       if (world.personY > 0 || world.velocityY > 0) return
       world.velocityY = world.jumpImpulse
+      // Check for a ? block bump near the apex of the jump (t = impulse / gravity).
+      window.setTimeout(bumpNearbyBlock, 340)
+    }
+
+    function bumpNearbyBlock() {
+      if (rafId === null || world.personY <= 0) return
+      const headX = world.personX + 20
+      const block = world.qblocks.find((item) => Math.abs(item.center - headX) <= 28)
+      if (!block) return
+
+      block.node.classList.remove("bumped")
+      void block.node.offsetWidth // restart the bump animation
+      block.node.classList.add("bumped")
+
+      if (block.used) return
+      block.used = true
+      block.node.classList.add("used")
+      block.node.textContent = ""
+
+      const coin = document.createElement("span")
+      coin.className = "experience-coin"
+      coin.style.left = `${block.center - 9}px`
+      worldEl.appendChild(coin)
+      window.setTimeout(() => coin.remove(), 700)
+
+      world.coins += 1
+      updateHud()
     }
 
     function updateSceneMetrics() {

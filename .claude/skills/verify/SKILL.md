@@ -26,4 +26,6 @@ Install `playwright-core` in the session scratchpad, not the repo.
 ## Gotchas
 
 - Movement/jump keys are ignored while the scene is offscreen (by design) — scroll to the section before sending keys.
+- The game has 4 bumpable `.experience-qblock` ? blocks (world centers 112, 338, 968, 1598) — jumping under one pops a coin once and increments `#hud-coins`; the `.experience-flagpole` gets class `down` when all 9 roles are visited.
+- Test with `emulateMedia({ reducedMotion: "reduce" })` too — the user's Windows machine runs with reduced motion on, and limb-swing must keep animating there.
 - Cache-busting query strings on `styles.css`/`script.js` in index.html should be bumped when those files change.

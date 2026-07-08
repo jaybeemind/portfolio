@@ -1277,18 +1277,15 @@ svg {
   position: relative;
   height: 420px;
   overflow: hidden;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  background:
-    linear-gradient(180deg, #7dc9ff 0%, #9ae1ff 38%, #dff7ff 64%, #d7f2ff 100%),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.24), transparent 38%, rgba(255, 225, 130, 0.22));
-  box-shadow: inset 0 -56px 0 rgba(72, 145, 54, 0.22), inset 0 -118px 120px rgba(44, 111, 180, 0.18);
+  border-radius: 12px;
+  border: 3px solid #262b36;
+  background: #5c94fc; /* classic SMB sky blue */
   outline: none;
 }
 
 .experience-scene:focus-visible {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.18), inset 0 -56px 0 rgba(72, 145, 54, 0.22), inset 0 -118px 120px rgba(44, 111, 180, 0.18);
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.18);
 }
 
 .experience-skyline {
@@ -1301,9 +1298,7 @@ svg {
     radial-gradient(circle at 21.5% 16%, rgba(255, 255, 255, 0.98) 0 3.6%, transparent 3.8%),
     radial-gradient(circle at 64% 18%, rgba(255, 255, 255, 0.98) 0 3.8%, transparent 4%),
     radial-gradient(circle at 69% 18%, rgba(255, 255, 255, 0.98) 0 4.9%, transparent 5.1%),
-    radial-gradient(circle at 74% 18%, rgba(255, 255, 255, 0.98) 0 3.5%, transparent 3.7%),
-    radial-gradient(circle at 83% 9%, rgba(255, 229, 131, 0.95) 0 5%, transparent 5.2%),
-    linear-gradient(180deg, transparent 58%, rgba(111, 206, 96, 0.22) 58%, rgba(86, 180, 75, 0.14) 67%, transparent 67%);
+    radial-gradient(circle at 74% 18%, rgba(255, 255, 255, 0.98) 0 3.5%, transparent 3.7%);
 }
 
 .experience-skyline::before,
@@ -1340,20 +1335,7 @@ svg {
   will-change: transform;
 }
 
-.experience-world::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 78px;
-  height: 18px;
-  background:
-    linear-gradient(180deg, #68c550 0 26%, #51a53c 26% 72%, #3c7d2d 72% 100%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 28px, rgba(0, 0, 0, 0.08) 28px 32px);
-  border-top: 2px solid rgba(255, 255, 255, 0.28);
-  border-bottom: 2px solid rgba(63, 96, 35, 0.45);
-}
-
+/* Classic SMB brick-block ground */
 .experience-world::after {
   content: '';
   position: absolute;
@@ -1362,11 +1344,12 @@ svg {
   bottom: 0;
   height: 96px;
   background:
-    linear-gradient(180deg, rgba(93, 101, 111, 0) 0 20%, rgba(93, 101, 111, 0.85) 20% 36%, rgba(61, 69, 80, 0.98) 36% 100%),
-    repeating-linear-gradient(90deg, rgba(211, 217, 225, 0.75) 0 38px, rgba(109, 118, 130, 0.9) 38px 42px),
-    repeating-linear-gradient(90deg, rgba(47, 53, 61, 0.5) 0 12px, transparent 12px 84px),
-    linear-gradient(180deg, #b86a32 0 38%, #8f4b22 38% 100%);
-  border-top: 2px solid rgba(255, 255, 255, 0.24);
+    repeating-linear-gradient(0deg, rgba(64, 26, 5, 0.9) 0 3px, transparent 3px 32px),
+    repeating-linear-gradient(90deg, rgba(64, 26, 5, 0.9) 0 3px, transparent 3px 32px),
+    repeating-linear-gradient(0deg, rgba(255, 205, 145, 0.55) 3px 6px, transparent 6px 32px),
+    repeating-linear-gradient(90deg, rgba(255, 205, 145, 0.35) 3px 6px, transparent 6px 32px),
+    linear-gradient(180deg, #d97f3e, #b85c22);
+  border-top: 3px solid #401a05;
 }
 
 .experience-building {
@@ -1589,12 +1572,12 @@ svg {
 }
 
 .person-head::after {
-  left: 5px;
+  left: 4px;
   bottom: 2px;
-  width: 10px;
-  height: 4px;
+  width: 12px;
+  height: 5px;
   border-radius: 999px;
-  background: #694124;
+  background: #4a2a12; /* mustache */
 }
 
 .person-body {
@@ -1604,8 +1587,10 @@ svg {
   height: 28px;
   border-radius: 5px 5px 4px 4px;
   background:
-    linear-gradient(180deg, #d94c36 0 38%, #2b63b8 38% 100%),
-    linear-gradient(90deg, transparent 0 6px, #ffd890 6px 8px, transparent 8px 16px, #ffd890 16px 18px, transparent 18px 100%);
+    radial-gradient(circle at 7px 12px, #ffd83d 0 2.2px, transparent 2.7px),
+    radial-gradient(circle at 17px 12px, #ffd83d 0 2.2px, transparent 2.7px),
+    linear-gradient(90deg, transparent 0 5px, #2b63b8 5px 9px, transparent 9px 15px, #2b63b8 15px 19px, transparent 19px 100%) 0 0 / 100% 40% no-repeat,
+    linear-gradient(180deg, #d94c36 0 40%, #2b63b8 40% 100%);
   border: 2px solid rgba(27, 39, 74, 0.2);
 }
 
@@ -1614,7 +1599,7 @@ svg {
   width: 7px;
   height: 24px;
   border-radius: 4px;
-  background: linear-gradient(180deg, #d94c36 0 42%, #f2b67f 42% 100%);
+  background: linear-gradient(180deg, #d94c36 0 58%, #ffffff 58% 100%); /* red sleeve, white glove */
   transform-origin: top center;
 }
 
@@ -1756,37 +1741,147 @@ svg {
 
 .experience-hud {
   position: absolute;
-  top: 0.75rem;
-  left: 0.75rem;
+  top: 0.9rem;
+  left: 1rem;
   z-index: 4;
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.42rem 0.7rem;
-  border-radius: 0.55rem;
-  border: 2px solid rgba(161, 95, 20, 0.9);
-  background: linear-gradient(180deg, rgba(20, 26, 34, 0.88), rgba(13, 17, 23, 0.88));
-  color: #ffe88b;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  gap: 0.55rem;
+  color: #ffffff;
+  font-family: 'Press Start 2P', var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.55);
   pointer-events: none;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.25);
 }
 
 .experience-hud::before {
   content: '★';
-  color: #f5ba3f;
+  color: #ffd83d;
+  font-size: 0.75rem;
 }
 
-.experience-hud.complete {
-  border-color: rgba(126, 231, 135, 0.8);
-  color: #7ee787;
+.hud-coin {
+  width: 11px;
+  height: 14px;
+  margin-left: 0.35rem;
+  border-radius: 50%;
+  border: 2px solid rgba(64, 26, 5, 0.6);
+  background: radial-gradient(circle at 40% 35%, #ffe27a, #f5a417);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
 }
 
+.experience-hud.complete,
 .experience-hud.complete::before {
-  color: #7ee787;
+  color: #b8ff9e;
+}
+
+.experience-pipe {
+  position: absolute;
+  bottom: 96px;
+  width: 56px;
+  z-index: 0;
+  pointer-events: none;
+  border: 3px solid #123c10;
+  border-bottom: none;
+  background: linear-gradient(90deg, #8ee06a 0 10px, #3e9b3c 10px 34px, #2c7a2b 34px 100%);
+}
+
+.experience-pipe::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -8px;
+  right: -8px;
+  height: 20px;
+  border: 3px solid #123c10;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #9dea77 0 12px, #47a844 12px 44px, #2c7a2b 44px 100%);
+}
+
+.experience-qblock {
+  position: absolute;
+  bottom: 240px;
+  width: 34px;
+  height: 34px;
+  z-index: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  border: 3px solid #6b2f0a;
+  background:
+    radial-gradient(circle at 5px 5px, #6b2f0a 0 2px, transparent 2.4px),
+    radial-gradient(circle at calc(100% - 5px) 5px, #6b2f0a 0 2px, transparent 2.4px),
+    radial-gradient(circle at 5px calc(100% - 5px), #6b2f0a 0 2px, transparent 2.4px),
+    radial-gradient(circle at calc(100% - 5px) calc(100% - 5px), #6b2f0a 0 2px, transparent 2.4px),
+    linear-gradient(180deg, #ffb936, #e88a17);
+  color: #ffffff;
+  font-family: 'Press Start 2P', var(--font-mono);
+  font-size: 0.8rem;
+  text-shadow: 2px 2px 0 #6b2f0a;
+  box-shadow: inset -3px -3px 0 rgba(107, 47, 10, 0.45), inset 3px 3px 0 rgba(255, 255, 255, 0.4);
+}
+
+.experience-qblock.bumped {
+  animation: block-bump 0.32s ease-out;
+}
+
+.experience-qblock.used {
+  background: linear-gradient(180deg, #a06a3c, #7c4a24);
+  box-shadow: inset -3px -3px 0 rgba(0, 0, 0, 0.3), inset 3px 3px 0 rgba(255, 255, 255, 0.15);
+}
+
+.experience-coin {
+  position: absolute;
+  bottom: 280px;
+  width: 18px;
+  height: 22px;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 50%;
+  border: 2px solid #8a5a10;
+  background: radial-gradient(circle at 40% 35%, #ffe27a, #f5a417);
+  box-shadow: inset 0 0 0 3px rgba(255, 244, 200, 0.6);
+  animation: coin-pop 0.65s ease-out forwards;
+}
+
+.experience-flagpole {
+  position: absolute;
+  bottom: 96px;
+  width: 6px;
+  height: 200px;
+  z-index: 0;
+  pointer-events: none;
+  border: 2px solid #4c5866;
+  background: linear-gradient(90deg, #cfd8e3, #8a97a8);
+}
+
+.flagpole-ball {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 2px solid #8a5a10;
+  background: radial-gradient(circle at 35% 30%, #ffe27a, #e8a417);
+}
+
+.flagpole-flag {
+  position: absolute;
+  top: 6px;
+  right: 100%;
+  width: 0;
+  height: 0;
+  border-top: 14px solid transparent;
+  border-bottom: 14px solid transparent;
+  border-right: 34px solid #2c7a2b;
+  transition: top 1.4s ease-in;
+}
+
+.experience-flagpole.down .flagpole-flag {
+  top: 140px;
 }
 
 .building-flag {
@@ -1818,9 +1913,8 @@ svg {
   border: 2px solid #ffe681;
   background: rgba(13, 17, 23, 0.9);
   color: #ffe88b;
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-family: 'Press Start 2P', var(--font-mono);
+  font-size: 0.72rem;
   white-space: nowrap;
   transform: translate(-50%, -50%);
   animation: toast-pop 0.45s cubic-bezier(0.68, -0.55, 0.27, 1.55), toast-fade 0.6s ease 3.5s forwards;
@@ -1868,21 +1962,40 @@ svg {
   to { opacity: 0; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .experience-person.walking .person-arm-left,
-  .experience-person.walking .person-arm-right,
-  .experience-person.walking .person-leg-left,
-  .experience-person.walking .person-leg-right {
-    animation: none;
-  }
+@keyframes block-bump {
+  30% { transform: translateY(-10px); }
+}
 
+@keyframes coin-pop {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scaleX(1);
+  }
+  50% {
+    transform: translateY(-42px) scaleX(0.35);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-16px) scaleX(1);
+  }
+}
+
+/* Limb swing stays on under reduced motion — without it the walking
+   character appears to slide, which reads as broken rather than calm.
+   Only the decorative extras are toned down. */
+@media (prefers-reduced-motion: reduce) {
   .experience-person.walking::after {
     display: none;
   }
 
   .building-flag,
-  .experience-toast {
+  .experience-toast,
+  .experience-qblock.bumped {
     animation: none;
+  }
+
+  .flagpole-flag {
+    transition: none;
   }
 }
 
