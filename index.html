@@ -60,7 +60,7 @@
 
     <link
       rel="stylesheet"
-      href="styles.css?v=20260621.2"
+      href="styles.css?v=20260708"
     />
   </head>
 
@@ -524,7 +524,7 @@
             <h2 class="section-title">Career <span class="accent">Journey</span></h2>
             <p class="experience-intro">
               Explore 12+ years of practical software delivery across internal systems,
-              product teams, databases, integrations, and process improvement. Use the <strong><span
+              product teams, databases, integrations, and process improvement. Walk with <strong><span
                   class="keycap"
                   aria-label="Left arrow key"
                 >&larr;</span> /
@@ -538,8 +538,10 @@
                 class="keycap-image"
                 width="110"
                 height="48"
-              />, or the on-screen controls.
-              When the character gets close to a building, the role details appear on the right.
+              />, or the on-screen controls, and jump with <span class="keycap">W</span> /
+              <span class="keycap">Space</span>. You can also tap a building to walk straight to it.
+              When the character gets close to a building, the role details appear on the right —
+              visit every building to collect all the stars and complete the journey.
             </p>
           </div>
 
@@ -552,6 +554,13 @@
                 aria-label="Interactive career timeline scene"
               >
                 <div class="experience-skyline"></div>
+                <div
+                  class="experience-hud"
+                  id="experience-hud"
+                  aria-hidden="true"
+                >
+                  <span id="hud-progress">ROLES 0/9</span>
+                </div>
                 <div
                   class="experience-world"
                   id="experience-world"
@@ -582,6 +591,12 @@
                 >←</button>
                 <button
                   class="control-btn"
+                  id="move-jump"
+                  type="button"
+                  aria-label="Jump"
+                >↑</button>
+                <button
+                  class="control-btn"
                   id="move-right"
                   type="button"
                   aria-label="Move right"
@@ -605,7 +620,8 @@
                 id="experience-points"
               >
                 <li>Tip: hold the movement buttons on mobile for continuous walking.</li>
-                <li>Keyboard support: Left Arrow, Right Arrow, A, and D.</li>
+                <li>Keyboard: ← / → or A / D to walk, W or Space to jump.</li>
+                <li>Tap any building to walk straight to it and collect its star.</li>
               </ul>
               <div
                 class="experience-stack"
@@ -882,7 +898,7 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260322"></script>
+    <script src="script.js?v=20260708"></script>
   </body>
 
 </html>
