@@ -1,6 +1,7 @@
 /* ============================================================
    PORTFOLIO – script.js
-   Vanilla JS: fixed nav, mobile menu, scroll reveal
+   Vanilla JS: fixed nav, mobile menu, scroll reveal,
+   career timeline + optional side-scrolling career game
    ============================================================ */
 
 ;(function () {
@@ -87,6 +88,14 @@
     )
 
     revealEls.forEach((el) => observer.observe(el))
+
+    // Safety net: if the observer never fires at all — a prerendered or
+    // never-composited page will do this — the whole site would sit at
+    // opacity 0. Reveal everything rather than show a blank page.
+    window.setTimeout(() => {
+      const anyRevealed = Array.prototype.some.call(revealEls, (el) => el.classList.contains("visible"))
+      if (!anyRevealed) revealEls.forEach((el) => el.classList.add("visible"))
+    }, 1500)
   } else {
     // Fallback: immediately show all reveal elements
     revealEls.forEach((el) => el.classList.add("visible"))
@@ -121,134 +130,202 @@
   window.addEventListener("scroll", setActiveLink, { passive: true })
   setActiveLink()
 
-  // ---------------------- Experience: interactive timeline ----------------------
-  const sceneEl = qs("#experience-scene")
-  const worldEl = qs("#experience-world")
-  const personEl = qs("#experience-person")
-  const detailsEl = qs("#experience-details")
-  const pointsEl = qs("#experience-points")
-  const stackEl = qs("#experience-stack")
-  const roleEl = qs(".experience-role", detailsEl || document)
-  const companyEl = qs(".experience-company", detailsEl || document)
-  const datesEl = qs(".experience-dates", detailsEl || document)
-  const moveLeftBtn = qs("#move-left")
-  const moveRightBtn = qs("#move-right")
-  const moveJumpBtn = qs("#move-jump")
-  const skylineEl = qs(".experience-skyline")
-  const hudEl = qs("#experience-hud")
-  const hudProgressEl = qs("#hud-progress")
-  const hudCoinsEl = qs("#hud-coins")
+  // ============================================================
+  //  CAREER HISTORY
+  //  Single source of truth for both the readable timeline and
+  //  the optional side-scrolling game. Newest role first.
+  // ============================================================
+  const experiences = [
+    {
+      buildingLabel: "NGCP",
+      role: "Resource Optimization and Market Interface Lead Specialist",
+      company: "National Grid Corporation of the Philippines",
+      dates: "July 2024 - Present",
+      points: [
+        "Lead process improvement initiatives ensuring ISO compliance.",
+        "Develop and enhance internal applications to streamline business workflows.",
+        "Implement upgrades to the Software Development Lifecycle focusing on QA and DevOps.",
+        "Utilize AI tools like n8n and GitHub Copilot to automate repetitive work and accelerate delivery.",
+      ],
+      stack: [
+        "Python",
+        "Django 5",
+        "JavaScript",
+        "Node.js",
+        "SvelteKit",
+        "Oracle DB",
+        "MySQL",
+        "Business Process Analysis",
+        "HTML/CSS",
+      ],
+    },
+    {
+      buildingLabel: "Realtair",
+      role: "Senior Software Engineer",
+      company: "Realtair, Inc. (Remote)",
+      dates: "Oct 2023 - Apr 2024",
+      points: [
+        "Developed and maintained features for the Deposits app.",
+        "Collaborated with stakeholders and support teams to keep the product stable.",
+        "Reviewed and optimized AWS SNS, SQS, EC2, and RDS configurations.",
+      ],
+      stack: ["C#", ".NET MVC", "React.js", "TypeScript", "AWS", "MSSQL", "CI/CD", "Git"],
+    },
+    {
+      buildingLabel: "GoTeam",
+      role: "Senior Full-Stack Developer",
+      company: "GoTeam (Remote)",
+      dates: "Feb 2023 - Sep 2023",
+      points: [
+        "Maintained and improved Comtrac's Investigation Management platform.",
+        "Contributed to application architecture using the CQRS design pattern.",
+      ],
+      stack: ["Vue.js 3", "Composition API", "C# .NET", "Azure", "CI/CD", "Git"],
+    },
+    {
+      buildingLabel: "Theoria",
+      role: "Senior Full-Stack Developer",
+      company: "Theoria Medical (Remote, USA)",
+      dates: "Sep 2022 - Feb 2023",
+      points: [
+        "Developed and maintained internal healthcare management apps.",
+        "Mentored mid-level and junior developers.",
+        "Implemented scalable front-end solutions using modern libraries.",
+      ],
+      stack: ["React.js", "TypeScript", "MongoDB", "GraphQL", "Jira", "Git", "Tailwind CSS"],
+    },
+    {
+      buildingLabel: "NGCP",
+      role: "Resource Optimization and Market Interface Division Lead Specialist",
+      company: "National Grid Corporation of the Philippines",
+      dates: "Nov 2020 - Sep 2022",
+      points: [
+        "Migrated and modernized legacy business systems.",
+        "Led development of Project Sentinel and the 5-Min Real-time Dashboard.",
+      ],
+      stack: ["Laravel", "Vue.js 2", "Node.js", "Oracle DB", "MongoDB", "SCADA", "Bootstrap"],
+    },
+    {
+      buildingLabel: "NGCP",
+      role: "Information Standards Senior Specialist",
+      company: "National Grid Corporation of the Philippines",
+      dates: "Jan 2016 - Nov 2020",
+      points: [
+        "Led multiple enterprise software projects including Single Sign-On and Market Data Interchange.",
+        "Oversaw the full SDLC of micro-apps and background job automation.",
+      ],
+      stack: ["Laravel", "Node.js", "Vue.js", "Oracle DB", "MongoDB", "Bootstrap"],
+    },
+    {
+      buildingLabel: "Teradata",
+      role: "Technical Consultant",
+      company: "Teradata",
+      dates: "Jun 2015 - Sep 2015",
+      points: [
+        "Customized marketing operations applications for major enterprise clients.",
+        "Implemented enhancements using C# and JavaScript.",
+      ],
+      stack: ["C#", "JavaScript"],
+    },
+    {
+      buildingLabel: "COA",
+      role: "Computer Programmer II",
+      company: "Commission on Audit",
+      dates: "Dec 2013 - May 2015",
+      points: ["Developed internal systems including COA Data Warehouse and Asset Monitoring tools."],
+      stack: ["C#", ".NET MVC", "MSSQL", "AngularJS", "Bootstrap"],
+    },
+    {
+      buildingLabel: "NGCP",
+      role: "Web Developer",
+      company: "National Grid Corporation of the Philippines",
+      dates: "Jun 2013 - Nov 2013",
+      points: ["Developed and deployed the Central Receiving and Monitoring Center App."],
+      stack: ["C#", ".NET", "MSSQL", "jQuery", "Bootstrap"],
+    },
+  ]
 
-  if (sceneEl && worldEl && personEl && detailsEl && pointsEl && stackEl && roleEl && companyEl && datesEl) {
-    const experiences = [
-      {
-        buildingLabel: "NGCP",
-        role: "Resource Optimization and Market Interface Lead Specialist",
-        company: "National Grid Corporation of the Philippines",
-        dates: "July 2024 - Present",
-        points: [
-          "Lead process improvement initiatives ensuring ISO compliance.",
-          "Develop and enhance internal applications to streamline business workflows.",
-          "Implement upgrades to the Software Development Lifecycle focusing on QA and DevOps.",
-          "Utilize AI tools like n8n and GitHub Copilot to automate repetitive work and accelerate delivery.",
-        ],
-        stack: [
-          "Python",
-          "Django 5",
-          "JavaScript",
-          "Node.js",
-          "SvelteKit",
-          "Oracle DB",
-          "MySQL",
-          "Business Process Analysis",
-          "HTML/CSS",
-        ],
-      },
-      {
-        buildingLabel: "Realtair",
-        role: "Senior Software Engineer",
-        company: "Realtair, Inc. (Remote)",
-        dates: "Oct 2023 - Apr 2024",
-        points: [
-          "Developed and maintained features for the Deposits app.",
-          "Collaborated with stakeholders and support teams to keep the product stable.",
-          "Reviewed and optimized AWS SNS, SQS, EC2, and RDS configurations.",
-        ],
-        stack: ["C#", ".NET MVC", "React.js", "TypeScript", "AWS", "MSSQL", "CI/CD", "Git"],
-      },
-      {
-        buildingLabel: "GoTeam",
-        role: "Senior Full-Stack Developer",
-        company: "GoTeam (Remote)",
-        dates: "Feb 2023 - Sep 2023",
-        points: [
-          "Maintained and improved Comtrac's Investigation Management platform.",
-          "Contributed to application architecture using the CQRS design pattern.",
-        ],
-        stack: ["Vue.js 3", "Composition API", "C# .NET", "Azure", "CI/CD", "Git"],
-      },
-      {
-        buildingLabel: "Theoria",
-        role: "Senior Full-Stack Developer",
-        company: "Theoria Medical (Remote, USA)",
-        dates: "Sep 2022 - Feb 2023",
-        points: [
-          "Developed and maintained internal healthcare management apps.",
-          "Mentored mid-level and junior developers.",
-          "Implemented scalable front-end solutions using modern libraries.",
-        ],
-        stack: ["React.js", "TypeScript", "MongoDB", "GraphQL", "Jira", "Git", "Tailwind CSS"],
-      },
-      {
-        buildingLabel: "NGCP",
-        role: "Resource Optimization and Market Interface Division Lead Specialist",
-        company: "National Grid Corporation of the Philippines",
-        dates: "Nov 2020 - Sep 2022",
-        points: [
-          "Migrated and modernized legacy business systems.",
-          "Led development of Project Sentinel and the 5-Min Real-time Dashboard.",
-        ],
-        stack: ["Laravel", "Vue.js 2", "Node.js", "Oracle DB", "MongoDB", "SCADA", "Bootstrap"],
-      },
-      {
-        buildingLabel: "NGCP",
-        role: "Information Standards Senior Specialist",
-        company: "National Grid Corporation of the Philippines",
-        dates: "Jan 2016 - Nov 2020",
-        points: [
-          "Led multiple enterprise software projects including Single Sign-On and Market Data Interchange.",
-          "Oversaw the full SDLC of micro-apps and background job automation.",
-        ],
-        stack: ["Laravel", "Node.js", "Vue.js", "Oracle DB", "MongoDB", "Bootstrap"],
-      },
-      {
-        buildingLabel: "Teradata",
-        role: "Technical Consultant",
-        company: "Teradata",
-        dates: "Jun 2015 - Sep 2015",
-        points: [
-          "Customized marketing operations applications for major enterprise clients.",
-          "Implemented enhancements using C# and JavaScript.",
-        ],
-        stack: ["C#", "JavaScript"],
-      },
-      {
-        buildingLabel: "COA",
-        role: "Computer Programmer II",
-        company: "Commission on Audit",
-        dates: "Dec 2013 - May 2015",
-        points: ["Developed internal systems including COA Data Warehouse and Asset Monitoring tools."],
-        stack: ["C#", ".NET MVC", "MSSQL", "AngularJS", "Bootstrap"],
-      },
-      {
-        buildingLabel: "NGCP",
-        role: "Web Developer",
-        company: "National Grid Corporation of the Philippines",
-        dates: "Jun 2013 - Nov 2013",
-        points: ["Developed and deployed the Central Receiving and Monitoring Center App."],
-        stack: ["C#", ".NET", "MSSQL", "jQuery", "Bootstrap"],
-      },
-    ]
+  // ---------------------- Experience: readable timeline ----------------------
+  /**
+   * The primary, always-available view of the career history. Rendered from the
+   * same data the game uses so the two can never drift apart.
+   */
+  function renderTimeline() {
+    const timelineEl = qs("#experience-timeline")
+    if (!timelineEl) return
+
+    const fragment = document.createDocumentFragment()
+
+    experiences.forEach((job) => {
+      const item = document.createElement("li")
+      item.className = "timeline-item"
+
+      const dates = document.createElement("p")
+      dates.className = "timeline-dates"
+      dates.textContent = job.dates
+
+      const role = document.createElement("h3")
+      role.className = "timeline-role"
+      role.textContent = job.role
+
+      const company = document.createElement("p")
+      company.className = "timeline-company"
+      company.textContent = job.company
+
+      const points = document.createElement("ul")
+      points.className = "timeline-points"
+      job.points.forEach((point) => {
+        const li = document.createElement("li")
+        li.textContent = point
+        points.appendChild(li)
+      })
+
+      const stack = document.createElement("div")
+      stack.className = "timeline-stack"
+      job.stack.forEach((skill) => {
+        const chip = document.createElement("span")
+        chip.className = "experience-chip"
+        chip.textContent = skill
+        stack.appendChild(chip)
+      })
+
+      item.append(dates, role, company, points, stack)
+      fragment.appendChild(item)
+    })
+
+    timelineEl.innerHTML = ""
+    timelineEl.appendChild(fragment)
+  }
+
+  renderTimeline()
+
+  // ---------------------- Experience: optional career game ----------------------
+  /**
+   * Builds and runs the side-scrolling career scene. Called lazily the first time
+   * the player opens it — the scene needs a measurable width, which it doesn't
+   * have while the container is still hidden.
+   */
+  function initCareerGame() {
+    const sceneEl = qs("#experience-scene")
+    const worldEl = qs("#experience-world")
+    const personEl = qs("#experience-person")
+    const detailsEl = qs("#experience-details")
+    const pointsEl = qs("#experience-points")
+    const stackEl = qs("#experience-stack")
+    const roleEl = qs(".experience-role", detailsEl || document)
+    const companyEl = qs(".experience-company", detailsEl || document)
+    const datesEl = qs(".experience-dates", detailsEl || document)
+    const moveLeftBtn = qs("#move-left")
+    const moveRightBtn = qs("#move-right")
+    const moveJumpBtn = qs("#move-jump")
+    const skylineEl = qs(".experience-skyline")
+    const hudEl = qs("#experience-hud")
+    const hudProgressEl = qs("#hud-progress")
+    const hudCoinsEl = qs("#hud-coins")
+
+    if (!(sceneEl && worldEl && personEl && detailsEl && pointsEl && stackEl && roleEl && companyEl && datesEl)) {
+      return
+    }
 
     const layout = {
       startX: 170,
@@ -484,6 +561,9 @@
     }
 
     function updateSceneMetrics() {
+      // Nothing sensible to measure while the container is collapsed.
+      if (!sceneEl.clientWidth) return
+
       world.sceneWidth = sceneEl.clientWidth
       world.width = Math.max(world.sceneWidth + 220, layout.startX + (experiences.length - 1) * layout.spacing + 260)
       worldEl.style.width = `${world.width}px`
@@ -626,7 +706,6 @@
     setDetails(null)
     updateHud()
     updateSceneMetrics()
-    updateActiveBuilding()
     sceneEl.addEventListener("click", () => sceneEl.focus({ preventScroll: true }))
     window.addEventListener("resize", updateSceneMetrics)
     window.addEventListener("keydown", (event) => handleKeyChange(event, true))
@@ -660,5 +739,37 @@
     } else {
       startLoop()
     }
+
+    return { remeasure: updateSceneMetrics }
+  }
+
+  // ---------------------- Experience: game toggle ----------------------
+  const gameToggle = qs("#game-toggle")
+  const gameWrap = qs("#experience-game")
+
+  if (gameToggle && gameWrap) {
+    let game = null
+
+    gameToggle.addEventListener("click", () => {
+      const opening = gameWrap.hasAttribute("hidden")
+
+      if (opening) {
+        gameWrap.removeAttribute("hidden")
+        // Build on first open, once the scene has a real width to measure.
+        if (!game) {
+          game = initCareerGame() || {}
+        } else if (game.remeasure) {
+          game.remeasure()
+        }
+        gameWrap.scrollIntoView({ behavior: "smooth", block: "nearest" })
+      } else {
+        gameWrap.setAttribute("hidden", "")
+      }
+
+      gameToggle.setAttribute("aria-expanded", String(opening))
+      gameToggle.classList.toggle("open", opening)
+      const label = qs(".game-toggle-text", gameToggle)
+      if (label) label.textContent = opening ? "Hide the game" : "Or walk through it as a game"
+    })
   }
 })()
