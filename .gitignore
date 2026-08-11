@@ -1,0 +1,3 @@
+# Agent definitions — local tooling, not part of the site
+.claude/agents/
+.agents/
