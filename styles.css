@@ -1799,8 +1799,17 @@ button:focus-visible,
   margin-top: 1.75rem;
 }
 
+/* The lead shot always runs full width — it's the one carrying the case. */
+.case-shots-lead {
+  grid-template-columns: 1fr;
+}
+
 .case-shot {
   min-width: 0;
+}
+
+.case-shot[hidden] {
+  display: none;
 }
 
 .case-shot-link {

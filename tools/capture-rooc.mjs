@@ -7,17 +7,20 @@
  * They are never written to disk, never logged, and no session state is
  * persisted — the browser context is discarded when the run ends.
  *
- * Everything matching REDACT is blurred *in the live DOM before the shutter
- * fires*, so unredacted pixels never reach a file. Review every image in
- * img/rooc/ before committing: this is a blunt instrument and it cannot know
- * about a field it has no selector for.
+ * Real guild data is replaced with invented data *in the live DOM before the
+ * shutter fires*, so real names never reach a file. Substitution rather than
+ * blur, because on a dashboard the data is the thing worth showing — a wall of
+ * blurred rectangles proves nothing.
+ *
+ * Fill in ANONYMIZE.text below before the first run. Nothing else knows which
+ * strings are real.
  *
  * Requires playwright-core and system Edge (no browser download):
- *   npm i playwright-core
+ *   npm i playwright-core sharp
  */
 
 import { chromium } from "playwright-core"
-import { mkdir, readdir, stat, unlink } from "node:fs/promises"
+import { mkdir, stat, unlink } from "node:fs/promises"
 import path from "node:path"
 
 const ORIGIN = "https://rooc-guild-management-web.jaybee-isip.workers.dev"
@@ -37,65 +40,140 @@ if (!USER || !PASS) {
 }
 
 /**
- * Anything personally identifying gets blurred before capture.
+ * ── FILL THIS IN ──────────────────────────────────────────────────────────
  *
- * Add selectors here as you spot things — the attribute matches below are
- * guesses at this app's markup, and a miss means real data in a public image.
+ * Every key is replaced with its value wherever it appears — text, titles,
+ * aria-labels, alt text. Keys are matched longest-first so a handle that
+ * contains another handle still resolves correctly.
+ *
+ * Add every real member handle that appears on any captured screen, plus the
+ * guild name. Anything not listed here goes out exactly as it is.
  */
-const REDACT = [
-  // Avatars and profile imagery
-  "img[src*='avatar']",
-  "img[alt*='avatar' i]",
-  "[class*='avatar' i]",
-  "[class*='profile-photo' i]",
-  // Names, handles, accounts
-  "[class*='member-name' i]",
-  "[class*='player-name' i]",
-  "[class*='user-name' i]",
-  "[class*='username' i]",
-  "[class*='display-name' i]",
-  "[data-testid*='name' i]",
-  // Contact details
-  "[class*='email' i]",
-  "[href^='mailto:']",
-]
+const ANONYMIZE = {
+  text: {
+    // Guild identity
+    Uncrowned: "Nightforge",
+    // Accounts and handles — extend this with every name on screen
+    MachineGunPstr: "ShadowPike",
+    Lansulot: "Valkyrra",
+    COMATOZZE: "Ironmaw",
+  },
+
+  /**
+   * Roster figures. Optional — these aren't personal data, but they do reveal
+   * the size of a real guild. Set to null to leave the real numbers alone.
+   */
+  numbers: {
+    "79": "64",
+    "81": "70",
+    "98%": "91%",
+  },
+
+  /** Imagery that can't be substituted gets blurred instead. */
+  blur: ["img[src*='avatar']", "img[alt*='avatar' i]", "[class*='avatar' i] img", "[class*='profile-photo' i]"],
+}
 
 /**
- * Blur every match by writing to the element's own style object.
- *
- * The app serves a strict `style-src 'self'` CSP, so an injected <style> tag is
- * refused outright. Direct CSSOM writes are not subject to that, which makes
- * this the redaction path that actually survives — it is not a fallback.
- * Also sweeps any text node that merely looks like an email address.
+ * Names that must never survive into an image. Checked after substitution;
+ * a hit fails the run rather than writing a file. Keep in sync with the keys
+ * above — this is the check that catches a screen you forgot about.
  */
-const REDACT_IN_PAGE = (selectors) => {
-  const hide = (el) => {
-    if (!el || !el.style) return
-    el.style.setProperty("filter", "blur(7px)", "important")
-    el.style.setProperty("user-select", "none", "important")
+const MUST_NOT_APPEAR = Object.keys(ANONYMIZE.text)
+
+const ANONYMIZE_IN_PAGE = (config) => {
+  const { text, numbers, blur } = config
+  // Longest keys first: replacing "Lans" before "Lansulot" would corrupt it.
+  const pairs = Object.entries({ ...text, ...(numbers || {}) }).sort((a, b) => b[0].length - a[0].length)
+
+  const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
+  /**
+   * Anchored on word boundaries, or "81" would rewrite the 81 inside a reward
+   * count of 281 and produce a screenshot with quietly wrong numbers. Lookarounds
+   * rather than \b, so keys ending in a symbol ("98%") still anchor correctly.
+   */
+  const matchers = pairs.map(([real, fake]) => [
+    new RegExp(`(?<![\\w])${escape(real)}(?![\\w])`, "g"),
+    fake,
+  ])
+
+  const swap = (value) => {
+    let out = value
+    for (const [re, fake] of matchers) out = out.replace(re, fake)
+    return out
   }
 
-  selectors.forEach((sel) => {
+  let replaced = 0
+
+  // Text nodes
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+  const nodes = []
+  let n
+  while ((n = walker.nextNode())) nodes.push(n)
+  nodes.forEach((node) => {
+    const next = swap(node.nodeValue || "")
+    if (next !== node.nodeValue) {
+      node.nodeValue = next
+      replaced++
+    }
+  })
+
+  // Attributes that surface as visible text or get read out
+  document.querySelectorAll("[title], [aria-label], [alt], [placeholder]").forEach((el) => {
+    ;["title", "aria-label", "alt", "placeholder"].forEach((attr) => {
+      const v = el.getAttribute(attr)
+      if (!v) return
+      const next = swap(v)
+      if (next !== v) {
+        el.setAttribute(attr, next)
+        replaced++
+      }
+    })
+  })
+
+  // Anything still showing an email address
+  const emailRe = /[\w.+-]+@[\w-]+\.[\w.]+/g
+  const walker2 = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+  while ((n = walker2.nextNode())) {
+    if (emailRe.test(n.nodeValue || "")) {
+      n.nodeValue = n.nodeValue.replace(emailRe, "officer@nightforge.example")
+      replaced++
+    }
+    emailRe.lastIndex = 0
+  }
+
+  // Single-letter avatar bubbles derive from a name; realign them so an
+  // "L" bubble doesn't sit next to a substituted name starting with V.
+  document.querySelectorAll("*").forEach((el) => {
+    if (el.children.length) return
+    const t = (el.textContent || "").trim()
+    if (t.length !== 1 || !/[A-Z]/.test(t)) return
+    const label = el.parentElement && el.parentElement.textContent.trim().replace(/^.\s*/, "")
+    const initial = label && label.match(/[A-Za-z]/)
+    if (initial && initial[0].toUpperCase() !== t) el.textContent = initial[0].toUpperCase()
+  })
+
+  let blurred = 0
+  blur.forEach((sel) => {
     try {
-      document.querySelectorAll(sel).forEach(hide)
+      document.querySelectorAll(sel).forEach((el) => {
+        if (!el.style) return
+        el.style.setProperty("filter", "blur(8px)", "important")
+        blurred++
+      })
     } catch {
       /* ignore a selector this browser won't parse */
     }
   })
 
-  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
-  const re = /[\w.+-]+@[\w-]+\.[\w.]+/
-  let n
-  const hits = []
-  while ((n = walker.nextNode())) {
-    if (re.test(n.nodeValue || "")) hits.push(n.parentElement)
-  }
-  hits.forEach(hide)
-
-  return { blurred: document.querySelectorAll("[style*='blur']").length }
+  return { replaced, blurred }
 }
 
-/** Freeze animations the same way, for the same CSP reason. */
+/**
+ * Freeze animations by writing to each element's own style object. The app
+ * serves a strict `style-src 'self'` CSP that refuses injected <style> tags,
+ * so this is the path that works, not a fallback.
+ */
 const STABILIZE_IN_PAGE = () => {
   document.querySelectorAll("*").forEach((el) => {
     if (!el.style) return
@@ -112,20 +190,6 @@ const slug = (s) =>
     .replace(/^-|-$/g, "")
     .toLowerCase() || "home"
 
-async function settle(page) {
-  await page.waitForLoadState("networkidle").catch(() => {})
-  await page.evaluate(STABILIZE_IN_PAGE).catch(() => {})
-  const result = await page.evaluate(REDACT_IN_PAGE, REDACT).catch(() => ({ blurred: 0 }))
-  // Let the blur filters actually paint before the shutter fires.
-  await page.waitForTimeout(500)
-  return result
-}
-
-/**
- * Screenshots land as ~500KB PNGs, which is far too heavy for a portfolio page.
- * Convert to WebP when sharp is installed (roughly 15x smaller) and drop the
- * PNG; without sharp the PNG is kept so a run still produces something usable.
- */
 let sharp = null
 try {
   ;({ default: sharp } = await import("sharp"))
@@ -133,8 +197,27 @@ try {
   console.warn("sharp not installed — keeping full-size PNGs (`npm i sharp` to shrink them)\n")
 }
 
-async function shoot(page, name) {
-  const { blurred } = await settle(page)
+async function shoot(page, name, { anonymize = true } = {}) {
+  await page.waitForLoadState("networkidle").catch(() => {})
+  await page.evaluate(STABILIZE_IN_PAGE).catch(() => {})
+
+  let stats = { replaced: 0, blurred: 0 }
+  if (anonymize) {
+    stats = await page.evaluate(ANONYMIZE_IN_PAGE, ANONYMIZE).catch(() => stats)
+
+    // Refuse to write a file that still contains a real name.
+    const body = await page.innerText("body").catch(() => "")
+    const leaked = MUST_NOT_APPEAR.filter((real) => body.includes(real))
+    if (leaked.length) {
+      throw new Error(
+        `Real data survived substitution on "${name}": ${leaked.join(", ")}.\n` +
+          `Nothing was written. This usually means the text sits in a canvas, an <img>, or a shadow root.`,
+      )
+    }
+  }
+
+  await page.waitForTimeout(400)
+
   const png = path.join(OUT_DIR, `${name}.png`)
   await page.screenshot({ path: png })
 
@@ -147,22 +230,25 @@ async function shoot(page, name) {
   }
 
   const { size } = await stat(out)
-  console.log(`  ${path.relative(process.cwd(), out)} — ${Math.round(size / 1024)}KB, ${blurred} element(s) blurred`)
+  console.log(
+    `  ${path.relative(process.cwd(), out)} — ${Math.round(size / 1024)}KB, ` +
+      `${stats.replaced} substitution(s), ${stats.blurred} blurred`,
+  )
 }
 
 const browser = await chromium.launch({ channel: "msedge", headless: true })
 // The app serves a strict CSP; bypassing it in this throwaway automation
-// context is what lets the redaction styles apply at all.
+// context is what lets the blur styles apply at all.
 const context = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: 1, bypassCSP: true })
 const page = await context.newPage()
 
 try {
   await mkdir(OUT_DIR, { recursive: true })
 
-  // ---- Public landing / sign-in page (no credentials involved) ----
-  console.log("landing page")
+  // ---- Public sign-in page (no credentials, no real data on it) ----
+  console.log("sign-in page")
   await page.goto(`${ORIGIN}/`, { waitUntil: "networkidle", timeout: 45000 })
-  await shoot(page, "00-sign-in")
+  await shoot(page, "sign-in", { anonymize: false })
 
   // ---- Sign in ----
   console.log("signing in as", USER.replace(/(.).*(@.*)/, "$1***$2"))
@@ -179,32 +265,26 @@ try {
   }
   console.log("signed in ->", page.url())
 
-  // ---- Enumerate the app's own navigation and shoot each destination ----
-  const routes = await page.evaluate(() =>
-    [...new Set([...document.querySelectorAll("a[href*='#/']")].map((a) => "#" + a.getAttribute("href").split("#")[1]))].filter(
-      Boolean,
-    ),
+  // ---- Dashboard first, then everything else in the app's own navigation ----
+  const discovered = await page.evaluate(() =>
+    [
+      ...new Set(
+        [...document.querySelectorAll("a[href*='#/']")].map((a) => "#" + a.getAttribute("href").split("#")[1]),
+      ),
+    ].filter(Boolean),
   )
-  console.log("routes found:", routes.length ? routes.join(", ") : "(none — capturing current view only)")
+  const routes = ["#/dashboard", ...discovered.filter((r) => r !== "#/dashboard")]
+  console.log("routes:", routes.join(", "))
 
-  let i = 1
-  const seen = new Set()
-  for (const route of routes.length ? routes : [""]) {
-    const name = `${String(i).padStart(2, "0")}-${slug(route)}`
-    if (seen.has(name)) continue
-    seen.add(name)
-    console.log(route || "(current)")
-    if (route) {
-      await page.goto(`${ORIGIN}/${route}`, { waitUntil: "networkidle", timeout: 45000 }).catch(() => {})
-      await page.waitForTimeout(1200)
-    }
-    await shoot(page, name)
-    i++
+  for (const route of routes) {
+    console.log(route)
+    await page.goto(`${ORIGIN}/${route}`, { waitUntil: "networkidle", timeout: 45000 }).catch(() => {})
+    await page.waitForTimeout(1500)
+    await shoot(page, slug(route))
   }
 
-  const files = await readdir(OUT_DIR)
-  console.log(`\nDone. ${files.length} image(s) in img/rooc/`)
-  console.log("REVIEW EVERY IMAGE before committing — add missed selectors to REDACT and re-run.")
+  console.log("\nDone — files are named after their route, e.g. dashboard.webp.")
+  console.log("Review every image before committing; substitution only covers names you listed.")
 } finally {
   await context.close()
   await browser.close()

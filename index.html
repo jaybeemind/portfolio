@@ -86,7 +86,7 @@
 
     <link
       rel="stylesheet"
-      href="styles.css?v=20260811.2"
+      href="styles.css?v=20260811.3"
     />
 
     <!-- Marks that scripting is available, so the scroll-reveal styles may hide
@@ -253,23 +253,72 @@
                 <div class="case-step">
                   <p class="case-step-label">What I built</p>
                   <p>
-                    Auction runs where the rules are fixed before bidding opens, role-based access with a
-                    Super Admin tier that issues accounts (no self-signup), a managed reward catalog, and
-                    an append-only history covering every meaningful change. Deployed on Cloudflare
-                    Workers, so there's no server for a volunteer admin to keep alive.
+                    Auction runs that carry their rules from the moment they open and move through a fixed
+                    lifecycle — open, awaiting result, finalized — so an assignment stops being editable
+                    once it's settled. Around that: a roster with a capacity, a reward catalog tied to rank
+                    bands, role-based access from Super Admin down, and an append-only history of every
+                    meaningful change. On Cloudflare Workers, so there's no server for a volunteer admin
+                    to keep alive.
                   </p>
                 </div>
+              </div>
+
+              <!-- Figures whose image is missing hide themselves (see script.js), so
+                   shots not yet captured never render as broken images. -->
+              <div class="case-shots case-shots-lead">
+                <figure class="case-shot">
+                  <a
+                    href="img/rooc/dashboard.webp"
+                    class="case-shot-link"
+                    data-lightbox
+                  >
+                    <img
+                      src="img/rooc/dashboard.webp"
+                      alt="ROOC dashboard: roster, open auction runs and reward catalog totals across the top, a table of recent auction runs with their status, and panels for items needing attention and guild leadership."
+                      width="1280"
+                      height="800"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                  <figcaption>
+                    The dashboard opens on what's unresolved, not on totals — runs awaiting an official
+                    result are the thing that actually blocks a guild. Names and figures here are sample
+                    data.
+                  </figcaption>
+                </figure>
               </div>
 
               <div class="case-shots">
                 <figure class="case-shot">
                   <a
-                    href="img/rooc/00-sign-in.webp"
+                    href="img/rooc/auction-runs.webp"
                     class="case-shot-link"
                     data-lightbox
                   >
                     <img
-                      src="img/rooc/00-sign-in.webp"
+                      src="img/rooc/auction-runs.webp"
+                      alt="ROOC auction runs list, showing each run's date, rank band, status and reward count."
+                      width="1280"
+                      height="800"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                  <figcaption>
+                    A run moves from open, to awaiting result, to finalized. Once it's finalized the
+                    assignment is history rather than something an admin can quietly revise.
+                  </figcaption>
+                </figure>
+
+                <figure class="case-shot">
+                  <a
+                    href="img/rooc/sign-in.webp"
+                    class="case-shot-link"
+                    data-lightbox
+                  >
+                    <img
+                      src="img/rooc/sign-in.webp"
                       alt="ROOC sign-in screen, split between a product summary and a sign-in form headed 'Sign in to your guild'."
                       width="1280"
                       height="800"
@@ -282,7 +331,6 @@
                     join uninvited is what makes the audit trail worth anything.
                   </figcaption>
                 </figure>
-                <!-- More shots land here once tools/capture-rooc.mjs has run; see tools/README.md -->
               </div>
 
               <!-- METRIC SLOT: e.g. "N guilds / N members using it, disputes down from X per week to Y" -->
@@ -1068,7 +1116,7 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260811.2"></script>
+    <script src="script.js?v=20260811.3"></script>
   </body>
 
 </html>
