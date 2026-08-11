@@ -748,6 +748,21 @@
    * Progressive enhancement: the thumbnails are plain links to the full-size
    * image, so without JS (or without <dialog> support) clicking still works.
    */
+  /**
+   * Hide any figure whose screenshot isn't on disk yet, so a shot that hasn't
+   * been captured shows nothing rather than a broken image. Once the file
+   * exists the figure appears on its own, with no markup change needed.
+   */
+  qsa(".case-shot img").forEach((img) => {
+    const fail = () => {
+      const figure = img.closest(".case-shot")
+      if (figure) figure.hidden = true
+    }
+    // A cached failure can land before this handler is attached.
+    if (img.complete && img.naturalWidth === 0) fail()
+    img.addEventListener("error", fail)
+  })
+
   const lightbox = qs("#lightbox")
   const lightboxImage = qs("#lightbox-image")
   const lightboxClose = qs("#lightbox-close")
