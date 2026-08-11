@@ -1808,7 +1808,8 @@ button:focus-visible,
   min-width: 0;
 }
 
-.case-shot[hidden] {
+.case-shot[hidden],
+.case-shots[hidden] {
   display: none;
 }
 
