@@ -9,3 +9,9 @@ node_modules/
 # Credentials for tools/capture-rooc.mjs — never commit
 .env.local
 .env
+
+# Screenshot capture output is ignored by default; un-ignore each image
+# deliberately once it has been reviewed. A run that grabs a page listing real
+# members then cannot be swept in by `git add -A`.
+img/rooc/*
+!img/rooc/dashboard.webp
