@@ -47,22 +47,41 @@ real guild's size. Set it to `null` to keep the real numbers.
 
 ### Run
 
-Set the credentials in your own shell, then run it. They are read from the environment, passed
-straight into the page, and never written to disk or logged:
+Copy the template to the repo root and fill in the two values:
 
 ```bash
-ROOC_USER=you@example.com ROOC_PASS='your-password' node tools/capture-rooc.mjs
+copy tools\.env.local.example .env.local
 ```
 
-PowerShell:
+```
+ROOC_USER=you@example.com
+ROOC_PASS=your-password
+```
+
+`.env.local` is gitignored. Then:
+
+```bash
+node tools/capture-rooc.mjs
+```
+
+Environment variables work too and take precedence, but mind the shell — the bash form
+`ROOC_USER=… node …` is a **parse error in PowerShell**, and `$env:` vars set in one terminal
+don't reach a process started in another. That mismatch is the usual reason a run produces
+nothing. In PowerShell:
 
 ```powershell
 $env:ROOC_USER='you@example.com'; $env:ROOC_PASS='your-password'; node tools/capture-rooc.mjs
 ```
 
-It signs in, captures the dashboard first, then every other `#/route` in the app's own
-navigation. Files are named after their route — `dashboard.webp`, `auction-runs.webp`,
-`members.webp` — so the markup can reference them before they exist.
+Either way the credentials go straight into the page and are never logged — the sign-in line
+prints a masked address — and no session state is persisted.
+
+It captures the public sign-in page first (no credentials needed), then signs in, captures the
+dashboard, then every other `#/route` in the app's own navigation. Files are named after their
+route — `dashboard.webp`, `members.webp` — so markup can reference them before they exist.
+
+**If only `sign-in.webp` appears, sign-in failed.** That shot is captured before authentication,
+so it's the marker separating "the browser and output path work" from "the login didn't".
 
 ### The safety check
 

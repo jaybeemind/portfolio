@@ -2,3 +2,10 @@
 .claude/agents/
 .claude/skills/
 .agents/
+
+# Build-time tooling deps (tools/ only; the site itself ships no dependencies)
+node_modules/
+
+# Credentials for tools/capture-rooc.mjs — never commit
+.env.local
+.env

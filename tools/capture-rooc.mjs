@@ -20,24 +20,67 @@
  */
 
 import { chromium } from "playwright-core"
-import { mkdir, stat, unlink } from "node:fs/promises"
+import { mkdir, stat, unlink, readFile } from "node:fs/promises"
 import path from "node:path"
 
 const ORIGIN = "https://rooc-guild-management-web.jaybee-isip.workers.dev"
 const OUT_DIR = path.resolve("img/rooc")
+const ENV_FILE = path.resolve(".env.local")
 const VIEWPORT = { width: 1440, height: 900 }
 
-const USER = process.env.ROOC_USER
-const PASS = process.env.ROOC_PASS
+/**
+ * Credentials come from the environment, or from a gitignored .env.local.
+ *
+ * The file exists because getting shell syntax exactly right is the step that
+ * actually fails: bash's `VAR=x node …` prefix is not valid in PowerShell, and
+ * `$env:` vars set in one terminal don't reach a process started in another.
+ * A two-line file has nothing to get wrong.
+ */
+async function loadCredentials() {
+  if (process.env.ROOC_USER && process.env.ROOC_PASS) {
+    return { user: process.env.ROOC_USER, pass: process.env.ROOC_PASS, from: "environment" }
+  }
 
-if (!USER || !PASS) {
+  try {
+    const raw = await readFile(ENV_FILE, "utf8")
+    const vars = {}
+    raw.split(/\r?\n/).forEach((line) => {
+      const match = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*)\s*$/i)
+      if (!match) return
+      // Strip one layer of matching quotes, so both raw and quoted values work.
+      vars[match[1]] = match[2].replace(/^(['"])(.*)\1$/, "$2")
+    })
+    if (vars.ROOC_USER && vars.ROOC_PASS) {
+      return { user: vars.ROOC_USER, pass: vars.ROOC_PASS, from: ".env.local" }
+    }
+  } catch {
+    /* no .env.local — fall through to the instructions below */
+  }
+
+  return null
+}
+
+const creds = await loadCredentials()
+
+if (!creds) {
   console.error(
-    "Set ROOC_USER and ROOC_PASS in your environment first.\n" +
-      "  PowerShell:  $env:ROOC_USER='you@example.com'; $env:ROOC_PASS='...'\n" +
-      "  bash:        export ROOC_USER=you@example.com ROOC_PASS='...'",
+    "No credentials found.\n\n" +
+      "Easiest: copy tools/.env.local.example to .env.local in the repo root and\n" +
+      "fill in the two values. It is gitignored and never committed.\n\n" +
+      "  ROOC_USER=you@example.com\n" +
+      "  ROOC_PASS=your-password\n\n" +
+      "Then just:  node tools/capture-rooc.mjs\n\n" +
+      "Or set them in the environment instead — note the syntax differs by shell:\n" +
+      "  PowerShell:  $env:ROOC_USER='you@example.com'; $env:ROOC_PASS='...'; node tools/capture-rooc.mjs\n" +
+      "  bash:        ROOC_USER=you@example.com ROOC_PASS='...' node tools/capture-rooc.mjs\n" +
+      "(The bash form is a parse error in PowerShell — that is the usual cause of this message.)",
   )
   process.exit(1)
 }
+
+const USER = creds.user
+const PASS = creds.pass
+console.log(`credentials loaded from ${creds.from}\n`)
 
 /**
  * ── FILL THIS IN ──────────────────────────────────────────────────────────

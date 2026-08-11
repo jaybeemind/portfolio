@@ -1,0 +1,13 @@
+{
+  "name": "portfolio-tools",
+  "private": true,
+  "description": "Dev-only dependencies for tools/. The site itself (index.html, styles.css, script.js) ships no dependencies and has no build step.",
+  "type": "module",
+  "scripts": {
+    "capture:rooc": "node tools/capture-rooc.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "^1.62.1",
+    "sharp": "^0.35.3"
+  }
+}
