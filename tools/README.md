@@ -45,6 +45,35 @@ real guild's size. Set it to `null` to keep the real numbers.
 
 `ANONYMIZE.blur` still blurs avatar *imagery*, which can't be substituted.
 
+### ANONYMIZE.hideSections — prefer this for anything listing people
+
+Substitution has one failure mode, and it is not hypothetical: **a handle you didn't know about
+ships as real data.** The safety check can't catch it, because it only knows the names you gave
+it. A roster panel is exactly where that bites.
+
+`hideSections` removes a whole card, matched on its heading text:
+
+```js
+hideSections: ["Guild leadership"],
+```
+
+It walks up from the heading to the nearest ancestor that looks like a card — a background or a
+rounded corner — rather than guessing at generated class names. Everything inside goes, including
+names nobody enumerated. Use it for any panel that renders a list of people; it has no
+partial-failure mode.
+
+### What gets captured
+
+**The dashboard only, by default.** Pass `--all` to crawl every route in the app's navigation:
+
+```bash
+node tools/capture-rooc.mjs --all
+```
+
+Be deliberate about that. `--all` captures Members, Users, and the audit trail — the pages that
+exist *to list people*, and where substitution is least likely to be complete. The portfolio
+needs one screen; capturing eighteen just manufactures risk.
+
 ### Run
 
 Copy the template to the repo root and fill in the two values:

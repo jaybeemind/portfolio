@@ -96,11 +96,27 @@ const ANONYMIZE = {
   text: {
     // Guild identity
     Uncrowned: "Nightforge",
-    // Accounts and handles — extend this with every name on screen
+    // Accounts and handles — extend this with every name on screen.
+    // Substrings differ subtly: MachineGunPstr and MachineGunPtr are two
+    // distinct handles, and a map entry for one will not match the other.
     MachineGunPstr: "ShadowPike",
+    MachineGunPtr: "Rookwarden",
     Lansulot: "Valkyrra",
     COMATOZZE: "Ironmaw",
+    Basstonero: "Duskhollow",
+    Draco: "Emberfall",
+    Jennipepper: "Larkspur",
   },
+
+  /**
+   * Whole cards to remove before capture, matched on their heading text.
+   *
+   * Substitution needs every name listed up front, and a roster panel is where
+   * that assumption quietly fails — one handle you didn't know about ships as
+   * real data. Removing the panel outright has no such failure mode, so prefer
+   * it for anything that renders a list of people.
+   */
+  hideSections: ["Guild leadership"],
 
   /**
    * Roster figures. Optional — these aren't personal data, but they do reveal
@@ -124,7 +140,34 @@ const ANONYMIZE = {
 const MUST_NOT_APPEAR = Object.keys(ANONYMIZE.text)
 
 const ANONYMIZE_IN_PAGE = (config) => {
-  const { text, numbers, blur } = config
+  const { text, numbers, blur, hideSections } = config
+
+  /**
+   * Remove a whole card by its heading text. Walks up from the heading to the
+   * nearest ancestor that actually looks like a card — a background or a
+   * rounded corner — rather than guessing at class names, which this app
+   * generates and which change between builds.
+   */
+  let sectionsHidden = 0
+  ;(hideSections || []).forEach((heading) => {
+    const target = [...document.querySelectorAll("h1,h2,h3,h4,h5,h6,p,span,div")].find(
+      (el) => el.textContent.trim() === heading && el.children.length === 0,
+    )
+    if (!target) return
+
+    let card = target
+    for (let i = 0; i < 6 && card.parentElement; i++) {
+      card = card.parentElement
+      const cs = getComputedStyle(card)
+      const hasSurface =
+        (cs.backgroundColor && cs.backgroundColor !== "rgba(0, 0, 0, 0)" && cs.backgroundColor !== "transparent") ||
+        parseFloat(cs.borderRadius) > 0
+      // Stop before swallowing a page-level container.
+      if (hasSurface && card.getBoundingClientRect().width < document.body.clientWidth * 0.75) break
+    }
+    card.remove()
+    sectionsHidden++
+  })
   // Longest keys first: replacing "Lans" before "Lansulot" would corrupt it.
   const pairs = Object.entries({ ...text, ...(numbers || {}) }).sort((a, b) => b[0].length - a[0].length)
 
@@ -209,7 +252,7 @@ const ANONYMIZE_IN_PAGE = (config) => {
     }
   })
 
-  return { replaced, blurred }
+  return { replaced, blurred, sectionsHidden }
 }
 
 /**
@@ -244,7 +287,7 @@ async function shoot(page, name, { anonymize = true } = {}) {
   await page.waitForLoadState("networkidle").catch(() => {})
   await page.evaluate(STABILIZE_IN_PAGE).catch(() => {})
 
-  let stats = { replaced: 0, blurred: 0 }
+  let stats = { replaced: 0, blurred: 0, sectionsHidden: 0 }
   if (anonymize) {
     stats = await page.evaluate(ANONYMIZE_IN_PAGE, ANONYMIZE).catch(() => stats)
 
@@ -275,7 +318,8 @@ async function shoot(page, name, { anonymize = true } = {}) {
   const { size } = await stat(out)
   console.log(
     `  ${path.relative(process.cwd(), out)} — ${Math.round(size / 1024)}KB, ` +
-      `${stats.replaced} substitution(s), ${stats.blurred} blurred`,
+      `${stats.replaced} substitution(s), ${stats.blurred} blurred, ` +
+      `${stats.sectionsHidden} section(s) removed`,
   )
 }
 
@@ -308,15 +352,31 @@ try {
   }
   console.log("signed in ->", page.url())
 
-  // ---- Dashboard first, then everything else in the app's own navigation ----
-  const discovered = await page.evaluate(() =>
-    [
-      ...new Set(
-        [...document.querySelectorAll("a[href*='#/']")].map((a) => "#" + a.getAttribute("href").split("#")[1]),
-      ),
-    ].filter(Boolean),
-  )
-  const routes = ["#/dashboard", ...discovered.filter((r) => r !== "#/dashboard")]
+  /**
+   * The dashboard only, unless --all is passed.
+   *
+   * Crawling every route captures the pages that exist to list people —
+   * Members, Users, the audit trail — where substitution is least likely to
+   * be complete. The portfolio needs one screen, so capturing eighteen just
+   * manufactures risk. --all is there for when you want them, deliberately.
+   */
+  const CAPTURE_ALL = process.argv.includes("--all")
+  let routes = ["#/dashboard"]
+
+  if (CAPTURE_ALL) {
+    const discovered = await page.evaluate(() =>
+      [
+        ...new Set(
+          [...document.querySelectorAll("a[href*='#/']")].map((a) => "#" + a.getAttribute("href").split("#")[1]),
+        ),
+      ].filter(Boolean),
+    )
+    routes = [...routes, ...discovered.filter((r) => r !== "#/dashboard")]
+    console.warn(
+      "\n--all: capturing every route, including pages that list members.\n" +
+        "Substitution only covers names in ANONYMIZE.text. Review every image.\n",
+    )
+  }
   console.log("routes:", routes.join(", "))
 
   for (const route of routes) {
