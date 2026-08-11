@@ -86,7 +86,7 @@
 
     <link
       rel="stylesheet"
-      href="styles.css?v=20260811.1"
+      href="styles.css?v=20260811.2"
     />
 
     <!-- Marks that scripting is available, so the scroll-reveal styles may hide
@@ -259,6 +259,30 @@
                     Workers, so there's no server for a volunteer admin to keep alive.
                   </p>
                 </div>
+              </div>
+
+              <div class="case-shots">
+                <figure class="case-shot">
+                  <a
+                    href="img/rooc/00-sign-in.webp"
+                    class="case-shot-link"
+                    data-lightbox
+                  >
+                    <img
+                      src="img/rooc/00-sign-in.webp"
+                      alt="ROOC sign-in screen, split between a product summary and a sign-in form headed 'Sign in to your guild'."
+                      width="1280"
+                      height="800"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </a>
+                  <figcaption>
+                    Accounts are issued by a Super Admin — there is no self-signup. A roster you can't
+                    join uninvited is what makes the audit trail worth anything.
+                  </figcaption>
+                </figure>
+                <!-- More shots land here once tools/capture-rooc.mjs has run; see tools/README.md -->
               </div>
 
               <!-- METRIC SLOT: e.g. "N guilds / N members using it, disputes down from X per week to Y" -->
@@ -1014,6 +1038,27 @@
 
     </main>
 
+    <!-- Screenshot lightbox. Without JS the thumbnails stay plain links to the
+         full-size image, so nothing depends on this dialog existing. -->
+    <dialog
+      class="lightbox"
+      id="lightbox"
+      aria-label="Screenshot viewer"
+    >
+      <img
+        class="lightbox-image"
+        id="lightbox-image"
+        src=""
+        alt=""
+      />
+      <button
+        class="lightbox-close"
+        id="lightbox-close"
+        type="button"
+        aria-label="Close screenshot"
+      >&times;</button>
+    </dialog>
+
     <!-- ===================== FOOTER ===================== -->
     <footer class="footer">
       <div class="footer-container">
@@ -1023,7 +1068,7 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260811.1"></script>
+    <script src="script.js?v=20260811.2"></script>
   </body>
 
 </html>
