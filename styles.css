@@ -387,6 +387,7 @@ svg {
 .code-var     { color: #79c0ff; }
 .code-prop    { color: #7ee787; }
 .code-string  { color: #a5d6ff; }
+.code-comment { color: #8b949e; font-style: italic; }
 
 /* ---------------------- ABOUT ---------------------- */
 .about {
@@ -1786,6 +1787,98 @@ button:focus-visible,
 
 .case .project-tech {
   margin-top: 1.25rem;
+}
+
+/* ---------------------- CASE SCREENSHOTS ---------------------- */
+.case-shots {
+  display: grid;
+  /* min() keeps the track from forcing overflow on narrow phones, where the
+     available width drops below the 320px floor. */
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.case-shot {
+  min-width: 0;
+}
+
+.case-shot-link {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-bg);
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.case-shot-link:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+  opacity: 1;
+}
+
+.case-shot-link img {
+  width: 100%;
+  height: auto;
+}
+
+.case-shot figcaption {
+  margin-top: 0.7rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+/* ---------------------- LIGHTBOX ---------------------- */
+.lightbox {
+  width: min(96vw, 1280px);
+  max-width: none;
+  max-height: 92vh;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+  overflow: visible;
+}
+
+.lightbox::backdrop {
+  background: rgba(1, 4, 9, 0.82);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.lightbox-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 92vh;
+  object-fit: contain;
+  border-radius: 11px;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -0.85rem;
+  right: -0.85rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  background: var(--color-bg-alt);
+  color: var(--color-heading);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.lightbox-close:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 /* ---------------------- APPROACH ---------------------- */

@@ -743,6 +743,42 @@
     return { remeasure: updateSceneMetrics }
   }
 
+  // ---------------------- Screenshot lightbox ----------------------
+  /**
+   * Progressive enhancement: the thumbnails are plain links to the full-size
+   * image, so without JS (or without <dialog> support) clicking still works.
+   */
+  const lightbox = qs("#lightbox")
+  const lightboxImage = qs("#lightbox-image")
+  const lightboxClose = qs("#lightbox-close")
+
+  if (lightbox && lightboxImage && typeof lightbox.showModal === "function") {
+    qsa("[data-lightbox]").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault()
+        const full = link.getAttribute("href")
+        const thumb = qs("img", link)
+        lightboxImage.src = full
+        lightboxImage.alt = thumb ? thumb.alt : ""
+        lightbox.showModal()
+      })
+    })
+
+    if (lightboxClose) lightboxClose.addEventListener("click", () => lightbox.close())
+
+    // Clicking the backdrop (i.e. outside the image) closes it too.
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) lightbox.close()
+    })
+
+    // Drop the source on close so a reopened lightbox never flashes the previous
+    // shot. removeAttribute, not src = "" — an empty src resolves to the page URL
+    // and makes the browser refetch the document as an image.
+    lightbox.addEventListener("close", () => {
+      lightboxImage.removeAttribute("src")
+    })
+  }
+
   // ---------------------- Experience: game toggle ----------------------
   const gameToggle = qs("#game-toggle")
   const gameWrap = qs("#experience-game")
