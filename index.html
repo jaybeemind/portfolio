@@ -9,9 +9,35 @@
     />
     <meta
       name="description"
-      content="John Berlyn Isip (JB) is a senior full-stack developer building maintainable internal systems, APIs, dashboards, automation, and AI-assisted business tools."
+      content="John Berlyn Isip (JB) — senior full-stack developer with 12+ years turning messy operational problems into systems people actually use. Internal tools, APIs, real-time dashboards, migrations, and AI-assisted delivery."
     />
-    <title>John Berlyn Isip (JB) | Senior Full-Stack Developer</title>
+    <title>John Berlyn Isip (JB) | Senior Full-Stack Developer &amp; Problem Solver</title>
+    <!-- TODO(JB): set these to the real deployed origin, then uncomment.
+         Social scrapers need absolute URLs, and a canonical pointing at the
+         wrong origin is worse than none at all.
+    <link rel="canonical" href="https://YOUR-DOMAIN/" />
+    <meta property="og:url" content="https://YOUR-DOMAIN/" />
+    <meta property="og:image" content="https://YOUR-DOMAIN/android-chrome-512x512.png" />
+    -->
+
+    <!-- Social preview -->
+    <meta
+      property="og:type"
+      content="website"
+    />
+    <meta
+      property="og:title"
+      content="John Berlyn Isip (JB) | Senior Full-Stack Developer"
+    />
+    <meta
+      property="og:description"
+      content="12+ years turning messy operational problems into systems people actually use — internal tools, real-time dashboards, migrations, and AI-assisted delivery."
+    />
+    <meta
+      name="twitter:card"
+      content="summary"
+    />
+
     <link
       rel="icon"
       href="favicon.ico"
@@ -60,11 +86,20 @@
 
     <link
       rel="stylesheet"
-      href="styles.css?v=20260708.2"
+      href="styles.css?v=20260811.1"
     />
+
+    <!-- Marks that scripting is available, so the scroll-reveal styles may hide
+         content. Runs before first paint to avoid a flash of visible content. -->
+    <script>document.documentElement.classList.add("js")</script>
   </head>
 
   <body>
+
+    <a
+      href="#work"
+      class="skip-link"
+    >Skip to main content</a>
 
     <!-- ===================== NAVIGATION ===================== -->
     <header
@@ -91,33 +126,29 @@
           id="nav-links"
         >
           <li><a
-              href="#about"
+              href="#work"
               class="nav-link"
-            >About</a></li>
+            >Work</a></li>
           <li><a
-              href="#what-i-do"
+              href="#approach"
               class="nav-link"
-            >What I Do</a></li>
+            >Approach</a></li>
           <li><a
-              href="#skills"
+              href="#ai"
               class="nav-link"
-            >Skills</a></li>
-          <li><a
-              href="#growth"
-              class="nav-link"
-            >Growth</a></li>
+            >AI</a></li>
           <li><a
               href="#experience"
               class="nav-link"
             >Experience</a></li>
           <li><a
-              href="#community-leadership"
+              href="#skills"
               class="nav-link"
-            >Community</a></li>
+            >Skills</a></li>
           <li><a
-              href="#projects"
+              href="#about"
               class="nav-link"
-            >Projects</a></li>
+            >About</a></li>
           <li><a
               href="#contact"
               class="nav-link"
@@ -135,381 +166,497 @@
       >
         <div class="hero-content">
           <p class="hero-greeting reveal">Hi, I'm John Berlyn Isip — JB.</p>
-          <h1 class="hero-name reveal">Senior Full-Stack Developer</h1>
-          <h2 class="hero-title reveal">
-            Building practical systems for automation, internal operations, and business productivity.
-          </h2>
+          <h1 class="hero-name reveal">I work out why the job is hard, then build the thing that fixes it.</h1>
+          <p class="hero-title reveal">
+            Senior full-stack developer · 12+ years · Philippines
+          </p>
           <p class="hero-intro reveal">
-            I design and build maintainable web applications, internal tools, APIs,
-            dashboards, and automation workflows that help teams work faster and make better decisions.
+            Almost everything I've shipped started as somebody's spreadsheet, a manual hand-off nobody
+            wanted to own, or two systems that refused to talk to each other. I dig until I find the
+            constraint that's actually causing the pain, then build the smallest durable system that
+            removes it — backend, frontend, data, and the automation in between.
           </p>
           <div class="hero-cta reveal">
             <a
-              href="#projects"
+              href="#work"
               class="btn btn-primary"
-            >View Projects</a>
+            >See problems I've solved</a>
             <a
               href="#contact"
               class="btn btn-outline"
-            >Contact Me</a>
+            >Contact me</a>
           </div>
         </div>
         <!-- Decorative code snippet -->
         <div class="hero-code reveal">
-          <pre><code><span class="code-keyword">const</span> <span class="code-var">developer</span> = {
-  <span class="code-prop">name</span>: <span class="code-string">'JB'</span>,
-  <span class="code-prop">role</span>: <span class="code-string">'Senior Full-Stack Developer'</span>,
-  <span class="code-prop">focus</span>: [<span class="code-string">'Internal tools'</span>, <span class="code-string">'Automation'</span>, <span class="code-string">'APIs'</span>],
-  <span class="code-prop">availability</span>: <span class="code-string">'Contract / Part-time'</span>
-};</code></pre>
+          <pre><code><span class="code-keyword">function</span> <span class="code-var">solve</span>(problem) {
+  <span class="code-keyword">const</span> real = <span class="code-var">traceToConstraint</span>(problem);
+  <span class="code-comment">// the ticket is rarely the problem</span>
+
+  <span class="code-keyword">return</span> build({
+    <span class="code-prop">scope</span>:   <span class="code-string">'smallest thing that holds'</span>,
+    <span class="code-prop">owner</span>:   <span class="code-string">'the team, not me'</span>,
+    <span class="code-prop">horizon</span>: <span class="code-string">'still true in 3 years'</span>
+  }, real);
+}</code></pre>
         </div>
       </section>
 
-      <!-- ===================== ABOUT ===================== -->
+      <!-- ===================== SELECTED WORK ===================== -->
       <section
-        id="about"
-        class="about section"
+        id="work"
+        class="work section"
       >
         <div class="section-container">
-          <h2 class="section-title reveal">About <span class="accent">Me</span></h2>
-          <div class="about-grid">
-            <div class="about-text reveal">
-              <p>
-                I'm a senior full-stack developer from the Philippines with over
-                <strong>12 years of experience</strong> building real-world business applications
-                across backend, frontend, databases, and automation workflows.
-              </p>
-              <p>
-                My strongest work is in <strong>practical business systems</strong>: internal tools,
-                process automation, API-driven platforms, dashboards, integrations, and
-                database-backed applications that reflect how teams actually operate.
-              </p>
-              <p>
-                I work across the stack, with particular strength in <strong>backend development</strong>
-                and <strong>process improvement</strong>. My goal is straightforward: build software
-                that is useful, maintainable, and aligned with real business needs—including
-                thoughtful AI-assisted tools where they genuinely improve the work.
-              </p>
-            </div>
-            <div class="about-stats reveal">
-              <div class="stat-card">
-                <span class="stat-number">12+</span>
-                <span class="stat-label">Years Experience</span>
+          <h2 class="section-title reveal">Problems I've <span class="accent">Solved</span></h2>
+          <p class="section-intro reveal">
+            Five systems, each written up the way I actually think about them: what was broken, what
+            the real constraint turned out to be, and what I built once I knew the difference.
+          </p>
+
+          <div class="case-grid">
+
+            <!-- ---------- ROOC ---------- -->
+            <article class="case reveal">
+              <header class="case-header">
+                <div class="case-heading">
+                  <p class="case-eyebrow">Side project · Live</p>
+                  <h3 class="case-title">ROOC Guild Management</h3>
+                </div>
+                <a
+                  class="case-live"
+                  href="https://rooc-guild-management-web.jaybee-isip.workers.dev/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >Visit the app <span aria-hidden="true">↗</span></a>
+              </header>
+
+              <div class="case-body">
+                <div class="case-step">
+                  <p class="case-step-label">The problem</p>
+                  <p>
+                    A game guild was running loot auctions, member rosters, and reward payouts out of
+                    chat threads and a shared spreadsheet. Every contested item turned into an argument
+                    nobody could settle, because there was no record of who changed what, or which rule
+                    was in force when the change happened.
+                  </p>
+                </div>
+                <div class="case-step case-step-key">
+                  <p class="case-step-label">The real constraint</p>
+                  <p>
+                    It looked like a tracking problem. It was a <strong>trust</strong> problem. A tool
+                    that let an administrator quietly edit history would have been abandoned inside a
+                    week — so the audit trail wasn't a feature to add later, it was the thing the whole
+                    design had to be built around.
+                  </p>
+                </div>
+                <div class="case-step">
+                  <p class="case-step-label">What I built</p>
+                  <p>
+                    Auction runs where the rules are fixed before bidding opens, role-based access with a
+                    Super Admin tier that issues accounts (no self-signup), a managed reward catalog, and
+                    an append-only history covering every meaningful change. Deployed on Cloudflare
+                    Workers, so there's no server for a volunteer admin to keep alive.
+                  </p>
+                </div>
               </div>
-              <div class="stat-card">
-                <span class="stat-number">End-to-End</span>
-                <span class="stat-label">Full-Stack Delivery</span>
+
+              <!-- METRIC SLOT: e.g. "N guilds / N members using it, disputes down from X per week to Y" -->
+              <p class="case-outcome">
+                <span class="case-outcome-label">Outcome</span>
+                Contested assignments now get settled by pointing at the log instead of re-arguing them.
+                Onboarding an officer is one role change rather than a conversation about who to trust
+                with the spreadsheet.
+              </p>
+
+              <div class="project-tech">
+                <span class="tech-tag">Cloudflare Workers</span>
+                <span class="tech-tag">SPA</span>
+                <span class="tech-tag">Role-based access</span>
+                <span class="tech-tag">Append-only audit log</span>
+                <span class="tech-tag">AI-assisted build</span>
               </div>
-              <div class="stat-card">
-                <span class="stat-number">Business-First</span>
-                <span class="stat-label">Practical Engineering</span>
+            </article>
+
+            <!-- ---------- REAL-TIME DASHBOARD ---------- -->
+            <article class="case reveal">
+              <header class="case-header">
+                <div class="case-heading">
+                  <p class="case-eyebrow">Energy · National Grid Corporation of the Philippines</p>
+                  <h3 class="case-title">Real-time grid &amp; market operations dashboard</h3>
+                </div>
+              </header>
+
+              <div class="case-body">
+                <div class="case-step">
+                  <p class="case-step-label">The problem</p>
+                  <p>
+                    Operators were reconciling SCADA telemetry against the electricity market's
+                    five-minute settlement intervals by hand — reading raw feeds in one place, market
+                    figures in another, and holding the comparison in their heads while decisions were
+                    already due.
+                  </p>
+                </div>
+                <div class="case-step case-step-key">
+                  <p class="case-step-label">The real constraint</p>
+                  <p>
+                    The data arrives on the market's clock, not the user's. A dashboard that's even a
+                    minute stale is <em>worse</em> than no dashboard, because people quietly stop trusting
+                    it and go back to the raw feed. Freshness wasn't a performance target — it was the
+                    acceptance criterion.
+                  </p>
+                </div>
+                <div class="case-step">
+                  <p class="case-step-label">What I built</p>
+                  <p>
+                    I led Project Sentinel and the 5-Minute Real-Time Dashboard: an aggregation layer that
+                    pulls SCADA and market data onto the settlement interval, and a front end that shows
+                    the current interval, its inputs, and how stale each number is — so an operator can
+                    tell at a glance whether to trust what they're looking at.
+                  </p>
+                </div>
               </div>
-            </div>
+
+              <!-- METRIC SLOT: e.g. "replaced an N-minute manual check per interval" / "N operators, N intervals a day" -->
+              <p class="case-outcome">
+                <span class="case-outcome-label">Outcome</span>
+                The manual cross-check disappeared from the operators' interval routine, and the
+                dashboard became the reference both operations and market interface teams worked from.
+              </p>
+
+              <div class="project-tech">
+                <span class="tech-tag">Laravel</span>
+                <span class="tech-tag">Vue.js 2</span>
+                <span class="tech-tag">Node.js</span>
+                <span class="tech-tag">Oracle DB</span>
+                <span class="tech-tag">MongoDB</span>
+                <span class="tech-tag">SCADA</span>
+              </div>
+            </article>
+
+            <!-- ---------- SSO ---------- -->
+            <article class="case reveal">
+              <header class="case-header">
+                <div class="case-heading">
+                  <p class="case-eyebrow">Enterprise identity · NGCP</p>
+                  <h3 class="case-title">Single sign-on across a fleet of internal apps</h3>
+                </div>
+              </header>
+
+              <div class="case-body">
+                <div class="case-step">
+                  <p class="case-step-label">The problem</p>
+                  <p>
+                    Years of internal micro-apps had accumulated, each with its own login screen and its
+                    own user table. Onboarding somebody meant touching every app; offboarding meant
+                    remembering to. Nobody could answer the audit question — <em>who still has access to
+                      what?</em>
+                  </p>
+                </div>
+                <div class="case-step case-step-key">
+                  <p class="case-step-label">The real constraint</p>
+                  <p>
+                    A clean rewrite was never on the table. The apps were live, owned by different teams,
+                    and written across different stacks and eras. So the design had to let apps migrate
+                    <strong>one at a time, on their owner's schedule</strong>, with the old login still
+                    working the day before they switched.
+                  </p>
+                </div>
+                <div class="case-step">
+                  <p class="case-step-label">What I built</p>
+                  <p>
+                    A central sign-on service the apps could adopt incrementally, plus the Market Data
+                    Interchange that moved data between systems on the same identity model — so access
+                    questions and data-flow questions finally had one answer each instead of a dozen.
+                  </p>
+                </div>
+              </div>
+
+              <!-- METRIC SLOT: e.g. "N apps migrated over N months, N users consolidated" -->
+              <p class="case-outcome">
+                <span class="case-outcome-label">Outcome</span>
+                Access became a single revocable thing per person rather than a scavenger hunt across
+                apps, and new internal tools started from an identity layer instead of building another
+                login.
+              </p>
+
+              <div class="project-tech">
+                <span class="tech-tag">Laravel</span>
+                <span class="tech-tag">Node.js</span>
+                <span class="tech-tag">Vue.js</span>
+                <span class="tech-tag">Oracle DB</span>
+                <span class="tech-tag">MongoDB</span>
+                <span class="tech-tag">SSO</span>
+              </div>
+            </article>
+
+            <!-- ---------- MIGRATION ---------- -->
+            <article class="case reveal">
+              <header class="case-header">
+                <div class="case-heading">
+                  <p class="case-eyebrow">Data platform · Legacy modernization</p>
+                  <h3 class="case-title">Getting business systems off aging Oracle</h3>
+                </div>
+              </header>
+
+              <div class="case-body">
+                <div class="case-step">
+                  <p class="case-step-label">The problem</p>
+                  <p>
+                    Core business data sat in an aging Oracle estate carrying licence cost and a shrinking
+                    pool of people who understood it. Everyone agreed it should move. Nobody wanted to be
+                    the one who moved it.
+                  </p>
+                </div>
+                <div class="case-step case-step-key">
+                  <p class="case-step-label">The real constraint</p>
+                  <p>
+                    The business doesn't pause while you migrate, and a cutover that silently loses a
+                    day of records is a failed cutover even if every row copied. The hard requirement
+                    wasn't the transform — it was being able to <strong>prove</strong> the new database
+                    matched the old one before anybody committed to it.
+                  </p>
+                </div>
+                <div class="case-step">
+                  <p class="case-step-label">What I built</p>
+                  <p>
+                    A migration pipeline that transformed legacy Oracle structures into a PostgreSQL model
+                    and reconciled the result — counts, keys, and business totals — so the two systems
+                    could run side by side and disagreements surfaced as findings instead of as
+                    production incidents after the switch.
+                  </p>
+                </div>
+              </div>
+
+              <!-- METRIC SLOT: e.g. "N tables / N million rows migrated, N hours of downtime at cutover" -->
+              <p class="case-outcome">
+                <span class="case-outcome-label">Outcome</span>
+                The migration became a reviewable, repeatable process rather than a single high-stakes
+                weekend, which is what made it safe enough to actually do.
+              </p>
+
+              <div class="project-tech">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Oracle</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">Node.js</span>
+                <span class="tech-tag">ETL &amp; reconciliation</span>
+              </div>
+            </article>
+
+            <!-- ---------- COMTRAC ---------- -->
+            <article class="case reveal">
+              <header class="case-header">
+                <div class="case-heading">
+                  <p class="case-eyebrow">Investigation software · Comtrac, via GoTeam</p>
+                  <h3 class="case-title">A casework platform where the audit trail <em>is</em> the product</h3>
+                </div>
+              </header>
+
+              <div class="case-body">
+                <div class="case-step">
+                  <p class="case-step-label">The problem</p>
+                  <p>
+                    An investigation management platform where evidence handling has to stand up to
+                    scrutiny later: who saw what, when, and what changed. Casework is written slowly and
+                    carefully, but read constantly, from many angles, by people who need an answer now.
+                  </p>
+                </div>
+                <div class="case-step case-step-key">
+                  <p class="case-step-label">The real constraint</p>
+                  <p>
+                    Reads and writes had almost nothing in common. Writes needed to be strict, validated,
+                    and permanently recorded; reads needed to be fast and shaped around whatever question
+                    an investigator was asking. Forcing both through one model was making each of them
+                    worse.
+                  </p>
+                </div>
+                <div class="case-step">
+                  <p class="case-step-label">What I built</p>
+                  <p>
+                    I worked on the platform's move toward a CQRS architecture — separating the
+                    write path from purpose-built read models — and delivered features against it in
+                    Vue 3 and .NET, alongside the ongoing maintenance the product needed to stay stable
+                    for live investigations.
+                  </p>
+                </div>
+              </div>
+
+              <!-- METRIC SLOT: e.g. "N features delivered, read latency before/after" -->
+              <p class="case-outcome">
+                <span class="case-outcome-label">Outcome</span>
+                Query-shaped features stopped forcing changes to the write model, so new views could be
+                added without putting the integrity of existing case records at risk.
+              </p>
+
+              <div class="project-tech">
+                <span class="tech-tag">Vue.js 3</span>
+                <span class="tech-tag">Composition API</span>
+                <span class="tech-tag">C# / .NET</span>
+                <span class="tech-tag">CQRS</span>
+                <span class="tech-tag">Azure</span>
+                <span class="tech-tag">CI/CD</span>
+              </div>
+            </article>
+
           </div>
         </div>
       </section>
 
-      <!-- ===================== WHAT I DO ===================== -->
+      <!-- ===================== APPROACH ===================== -->
       <section
-        id="what-i-do"
-        class="what-i-do section"
+        id="approach"
+        class="approach section"
       >
         <div class="section-container">
-          <h2 class="section-title reveal">What I <span class="accent">Do</span></h2>
+          <h2 class="section-title reveal">How I <span class="accent">Work a Problem</span></h2>
           <p class="section-intro reveal">
-            I help teams replace manual work and disconnected data with maintainable
-            applications, automation, and integrations built around real operations.
+            The pattern under every case study above. It's not a methodology I'm selling — it's just
+            what stops me building the wrong thing well.
           </p>
-          <div class="what-i-do-grid">
-            <article class="what-i-do-card what-i-do-card-workflow reveal">
-              <div class="what-i-do-service-card">
-                <div class="what-i-do-copy">
-                  <p class="what-i-do-eyebrow">Process Improvement</p>
-                  <h3 class="what-i-do-title">Turn manual workflows into dependable automation</h3>
-                  <p class="what-i-do-description">
-                    I map how work moves through a team, then build automation with clear rules,
-                    approval points, notifications, and traceable outcomes.
-                  </p>
+
+          <div class="approach-flow reveal">
+            <div
+              class="service-flow"
+              role="img"
+              aria-label="Problem-solving method in four steps: observe the actual work, find the binding constraint, build the smallest system that holds, then make it survivable without me."
+            >
+              <div class="flow-steps flow-steps-4">
+                <div class="flow-step">
+                  <span class="flow-index">01</span>
+                  <span class="flow-label">Observe</span>
+                  <strong>The actual work</strong>
                 </div>
-                <div
-                  class="service-flow service-flow-automation"
-                  role="img"
-                  aria-label="Automation flow: capture a request, apply business rules and approvals, then complete and record the action."
-                >
-                  <div class="flow-steps">
-                    <div class="flow-step">
-                      <span class="flow-index">01</span>
-                      <span class="flow-label">Input</span>
-                      <strong>Request or event</strong>
-                    </div>
-                    <div class="flow-step flow-step-core">
-                      <span class="flow-index">02</span>
-                      <span class="flow-label">Process</span>
-                      <strong>Rules &amp; approvals</strong>
-                    </div>
-                    <div class="flow-step">
-                      <span class="flow-index">03</span>
-                      <span class="flow-label">Outcome</span>
-                      <strong>Action &amp; audit trail</strong>
-                    </div>
-                  </div>
-                  <div class="flow-capabilities">
-                    <span>Forms</span><span>Notifications</span><span>Background jobs</span>
-                  </div>
+                <div class="flow-step flow-step-core">
+                  <span class="flow-index">02</span>
+                  <span class="flow-label">Isolate</span>
+                  <strong>The binding constraint</strong>
+                </div>
+                <div class="flow-step">
+                  <span class="flow-index">03</span>
+                  <span class="flow-label">Build</span>
+                  <strong>Smallest thing that holds</strong>
+                </div>
+                <div class="flow-step">
+                  <span class="flow-index">04</span>
+                  <span class="flow-label">Harden</span>
+                  <strong>Survivable without me</strong>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div class="approach-grid">
+            <article class="approach-card reveal">
+              <p class="approach-index">01</p>
+              <h3>Watch the work, not the ticket</h3>
+              <p>
+                The request is a symptom someone already interpreted for me. I go and see how the work
+                actually moves — including the workaround people invented and stopped mentioning, which
+                is usually where the real requirement is hiding.
+              </p>
             </article>
-            <article class="what-i-do-card what-i-do-card-apps reveal">
-              <div class="what-i-do-service-card">
-                <div class="what-i-do-copy">
-                  <p class="what-i-do-eyebrow">Internal Systems</p>
-                  <h3 class="what-i-do-title">Build tools around real business operations</h3>
-                  <p class="what-i-do-description">
-                    I design and deliver admin systems, dashboards, and database-backed applications
-                    that make day-to-day work clearer, faster, and easier to maintain.
-                  </p>
-                </div>
-                <div
-                  class="service-flow service-flow-apps"
-                  role="img"
-                  aria-label="Application delivery flow: understand the workflow, build the application and data foundation, then support clearer operations."
-                >
-                  <div class="flow-steps">
-                    <div class="flow-step">
-                      <span class="flow-index">01</span>
-                      <span class="flow-label">Discover</span>
-                      <strong>Workflow &amp; users</strong>
-                    </div>
-                    <div class="flow-step flow-step-core">
-                      <span class="flow-index">02</span>
-                      <span class="flow-label">Build</span>
-                      <strong>App, API &amp; data</strong>
-                    </div>
-                    <div class="flow-step">
-                      <span class="flow-index">03</span>
-                      <span class="flow-label">Improve</span>
-                      <strong>Clearer operations</strong>
-                    </div>
-                  </div>
-                  <div class="flow-capabilities">
-                    <span>Admin tools</span><span>Dashboards</span><span>Business rules</span>
-                  </div>
-                </div>
-              </div>
+            <article class="approach-card approach-card-key reveal">
+              <p class="approach-index">02</p>
+              <h3>Find the one thing that's binding</h3>
+              <p>
+                Most problems have one constraint doing the damage and a crowd of symptoms around it.
+                Trust, freshness, an unmovable legacy system, a schedule I don't control. Naming it
+                changes what's worth building — and rules out most of the obvious answers.
+              </p>
             </article>
-            <article class="what-i-do-card what-i-do-card-ai reveal">
-              <div class="what-i-do-service-card">
-                <div class="what-i-do-copy">
-                  <p class="what-i-do-eyebrow">Practical AI</p>
-                  <h3 class="what-i-do-title">Add AI where it meaningfully improves the work</h3>
-                  <p class="what-i-do-description">
-                    I integrate AI into existing products and workflows for tasks such as classification,
-                    drafting, lookup, and decision support—with context, guardrails, and human review.
-                  </p>
-                </div>
-                <div
-                  class="service-flow service-flow-ai"
-                  role="img"
-                  aria-label="AI-assisted workflow: define the business task and context, add a guarded AI capability, then provide a reviewable result."
-                >
-                  <div class="flow-steps">
-                    <div class="flow-step">
-                      <span class="flow-index">01</span>
-                      <span class="flow-label">Ground</span>
-                      <strong>Task &amp; context</strong>
-                    </div>
-                    <div class="flow-step flow-step-core">
-                      <span class="flow-index">02</span>
-                      <span class="flow-label">Assist</span>
-                      <strong>Guarded AI workflow</strong>
-                    </div>
-                    <div class="flow-step">
-                      <span class="flow-index">03</span>
-                      <span class="flow-label">Review</span>
-                      <strong>Useful, checked output</strong>
-                    </div>
-                  </div>
-                  <div class="flow-capabilities">
-                    <span>Business context</span><span>Guardrails</span><span>Human review</span>
-                  </div>
-                </div>
-              </div>
+            <article class="approach-card reveal">
+              <p class="approach-index">03</p>
+              <h3>Build the smallest thing that holds</h3>
+              <p>
+                Something real, in front of the people doing the job, early. Not a prototype I throw
+                away — the actual first version, narrow on purpose. Being wrong in week two is cheap;
+                being wrong at launch is not.
+              </p>
             </article>
-            <article class="what-i-do-card what-i-do-card-integration reveal">
-              <div class="what-i-do-service-card">
-                <div class="what-i-do-copy">
-                  <p class="what-i-do-eyebrow">APIs &amp; Data</p>
-                  <h3 class="what-i-do-title">Connect systems and keep data trustworthy</h3>
-                  <p class="what-i-do-description">
-                    I build APIs and integration flows that move data reliably between business systems,
-                    reduce duplicate encoding, and support consistent reporting.
-                  </p>
-                </div>
-                <div
-                  class="service-flow service-flow-integration"
-                  role="img"
-                  aria-label="Integration flow: receive data from business systems, validate and map it through APIs, then deliver trusted reporting and automation."
-                >
-                  <div class="flow-steps">
-                    <div class="flow-step">
-                      <span class="flow-index">01</span>
-                      <span class="flow-label">Source</span>
-                      <strong>Business systems</strong>
-                    </div>
-                    <div class="flow-step flow-step-core">
-                      <span class="flow-index">02</span>
-                      <span class="flow-label">Connect</span>
-                      <strong>Validate, map &amp; sync</strong>
-                    </div>
-                    <div class="flow-step">
-                      <span class="flow-index">03</span>
-                      <span class="flow-label">Use</span>
-                      <strong>Reports &amp; automation</strong>
-                    </div>
-                  </div>
-                  <div class="flow-capabilities">
-                    <span>REST APIs</span><span>Webhooks</span><span>Data mapping</span>
-                  </div>
-                </div>
-              </div>
+            <article class="approach-card reveal">
+              <p class="approach-index">04</p>
+              <h3>Make it survivable without me</h3>
+              <p>
+                A system that only I can operate isn't finished. Clear boundaries, tests around the
+                business rules that actually matter, repeatable deployment, and enough logging that the
+                next person can answer "what happened?" without calling me.
+              </p>
             </article>
+          </div>
+
+          <div class="tradeoffs reveal">
+            <h3 class="tradeoffs-title">Opinions I'll defend in review</h3>
+            <ul class="tradeoffs-list">
+              <li><strong>Boring beats clever.</strong> The team inherits my cleverness, and they inherit
+                it at 2am.</li>
+              <li><strong>A modular monolith until proven otherwise.</strong> Most systems that "need
+                microservices" need clearer boundaries, which is cheaper to get inside one deployable.</li>
+              <li><strong>Data outlives code.</strong> I'll spend an extra day on the schema and take it
+                back tenfold; a bad model is still there three rewrites later.</li>
+              <li><strong>If nobody can tell it broke, it's already broken.</strong> Observability isn't
+                a phase-two item on anything that touches operations.</li>
+            </ul>
           </div>
         </div>
       </section>
 
-      <!-- ===================== SKILLS ===================== -->
+      <!-- ===================== AI-ASSISTED DEVELOPMENT ===================== -->
       <section
-        id="skills"
-        class="skills section"
+        id="ai"
+        class="ai-practice section"
       >
         <div class="section-container">
-          <h2 class="section-title reveal">Skills &amp; <span class="accent">Tools</span></h2>
+          <h2 class="section-title reveal">AI-Assisted <span class="accent">Development</span></h2>
           <p class="section-intro reveal">
-            A practical toolkit for delivering business applications from interface to database,
-            integration, and deployment.
+            I've been building with AI in the loop daily since it became genuinely useful — n8n for
+            workflow automation, GitHub Copilot and Claude Code in the editor. I'm deliberate about
+            where it helps and where it quietly costs you.
           </p>
-          <div class="skills-grid">
 
-            <div class="skill-category reveal">
-              <h3 class="skill-category-title">
-                <span class="skill-icon">🎨</span> Frontend &amp; Mobile
-              </h3>
-              <ul class="skill-list">
-                <li class="skill-tag">JavaScript (ES6+)</li>
-                <li class="skill-tag">TypeScript</li>
-                <li class="skill-tag">HTML5 / CSS3</li>
-                <li class="skill-tag">Bootstrap</li>
-                <li class="skill-tag">Vue.js</li>
-                <li class="skill-tag">Nuxt 3</li>
-                <li class="skill-tag">React</li>
-                <li class="skill-tag">Svelte / SvelteKit</li>
-                <li class="skill-tag">Flutter</li>
+          <div class="ai-grid">
+            <article class="ai-card ai-card-yes reveal">
+              <p class="ai-card-kicker">Where I let it drive</p>
+              <ul class="ai-list">
+                <li>Scaffolding and the repetitive middle of a feature</li>
+                <li>Migration and transformation grunt work with a spec I can check against</li>
+                <li>Test cases around business rules I've already decided</li>
+                <li>Getting oriented in an unfamiliar API or an inherited codebase</li>
+                <li>First-draft docs, changelogs, and review notes</li>
               </ul>
-            </div>
+            </article>
 
-            <div class="skill-category reveal">
-              <h3 class="skill-category-title">
-                <span class="skill-icon">⚙️</span> Backend
-              </h3>
-              <ul class="skill-list">
-                <li class="skill-tag">Node.js</li>
-                <li class="skill-tag">Python</li>
-                <li class="skill-tag">Django</li>
-                <li class="skill-tag">REST APIs</li>
-                <li class="skill-tag">PHP</li>
-                <li class="skill-tag">Laravel</li>
-                <li class="skill-tag">C# / .NET</li>
-                <li class="skill-tag">GraphQL</li>
+            <article class="ai-card ai-card-no reveal">
+              <p class="ai-card-kicker">Where I don't</p>
+              <ul class="ai-list">
+                <li>Architecture and system boundaries — that's the judgment I'm paid for</li>
+                <li>Authentication, authorization, and anything holding a security boundary</li>
+                <li>Data models, which are expensive to get wrong and cheap to think about</li>
+                <li>Anything I couldn't review line by line and defend in a code review</li>
               </ul>
-            </div>
+            </article>
 
-            <div class="skill-category reveal">
-              <h3 class="skill-category-title">
-                <span class="skill-icon">🗄️</span> Databases
-              </h3>
-              <ul class="skill-list">
-                <li class="skill-tag">PostgreSQL</li>
-                <li class="skill-tag">Supabase</li>
-                <li class="skill-tag">Oracle DB</li>
-                <li class="skill-tag">SQL Server</li>
-                <li class="skill-tag">MySQL</li>
-                <li class="skill-tag">MongoDB</li>
+            <article class="ai-card reveal">
+              <p class="ai-card-kicker">How I keep it honest</p>
+              <ul class="ai-list">
+                <li>Generated code goes through the same review bar as written code</li>
+                <li>Business context and constraints go in up front, not corrections afterwards</li>
+                <li>Tests and reconciliation checks are the guardrail, not vibes</li>
+                <li>A human approves anything that writes to production data</li>
+                <li>If I can't explain why it works, it doesn't ship</li>
               </ul>
-            </div>
-
-            <div class="skill-category reveal">
-              <h3 class="skill-category-title">
-                <span class="skill-icon">🔗</span> Automation &amp; Integration
-              </h3>
-              <ul class="skill-list">
-                <li class="skill-tag">n8n (Automation)</li>
-                <li class="skill-tag">OpenAI Integration</li>
-                <li class="skill-tag">Webhooks</li>
-                <li class="skill-tag">API Integration</li>
-                <li class="skill-tag">Background Jobs</li>
-              </ul>
-            </div>
-
-            <div class="skill-category reveal">
-              <h3 class="skill-category-title">
-                <span class="skill-icon">🚀</span> Delivery &amp; Environments
-              </h3>
-              <ul class="skill-list">
-                <li class="skill-tag">Git / GitHub</li>
-                <li class="skill-tag">CI/CD</li>
-                <li class="skill-tag">Docker</li>
-                <li class="skill-tag">Self-hosted Apps</li>
-                <li class="skill-tag">Windows Server</li>
-                <li class="skill-tag">Linux</li>
-              </ul>
-            </div>
-
+            </article>
           </div>
-        </div>
-      </section>
 
-      <!-- ===================== GROWTH DIRECTION ===================== -->
-      <section
-        id="growth"
-        class="growth section"
-      >
-        <div class="section-container">
-          <h2 class="section-title reveal">Deepening My <span class="accent">Practice</span></h2>
-          <p class="section-intro reveal">
-            Alongside delivery work, I am sharpening the architecture and engineering practices
-            that help practical systems remain secure, testable, and dependable as they grow.
-          </p>
-          <div class="growth-grid">
-            <article class="growth-card reveal">
-              <p class="growth-kicker">Architecture</p>
-              <h3>Modular system design</h3>
-              <p>Clear boundaries, maintainable modular monoliths, and designs that fit the problem.</p>
-            </article>
-            <article class="growth-card reveal">
-              <p class="growth-kicker">Quality</p>
-              <h3>Testing strategy</h3>
-              <p>Practical coverage around business rules, workflows, APIs, and integrations.</p>
-            </article>
-            <article class="growth-card reveal">
-              <p class="growth-kicker">Trust</p>
-              <h3>Application security</h3>
-              <p>Secure defaults, thoughtful access control, and stronger protection of business data.</p>
-            </article>
-            <article class="growth-card reveal">
-              <p class="growth-kicker">Operations</p>
-              <h3>Deployment reliability</h3>
-              <p>Repeatable delivery, safer releases, and systems that are easier to support.</p>
-            </article>
-            <article class="growth-card reveal">
-              <p class="growth-kicker">Data</p>
-              <h3>Database performance</h3>
-              <p>Better query design, indexing, and data access patterns for responsive applications.</p>
-            </article>
-            <article class="growth-card reveal">
-              <p class="growth-kicker">Design</p>
-              <h3>System trade-offs</h3>
-              <p>Making clearer decisions about complexity, maintainability, and operational needs.</p>
-            </article>
+          <div class="ai-proof reveal">
+            <p class="ai-proof-kicker">In practice</p>
+            <p>
+              At NGCP I use n8n and Copilot to take repetitive process work out of the delivery loop —
+              the kind of steps that are too small to staff and too frequent to keep doing by hand — while
+              keeping approval points human where the outcome matters. <a href="#work">ROOC</a> was built
+              this way end to end, and so was the career game further down this page: AI accelerating the
+              parts I'd already decided, with me holding the design and the review.
+            </p>
           </div>
         </div>
       </section>
@@ -523,130 +670,260 @@
           <div class="experience-header reveal">
             <h2 class="section-title">Career <span class="accent">Journey</span></h2>
             <p class="experience-intro">
-              Explore 12+ years of practical software delivery across internal systems,
-              product teams, databases, integrations, and process improvement. Walk with <strong><span
-                  class="keycap"
-                  aria-label="Left arrow key"
-                >&larr;</span> /
-                <span
-                  class="keycap"
-                  aria-label="Right arrow key"
-                >&rarr;</span></strong>, <span class="keycap">A</span> /
-              <span class="keycap">D</span> <img
-                src="img/keys-key.svg"
-                alt="keys"
-                class="keycap-image"
-                width="110"
-                height="48"
-              />, or the on-screen controls, and jump with <span class="keycap">W</span> /
-              <span class="keycap">Space</span>. You can also tap a building to walk straight to it.
-              When the character gets close to a building, the role details appear on the right —
-              visit every building to collect all the stars, bump the <strong>?</strong> blocks for
-              coins, and reach the flag at the end to complete the journey.
+              12+ years across energy, government, healthcare, proptech, and investigation software —
+              in-house and on remote teams in Australia and the US.
             </p>
           </div>
 
-          <div class="experience-layout">
-            <div class="experience-scene-panel reveal">
-              <div
-                class="experience-scene"
-                id="experience-scene"
-                tabindex="0"
-                aria-label="Interactive career timeline scene"
-              >
-                <div class="experience-skyline"></div>
-                <div
-                  class="experience-hud"
-                  id="experience-hud"
-                  aria-hidden="true"
-                >
-                  <span id="hud-progress">ROLES 0/9</span>
-                  <span class="hud-coin"></span>
-                  <span id="hud-coins">×0</span>
-                </div>
-                <div
-                  class="experience-world"
-                  id="experience-world"
-                ></div>
-                <div
-                  class="experience-person"
-                  id="experience-person"
-                  aria-hidden="true"
-                >
-                  <span class="person-head"></span>
-                  <span class="person-body"></span>
-                  <span class="person-arm person-arm-left"></span>
-                  <span class="person-arm person-arm-right"></span>
-                  <span class="person-leg person-leg-left"></span>
-                  <span class="person-leg person-leg-right"></span>
-                </div>
-              </div>
+          <!-- Readable timeline: the primary, accessible view -->
+          <ol
+            class="timeline reveal"
+            id="experience-timeline"
+          ></ol>
 
-              <div
-                class="experience-controls reveal"
-                aria-label="Movement controls"
-              >
-                <button
-                  class="control-btn"
-                  id="move-left"
-                  type="button"
-                  aria-label="Move left"
-                >←</button>
-                <button
-                  class="control-btn"
-                  id="move-jump"
-                  type="button"
-                  aria-label="Jump"
-                >↑</button>
-                <button
-                  class="control-btn"
-                  id="move-right"
-                  type="button"
-                  aria-label="Move right"
-                >→</button>
-              </div>
-            </div>
-
-            <aside
-              class="experience-details reveal"
-              id="experience-details"
-              aria-live="polite"
+          <!-- Optional: the same history as a side-scrolling game -->
+          <div class="game-toggle-wrap reveal">
+            <button
+              class="btn btn-outline game-toggle"
+              id="game-toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="experience-game"
             >
-              <p class="experience-kicker">Current stop</p>
-              <h3 class="experience-role">Walk to a building</h3>
-              <p class="experience-company">
-                Move close to any building to inspect the role, dates, responsibilities, and stack.
-              </p>
-              <p class="experience-dates">Latest roles are placed on the left.</p>
-              <ul
-                class="experience-points"
-                id="experience-points"
+              <span class="game-toggle-icon" aria-hidden="true">🎮</span>
+              <span class="game-toggle-text">Or walk through it as a game</span>
+            </button>
+            <p class="game-toggle-note">
+              Same nine roles, built as a side-scroller — no libraries, just CSS and
+              <code>requestAnimationFrame</code>.
+            </p>
+          </div>
+
+          <div
+            class="experience-game"
+            id="experience-game"
+            hidden
+          >
+            <p class="experience-game-help">
+              Walk with <span class="keycap">←</span> / <span class="keycap">→</span> or
+              <span class="keycap">A</span> / <span class="keycap">D</span>, jump with
+              <span class="keycap">W</span> / <span class="keycap">Space</span>, or use the on-screen
+              controls. Tap a building to walk straight to it. Visit every building to collect the stars,
+              bump the <strong>?</strong> blocks for coins, and reach the flag to finish.
+            </p>
+
+            <div class="experience-layout">
+              <div class="experience-scene-panel">
+                <div
+                  class="experience-scene"
+                  id="experience-scene"
+                  tabindex="0"
+                  aria-label="Interactive career timeline scene"
+                >
+                  <div class="experience-skyline"></div>
+                  <div
+                    class="experience-hud"
+                    id="experience-hud"
+                    aria-hidden="true"
+                  >
+                    <span id="hud-progress">ROLES 0/9</span>
+                    <span class="hud-coin"></span>
+                    <span id="hud-coins">×0</span>
+                  </div>
+                  <div
+                    class="experience-world"
+                    id="experience-world"
+                  ></div>
+                  <div
+                    class="experience-person"
+                    id="experience-person"
+                    aria-hidden="true"
+                  >
+                    <span class="person-head"></span>
+                    <span class="person-body"></span>
+                    <span class="person-arm person-arm-left"></span>
+                    <span class="person-arm person-arm-right"></span>
+                    <span class="person-leg person-leg-left"></span>
+                    <span class="person-leg person-leg-right"></span>
+                  </div>
+                </div>
+
+                <div
+                  class="experience-controls"
+                  aria-label="Movement controls"
+                >
+                  <button
+                    class="control-btn"
+                    id="move-left"
+                    type="button"
+                    aria-label="Move left"
+                  >←</button>
+                  <button
+                    class="control-btn"
+                    id="move-jump"
+                    type="button"
+                    aria-label="Jump"
+                  >↑</button>
+                  <button
+                    class="control-btn"
+                    id="move-right"
+                    type="button"
+                    aria-label="Move right"
+                  >→</button>
+                </div>
+              </div>
+
+              <aside
+                class="experience-details"
+                id="experience-details"
+                aria-live="polite"
               >
-                <li>Tip: hold the movement buttons on mobile for continuous walking.</li>
-                <li>Keyboard: ← / → or A / D to walk, W or Space to jump.</li>
-                <li>Tap any building to walk straight to it and collect its star.</li>
-              </ul>
-              <div
-                class="experience-stack"
-                id="experience-stack"
-              ></div>
-            </aside>
+                <p class="experience-kicker">Current stop</p>
+                <h3 class="experience-role">Walk to a building</h3>
+                <p class="experience-company">
+                  Move close to any building to inspect the role, dates, responsibilities, and stack.
+                </p>
+                <p class="experience-dates">Latest roles are placed on the left.</p>
+                <ul
+                  class="experience-points"
+                  id="experience-points"
+                >
+                  <li>Tip: hold the movement buttons on mobile for continuous walking.</li>
+                  <li>Keyboard: ← / → or A / D to walk, W or Space to jump.</li>
+                  <li>Tap any building to walk straight to it and collect its star.</li>
+                </ul>
+                <div
+                  class="experience-stack"
+                  id="experience-stack"
+                ></div>
+              </aside>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- ===================== COMMUNITY & LEADERSHIP ===================== -->
+      <!-- ===================== SKILLS ===================== -->
       <section
-        id="community-leadership"
-        class="community section"
+        id="skills"
+        class="skills section"
       >
         <div class="section-container">
-          <h2 class="section-title reveal">Community &amp; <span class="accent">Leadership</span></h2>
-          <p class="community-intro reveal">
-            I stay involved outside of product work through ministry and consulting roles that let me support people,
-            teams, and organizations in practical ways.
+          <h2 class="section-title reveal">Skills &amp; <span class="accent">Tools</span></h2>
+          <p class="section-intro reveal">
+            Grouped by how well I actually know them, rather than everything I've ever touched.
           </p>
+          <div class="skills-grid skills-grid-tiers">
 
+            <div class="skill-category skill-tier-1 reveal">
+              <h3 class="skill-category-title">
+                <span class="skill-icon">⚡</span> Reach for daily
+              </h3>
+              <p class="skill-tier-note">Current stack. I'm productive in these from the first hour.</p>
+              <ul class="skill-list">
+                <li class="skill-tag">Python</li>
+                <li class="skill-tag">Django 5</li>
+                <li class="skill-tag">JavaScript (ES6+)</li>
+                <li class="skill-tag">TypeScript</li>
+                <li class="skill-tag">Node.js</li>
+                <li class="skill-tag">SvelteKit</li>
+                <li class="skill-tag">Vue.js 3</li>
+                <li class="skill-tag">REST APIs</li>
+                <li class="skill-tag">Oracle DB</li>
+                <li class="skill-tag">MySQL</li>
+                <li class="skill-tag">n8n</li>
+                <li class="skill-tag">Git / GitHub</li>
+              </ul>
+            </div>
+
+            <div class="skill-category skill-tier-2 reveal">
+              <h3 class="skill-category-title">
+                <span class="skill-icon">🏗️</span> Shipped to production
+              </h3>
+              <p class="skill-tier-note">Delivered and maintained real systems in these; a short warm-up
+                and I'm back at speed.</p>
+              <ul class="skill-list">
+                <li class="skill-tag">C# / .NET</li>
+                <li class="skill-tag">React</li>
+                <li class="skill-tag">Laravel / PHP</li>
+                <li class="skill-tag">PostgreSQL</li>
+                <li class="skill-tag">SQL Server</li>
+                <li class="skill-tag">MongoDB</li>
+                <li class="skill-tag">GraphQL</li>
+                <li class="skill-tag">AWS (SNS, SQS, EC2, RDS)</li>
+                <li class="skill-tag">Azure</li>
+                <li class="skill-tag">Cloudflare Workers</li>
+                <li class="skill-tag">Supabase</li>
+                <li class="skill-tag">Docker</li>
+                <li class="skill-tag">CI/CD</li>
+                <li class="skill-tag">Tailwind CSS</li>
+                <li class="skill-tag">Bootstrap</li>
+              </ul>
+            </div>
+
+            <div class="skill-category skill-tier-3 reveal">
+              <h3 class="skill-category-title">
+                <span class="skill-icon">🧭</span> Working knowledge
+              </h3>
+              <p class="skill-tier-note">Used them for real work, but I'd want a ramp-up before owning
+                something critical.</p>
+              <ul class="skill-list">
+                <li class="skill-tag">Flutter</li>
+                <li class="skill-tag">Nuxt 3</li>
+                <li class="skill-tag">SCADA interfaces</li>
+                <li class="skill-tag">Windows Server</li>
+                <li class="skill-tag">Linux</li>
+                <li class="skill-tag">Nginx</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== ABOUT ===================== -->
+      <section
+        id="about"
+        class="about section"
+      >
+        <div class="section-container">
+          <h2 class="section-title reveal">About <span class="accent">Me</span></h2>
+          <div class="about-grid">
+            <div class="about-text reveal">
+              <p>
+                I'm a senior full-stack developer based in the Philippines, twelve years into building
+                the unglamorous systems businesses actually run on — internal tools, APIs, dashboards,
+                integrations, and the automation that removes work nobody should be doing by hand.
+              </p>
+              <p>
+                I've done that in-house at a national grid operator and a government audit commission,
+                and on remote product teams in Australia and the US. The domains change; the useful part
+                doesn't. It's almost always the same job: sit with the people doing the work, find the
+                thing that's genuinely in their way, and build something they'll still be using — and
+                still be able to maintain — in three years.
+              </p>
+              <p>
+                Outside product work I serve as a youth pastor and consult for a local organization.
+                Both keep me practised at the part of this job that isn't code: listening properly before
+                proposing anything.
+              </p>
+            </div>
+            <div class="about-stats reveal">
+              <div class="stat-card">
+                <span class="stat-number">12+</span>
+                <span class="stat-label">Years shipping production systems</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-number">6</span>
+                <span class="stat-label">Industries, from energy to healthtech</span>
+              </div>
+              <div class="stat-card">
+                <span class="stat-number">3</span>
+                <span class="stat-label">Remote teams across AU &amp; US</span>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="subsection-title reveal">Community &amp; Leadership</h3>
           <div class="projects-grid">
             <article class="project-card reveal">
               <div class="project-card-header">
@@ -695,163 +972,6 @@
         </div>
       </section>
 
-      <!-- ===================== PROJECTS ===================== -->
-      <section
-        id="projects"
-        class="projects section"
-      >
-        <div class="section-container">
-          <h2 class="section-title reveal">Featured <span class="accent">Projects</span></h2>
-          <div class="projects-grid">
-
-            <article class="project-card reveal">
-              <div class="project-card-header">
-                <span class="project-icon">📦</span>
-                <div class="project-links">
-                  <a
-                    href="#"
-                    class="project-link"
-                    aria-label="View on GitHub"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      width="20"
-                      height="20"
-                    >
-                      <path
-                        d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-              <h3 class="project-title">SaaS Admin Platform</h3>
-              <p class="project-description">
-                A multi-tenant admin workspace that centralizes access, analytics, and real-time
-                operational updates. Role-based controls help teams manage work safely as usage grows.
-              </p>
-              <div class="project-tech">
-                <span class="tech-tag">Nuxt 3</span>
-                <span class="tech-tag">Node.js</span>
-                <span class="tech-tag">PostgreSQL</span>
-                <span class="tech-tag">Supabase</span>
-              </div>
-            </article>
-
-            <article class="project-card reveal">
-              <div class="project-card-header">
-                <span class="project-icon">🤖</span>
-                <div class="project-links">
-                  <a
-                    href="#"
-                    class="project-link"
-                    aria-label="View on GitHub"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      width="20"
-                      height="20"
-                    >
-                      <path
-                        d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-              <h3 class="project-title">AI Automation Workflow Engine</h3>
-              <p class="project-description">
-                An n8n-based workflow engine that connects AI services, webhooks, and APIs
-                to reduce repetitive processing and keep operational tasks moving with less manual intervention.
-              </p>
-              <div class="project-tech">
-                <span class="tech-tag">Python</span>
-                <span class="tech-tag">n8n</span>
-                <span class="tech-tag">REST APIs</span>
-                <span class="tech-tag">OpenAI</span>
-              </div>
-            </article>
-
-            <article class="project-card reveal">
-              <div class="project-card-header">
-                <span class="project-icon">🗃️</span>
-                <div class="project-links">
-                  <a
-                    href="#"
-                    class="project-link"
-                    aria-label="View on GitHub"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      width="20"
-                      height="20"
-                    >
-                      <path
-                        d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-              <h3 class="project-title">Data Migration &amp; ETL Pipeline</h3>
-              <p class="project-description">
-                A migration pipeline that transforms legacy Oracle data for PostgreSQL,
-                giving teams a cleaner path off aging systems while protecting continuity during the transition.
-              </p>
-              <div class="project-tech">
-                <span class="tech-tag">Python</span>
-                <span class="tech-tag">Oracle</span>
-                <span class="tech-tag">PostgreSQL</span>
-                <span class="tech-tag">Node.js</span>
-              </div>
-            </article>
-
-            <article class="project-card reveal">
-              <div class="project-card-header">
-                <span class="project-icon">🌐</span>
-                <div class="project-links">
-                  <a
-                    href="#"
-                    class="project-link"
-                    aria-label="View on GitHub"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      width="20"
-                      height="20"
-                    >
-                      <path
-                        d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-              <h3 class="project-title">Self-Hosted SaaS Infrastructure</h3>
-              <p class="project-description">
-                A self-hosted application stack that brings routing, authentication, data,
-                and monitoring into one manageable deployment for organizations that need direct control of their environment.
-              </p>
-              <div class="project-tech">
-                <span class="tech-tag">Windows Server</span>
-                <span class="tech-tag">Nginx</span>
-                <span class="tech-tag">Docker</span>
-                <span class="tech-tag">Node.js</span>
-              </div>
-            </article>
-
-          </div>
-        </div>
-      </section>
-
       <!-- ===================== CONTACT ===================== -->
       <section
         id="contact"
@@ -860,8 +980,9 @@
         <div class="section-container">
           <h2 class="section-title reveal">Get In <span class="accent">Touch</span></h2>
           <p class="contact-intro reveal">
-            Need an internal tool, workflow automation, dashboard, integration, or practical
-            full-stack support? I'd be glad to hear what your team is working on.
+            If something in your operation is stuck — a manual process nobody owns, systems that won't
+            talk, a legacy database everyone's afraid of — tell me what it looks like day to day and
+            I'll tell you honestly whether I'm the right person for it.
           </p>
 
           <div class="contact-info reveal">
@@ -896,12 +1017,13 @@
     <!-- ===================== FOOTER ===================== -->
     <footer class="footer">
       <div class="footer-container">
-        <p class="footer-copy">&copy; <span id="year"></span> JB. All rights reserved.</p>
-        <p class="footer-built">Built with <span class="accent">HTML &amp; CSS</span> — no frameworks, no fuss.</p>
+        <p class="footer-copy">&copy; <span id="year"></span> John Berlyn Isip. All rights reserved.</p>
+        <p class="footer-built">Built with <span class="accent">HTML, CSS &amp; vanilla JS</span> — no
+          frameworks, no build step.</p>
       </div>
     </footer>
 
-    <script src="script.js?v=20260708.2"></script>
+    <script src="script.js?v=20260811.1"></script>
   </body>
 
 </html>
