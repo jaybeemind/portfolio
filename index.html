@@ -86,7 +86,7 @@
 
     <link
       rel="stylesheet"
-      href="styles.css?v=20260811.3"
+      href="styles.css?v=20260811.5"
     />
 
     <!-- Marks that scripting is available, so the scroll-reveal styles may hide
@@ -263,8 +263,11 @@
                 </div>
               </div>
 
-              <!-- Figures whose image is missing hide themselves (see script.js), so
-                   shots not yet captured never render as broken images. -->
+              <!-- Needs `node tools/capture-rooc.mjs` to produce img/rooc/dashboard.webp.
+                   A figure whose image is missing hides itself (see script.js), so this
+                   renders nothing until the file exists rather than a broken image.
+                   To add another screen, copy this figure and point it at the filename
+                   the capture run printed — the files are named after their route. -->
               <div class="case-shots case-shots-lead">
                 <figure class="case-shot">
                   <a
@@ -282,53 +285,9 @@
                     />
                   </a>
                   <figcaption>
-                    The dashboard opens on what's unresolved, not on totals — runs awaiting an official
-                    result are the thing that actually blocks a guild. Names and figures here are sample
-                    data.
-                  </figcaption>
-                </figure>
-              </div>
-
-              <div class="case-shots">
-                <figure class="case-shot">
-                  <a
-                    href="img/rooc/auction-runs.webp"
-                    class="case-shot-link"
-                    data-lightbox
-                  >
-                    <img
-                      src="img/rooc/auction-runs.webp"
-                      alt="ROOC auction runs list, showing each run's date, rank band, status and reward count."
-                      width="1280"
-                      height="800"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </a>
-                  <figcaption>
-                    A run moves from open, to awaiting result, to finalized. Once it's finalized the
-                    assignment is history rather than something an admin can quietly revise.
-                  </figcaption>
-                </figure>
-
-                <figure class="case-shot">
-                  <a
-                    href="img/rooc/sign-in.webp"
-                    class="case-shot-link"
-                    data-lightbox
-                  >
-                    <img
-                      src="img/rooc/sign-in.webp"
-                      alt="ROOC sign-in screen, split between a product summary and a sign-in form headed 'Sign in to your guild'."
-                      width="1280"
-                      height="800"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </a>
-                  <figcaption>
-                    Accounts are issued by a Super Admin — there is no self-signup. A roster you can't
-                    join uninvited is what makes the audit trail worth anything.
+                    The dashboard opens on what's unresolved rather than on totals — runs awaiting an
+                    official result are what actually blocks a guild. Names and figures shown are
+                    sample data.
                   </figcaption>
                 </figure>
               </div>
@@ -1116,7 +1075,7 @@
       </div>
     </footer>
 
-    <script src="script.js?v=20260811.3"></script>
+    <script src="script.js?v=20260811.5"></script>
   </body>
 
 </html>

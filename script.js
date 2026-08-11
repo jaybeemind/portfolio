@@ -756,7 +756,13 @@
   qsa(".case-shot img").forEach((img) => {
     const fail = () => {
       const figure = img.closest(".case-shot")
-      if (figure) figure.hidden = true
+      if (!figure) return
+      figure.hidden = true
+
+      // Collapse the container too once nothing in it is left to show, or its
+      // margin would leave a gap where the gallery used to be.
+      const group = figure.closest(".case-shots")
+      if (group && !qs(".case-shot:not([hidden])", group)) group.hidden = true
     }
     // A cached failure can land before this handler is attached.
     if (img.complete && img.naturalWidth === 0) fail()
