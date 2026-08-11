@@ -1,3 +1,4 @@
-# Agent definitions — local tooling, not part of the site
+# Agent and skill definitions — local tooling, not part of the site
 .claude/agents/
+.claude/skills/
 .agents/
