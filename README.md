@@ -6,8 +6,8 @@ The site is positioned around **the work I can be hired for**, not around a CV. 
 the section directly beneath it (`#ai`) has to earn that claim, which is why it leads with the
 vibe-coding contrast rather than sitting further down the page. After that: five named services
 (operations platforms, real-time dashboards, integrations and SSO, legacy migrations, automation), how
-an engagement is shaped, and the case studies backing each service — written as _problem → the real
-constraint → what I built → outcome_. Method, career history, stack, and bio sit below as supporting
+an engagement is shaped, and the case studies backing each service, each written as _problem → the
+real constraint → what I built → outcome_. Method, career history, stack, and bio sit below as supporting
 credibility.
 
 ## Stack
@@ -28,4 +28,4 @@ python -m http.server 4173
 | `script.js` | Nav, scroll reveal, career timeline, and the optional side-scroller |
 
 The career history lives in one array in `script.js`. It renders both the readable timeline and
-the optional game, so the two can't drift apart — edit it in one place.
+the optional game, so the two can't drift apart. Edit it in one place.
