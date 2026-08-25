@@ -19,7 +19,7 @@
   - small DOM helpers such as `qs` and `qsa`
 
 ## Key code layout
-- `index.html` contains all sections of the one-page site, including the fixed navigation, hero, skills, experience timeline, projects, contact, and footer.
+- `index.html` contains all sections of the one-page site, in this order: fixed navigation, hero, services (`#services`), engagements (`#engagements`), case studies (`#work`), method (`#approach`), AI practice (`#ai`), career timeline (`#experience`), stack (`#skills`), about (`#about`), contact, and footer.
 - `styles.css` is the single stylesheet. It is dark-mode first, mobile-first, and uses CSS variables throughout.
 - When adding or adjusting styles, prefer the existing CSS custom properties in `:root` and follow the current naming patterns such as `--color-*`, `--font-*`, `--transition*`, and `--nav-height`.
 - `script.js` handles:
