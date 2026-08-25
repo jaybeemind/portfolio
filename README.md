@@ -2,9 +2,11 @@
 
 Portfolio of John Berlyn Isip (JB), a senior full-stack developer with 12+ years of experience.
 
-The site leads with **problem solving** — five case studies written as
-_problem → the real constraint → what I built → outcome_ — followed by the method behind them,
-how AI fits into the delivery loop, and the full career history.
+The site is positioned around **the work I can be hired for**, not around a CV. It opens with five
+named services (operations platforms, real-time dashboards, integrations and SSO, legacy migrations,
+automation), then how an engagement is shaped, then the case studies that back each service — each
+written as _problem → the real constraint → what I built → outcome_. The method, the AI practice,
+and the career history sit below that as supporting credibility.
 
 ## Stack
 
