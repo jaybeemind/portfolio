@@ -2,11 +2,13 @@
 
 Portfolio of John Berlyn Isip (JB), a senior full-stack developer with 12+ years of experience.
 
-The site is positioned around **the work I can be hired for**, not around a CV. It opens with five
-named services (operations platforms, real-time dashboards, integrations and SSO, legacy migrations,
-automation), then how an engagement is shaped, then the case studies that back each service — each
-written as _problem → the real constraint → what I built → outcome_. The method, the AI practice,
-and the career history sit below that as supporting credibility.
+The site is positioned around **the work I can be hired for**, not around a CV. The hero claims speed;
+the section directly beneath it (`#ai`) has to earn that claim, which is why it leads with the
+vibe-coding contrast rather than sitting further down the page. After that: five named services
+(operations platforms, real-time dashboards, integrations and SSO, legacy migrations, automation), how
+an engagement is shaped, and the case studies backing each service — written as _problem → the real
+constraint → what I built → outcome_. Method, career history, stack, and bio sit below as supporting
+credibility.
 
 ## Stack
 

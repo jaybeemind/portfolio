@@ -2283,6 +2283,94 @@ button:focus-visible,
 }
 
 /* ---------------------- AI-ASSISTED DEVELOPMENT ---------------------- */
+/* The vibe-coding contrast. Two columns that read across, so the same seven
+   decisions can be compared line for line. */
+.compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.compare-col {
+  min-width: 0;
+  padding: 1.6rem 1.5rem;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.compare-col-no {
+  border-color: rgba(255, 123, 114, 0.28);
+  background: linear-gradient(180deg, rgba(255, 123, 114, 0.05), var(--color-card-bg) 55%);
+}
+
+.compare-col-yes {
+  border-color: rgba(126, 231, 135, 0.32);
+  background: linear-gradient(180deg, rgba(126, 231, 135, 0.06), var(--color-card-bg) 55%);
+}
+
+.compare-kicker {
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.compare-col-no .compare-kicker {
+  color: #ff7b72;
+}
+
+.compare-col-yes .compare-kicker {
+  color: var(--color-accent-2);
+}
+
+.compare-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.compare-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.compare-col-no .compare-list li {
+  color: var(--color-text-muted);
+}
+
+.compare-list li::before {
+  position: absolute;
+  left: 0;
+  font-size: 0.85rem;
+}
+
+.compare-col-no .compare-list li::before {
+  content: '✗';
+  color: #ff7b72;
+}
+
+.compare-col-yes .compare-list li::before {
+  content: '✓';
+  color: var(--color-accent-2);
+}
+
+.ai-bridge {
+  max-width: 78ch;
+  margin: 0 auto 2.5rem;
+  padding-left: 1.15rem;
+  border-left: 3px solid var(--color-accent);
+  color: var(--color-text-muted);
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
 .ai-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -2612,7 +2700,8 @@ button:focus-visible,
   }
 
   .case-body,
-  .service-cols {
+  .service-cols,
+  .compare {
     grid-template-columns: 1fr;
     gap: 1.15rem;
   }
