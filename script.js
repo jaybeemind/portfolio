@@ -145,7 +145,7 @@
         "Lead process improvement initiatives ensuring ISO compliance.",
         "Develop and enhance internal applications to streamline business workflows.",
         "Implement upgrades to the Software Development Lifecycle focusing on QA and DevOps.",
-        "Utilize AI tools like n8n and GitHub Copilot to automate repetitive work and accelerate delivery.",
+        "Utilize AI tools like n8n, Codex, and Claude Code to automate repetitive work and accelerate delivery.",
       ],
       stack: [
         "Python",
