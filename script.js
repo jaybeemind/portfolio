@@ -1,6 +1,6 @@
 /* ============================================================
    PORTFOLIO – script.js
-   Vanilla JS: fixed nav, mobile menu, scroll reveal,
+   Vanilla JS: navigation, mobile menu, screenshot viewer,
    career timeline + optional side-scrolling career game
    ============================================================ */
 
@@ -44,6 +44,16 @@
       navToggle.setAttribute("aria-expanded", String(isOpen))
     })
 
+    // Escape closes the mobile menu and returns focus to its toggle.
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && navLinks.classList.contains("open")) {
+        navLinks.classList.remove("open")
+        navToggle.classList.remove("open")
+        navToggle.setAttribute("aria-expanded", "false")
+        navToggle.focus()
+      }
+    })
+
     // Close menu when a nav link is clicked
     qsa(".nav-link", navLinks).forEach((link) => {
       link.addEventListener("click", () => {
@@ -61,44 +71,6 @@
         navToggle.setAttribute("aria-expanded", "false")
       }
     })
-  }
-
-  // ---------------------- Scroll Reveal ----------------------
-  /**
-   * Uses IntersectionObserver to add the "visible" class to .reveal elements
-   * when they enter the viewport. Falls back gracefully if the API is absent.
-   */
-  const revealEls = qsa(".reveal")
-
-  if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible")
-            // Once revealed, stop observing
-            observer.unobserve(entry.target)
-          }
-        })
-      },
-      {
-        threshold: 0.12, // trigger when 12% of the element is visible
-        rootMargin: "0px 0px -40px 0px", // slight bottom offset so elements near bottom reveal properly
-      },
-    )
-
-    revealEls.forEach((el) => observer.observe(el))
-
-    // Safety net: if the observer never fires at all — a prerendered or
-    // never-composited page will do this — the whole site would sit at
-    // opacity 0. Reveal everything rather than show a blank page.
-    window.setTimeout(() => {
-      const anyRevealed = Array.prototype.some.call(revealEls, (el) => el.classList.contains("visible"))
-      if (!anyRevealed) revealEls.forEach((el) => el.classList.add("visible"))
-    }, 1500)
-  } else {
-    // Fallback: immediately show all reveal elements
-    revealEls.forEach((el) => el.classList.add("visible"))
   }
 
   // ---------------------- Active nav link on scroll ----------------------
@@ -121,8 +93,10 @@
 
     navLinkEls.forEach((link) => {
       link.classList.remove("active")
+      link.removeAttribute("aria-current")
       if (link.getAttribute("href") === `#${currentId}`) {
         link.classList.add("active")
+        link.setAttribute("aria-current", "location")
       }
     })
   }
@@ -142,10 +116,10 @@
       company: "National Grid Corporation of the Philippines",
       dates: "July 2024 - Present",
       points: [
-        "Lead process improvement initiatives ensuring ISO compliance.",
-        "Develop and enhance internal applications to streamline business workflows.",
-        "Implement upgrades to the Software Development Lifecycle focusing on QA and DevOps.",
-        "Utilize AI tools like n8n, Codex, and Claude Code to automate repetitive work and accelerate delivery.",
+        "Lead process improvements and support ISO compliance.",
+        "Develop and maintain internal applications for business workflows.",
+        "Improve testing and deployment practices across the development lifecycle.",
+        "Automate repetitive tasks with n8n and use Codex and Claude Code in development.",
       ],
       stack: [
         "Python",
@@ -190,7 +164,7 @@
       points: [
         "Developed and maintained internal healthcare management apps.",
         "Mentored mid-level and junior developers.",
-        "Implemented scalable front-end solutions using modern libraries.",
+        "Built front-end features for internal healthcare applications.",
       ],
       stack: ["React.js", "TypeScript", "MongoDB", "GraphQL", "Jira", "Git", "Tailwind CSS"],
     },
@@ -818,7 +792,7 @@
         } else if (game.remeasure) {
           game.remeasure()
         }
-        gameWrap.scrollIntoView({ behavior: "smooth", block: "nearest" })
+        gameWrap.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "nearest" })
       } else {
         gameWrap.setAttribute("hidden", "")
       }

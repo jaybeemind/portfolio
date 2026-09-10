@@ -1,31 +1,55 @@
-# portfolio
+# John Berlyn Isip — portfolio
 
-Portfolio of John Berlyn Isip (JB), a senior full-stack developer with 12+ years of experience.
+A portfolio for senior full-stack development and consulting work. It leads with
+JB's role, location, and career since 2013, then connects his strengths to specific
+projects and employment history.
 
-The site is positioned around **the work I can be hired for**, not around a CV. The hero claims speed;
-the section directly beneath it (`#ai`) has to earn that claim, which is why it leads with the
-vibe-coding contrast rather than sitting further down the page. After that: five named services
-(operations platforms, real-time dashboards, integrations and SSO, legacy migrations, automation), how
-an engagement is shaped, and the case studies backing each service, each written as _problem → the
-real constraint → what I built → outcome_. Method, career history, stack, and bio sit below as supporting
-credibility.
+## Content
 
-## Stack
+- **Introduction:** role, location, core work, and links to projects and email.
+- **Strengths:** systems integration, delivery through production, and teamwork.
+- **Selected work:** four professional case studies and the ROOC independent app.
+  Each identifies the contribution, technical decision, and result. No invented
+  performance numbers or delivery guarantees.
+- **Career history:** all nine roles, with the optional career game retained.
+- **Skills:** current work, production experience, and working knowledge.
+- **Working style, about, and contact:** short explanations and direct links.
 
-Static HTML, CSS, and vanilla JS. No frameworks, no build step, no dependencies. Open
-`index.html` directly, or serve the folder:
+The existing portfolio is the source for career and project claims. The ROOC
+screenshot uses sample data. The app requires sign-in; its link is labeled accordingly.
 
-```bash
-python -m http.server 4173
+## Stack and preview
+
+Static HTML, CSS, and vanilla JavaScript. The shipped site has no runtime
+dependencies and requires no build. Serve this directory locally:
+
+```sh
+python -m http.server 4173 --bind 127.0.0.1
 ```
 
-## Structure
+## Files
 
-| File | Contents |
+| File | Purpose |
 | --- | --- |
-| `index.html` | All page content and structure |
-| `styles.css` | Design tokens, layout, and the career-game scene |
-| `script.js` | Nav, scroll reveal, career timeline, and the optional side-scroller |
+| `index.html` | Content, metadata, and readable career history |
+| `styles.css` | Responsive design, print styles, and career game |
+| `script.js` | Navigation, career data, screenshot viewer, and game |
+| `tools/sync-experience.mjs` | Keeps the HTML history aligned with career data |
 
-The career history lives in one array in `script.js`. It renders both the readable timeline and
-the optional game, so the two can't drift apart. Edit it in one place.
+## Updating career history
+
+Edit the `experiences` array in `script.js`, then run:
+
+```sh
+npm run sync:experience
+npm run check:experience
+node --check script.js
+```
+
+The generated HTML keeps the full history available without JavaScript. The
+same data renders the interactive game. Navigation also works without scripting;
+the game is only offered when scripting is available. Motion respects the reader's
+reduced-motion preference.
+
+Screenshot capture tooling is documented in `tools/README.md`. Keep credentials
+in the ignored `.env.local`; do not include it in deployment assets.
