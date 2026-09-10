@@ -4,7 +4,9 @@
   "description": "Dev-only dependencies for tools/. The site itself (index.html, styles.css, script.js) ships no dependencies and has no build step.",
   "type": "module",
   "scripts": {
-    "capture:rooc": "node tools/capture-rooc.mjs"
+    "capture:rooc": "node tools/capture-rooc.mjs",
+    "sync:experience": "node tools/sync-experience.mjs",
+    "check:experience": "node tools/sync-experience.mjs --check"
   },
   "dependencies": {
     "playwright-core": "^1.62.1",
