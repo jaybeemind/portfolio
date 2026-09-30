@@ -1,13 +1,13 @@
 # John Berlyn Isip — portfolio
 
-A portfolio for senior full-stack development and consulting work. It leads with
-JB's role, location, and career since 2013, then connects his strengths to specific
-projects and employment history.
+A portfolio for business automation and internal tools development. It leads with
+n8n, Python/Django, APIs, and AI-assisted development, backed by JB's production
+experience since 2013, enterprise project leadership, architecture work, and mentoring.
 
 ## Content
 
 - **Introduction:** role, location, core work, and links to projects and email.
-- **Strengths:** systems integration, delivery through production, and teamwork.
+- **Services:** workflow automation, systems integration, and custom internal tools.
 - **Selected work:** four professional case studies and the ROOC independent app.
   Each identifies the contribution, technical decision, and result. No invented
   performance numbers or delivery guarantees.
@@ -17,6 +17,7 @@ projects and employment history.
 
 The existing portfolio is the source for career and project claims. The ROOC
 screenshot uses sample data. The app requires sign-in; its link is labeled accordingly.
+AI experience is described as AI-assisted development using Codex and Claude Code.
 
 ## Stack and preview
 

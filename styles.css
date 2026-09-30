@@ -58,7 +58,7 @@ p {text-wrap:pretty;}
 .hero-topline {display:flex;justify-content:space-between;gap:24px;font-family:var(--font-mono);font-size:.875rem;color:var(--color-text-muted);}
 .hero-topline p:first-child {color:var(--color-accent);}
 .hero-grid {display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);gap:100px;align-items:center;padding:58px 0 64px;}
-.hero h1 {font-size:clamp(3.75rem,6.9vw,6rem);line-height:1.02;letter-spacing:-.07em;}
+.hero h1 {font-size:clamp(2.6rem,4.3vw,3.8rem);line-height:1.08;letter-spacing:-.05em;}
 .hero-short-name {font-size:.9375rem;color:var(--color-text-muted);margin:17px 0 28px;}
 .hero-statement {font-size:clamp(1.65rem,2.6vw,2.2rem);letter-spacing:-.035em;line-height:1.25;}
 .hero-intro {max-width:540px;margin-top:20px;}
@@ -954,7 +954,7 @@ figcaption {font-size:.8125rem;color:var(--color-text-muted);margin-top:14px;lin
  .hero {padding-top:28px;padding-bottom:0;}
  .hero-topline {font-size:.8125rem;flex-wrap:wrap;gap:5px 20px;}
  .hero-grid {grid-template-columns:1fr;gap:48px;padding:42px 0;}
- .hero h1 {font-size:clamp(3.6rem,11vw,5.5rem);}
+ .hero h1 {font-size:clamp(2.4rem,7vw,3.6rem);}
  .hero-statement {font-size:1.8rem;}
  .hero-intro {max-width:590px;}
  .career-summary {display:grid;grid-template-columns:1fr 1.3fr;gap:0 25px;align-items:start;}
@@ -984,7 +984,7 @@ figcaption {font-size:.8125rem;color:var(--color-text-muted);margin-top:14px;lin
 }
 @media (max-width:400px) {
  .section {padding-inline:18px;}
- .hero h1 {font-size:3.45rem;}
+ .hero h1 {font-size:2.3rem;}
  .career-summary {grid-template-columns:1fr;}
  .career-summary .career-details {grid-column:1;grid-row:auto;}
  .career-years strong {display:inline;margin-left:10px;}
