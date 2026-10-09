@@ -13,13 +13,13 @@
 - Keep the site dependency-free unless the user explicitly asks for a new dependency or framework.
 - Preserve the existing style:
   - semantic HTML sections with stable `id` values used by navigation
-  - existing `id` hooks used by JavaScript; do not rename `nav-header`, `nav-toggle`, `nav-links`, `experience-scene`, `experience-world`, `experience-person`, `experience-details`, `experience-points`, `experience-stack`, `move-left`, `move-right`, or `year` without updating `script.js`
+  - existing `id` hooks used by JavaScript; do not rename `nav-header`, `nav-toggle`, `nav-links`, `experience-scene`, `experience-world`, `experience-person`, `experience-details`, `experience-points`, `experience-stack`, `experience-timeline`, `experience-game`, `view-timeline`, `view-game`, `move-left`, `move-right`, or `year` without updating `script.js`
   - CSS custom properties for theme values
   - vanilla JS inside the existing strict-mode IIFE in `script.js`
   - small DOM helpers such as `qs` and `qsa`
 
 ## Key code layout
-- `index.html` contains all sections of the one-page site, in this order: fixed navigation, hero, AI-assisted delivery (`#ai`), services (`#services`), engagements (`#engagements`), case studies (`#work`), method (`#approach`), career timeline (`#experience`), stack (`#skills`), about (`#about`), contact, and footer.
+- `index.html` contains all sections of the one-page site, in this order: fixed navigation, hero, services (`#services`), case studies (`#work`), career history (`#experience`, timeline plus optional game), stack (`#skills`), about (`#about`), contact (`#contact`, which also holds the working-style notes `#approach`, `#engagements`, `#ai`), and footer.
 - `styles.css` is the single stylesheet. It is dark-mode first, mobile-first, and uses CSS variables throughout.
 - When adding or adjusting styles, prefer the existing CSS custom properties in `:root` and follow the current naming patterns such as `--color-*`, `--font-*`, `--transition*`, and `--nav-height`.
 - `script.js` handles:

@@ -8,16 +8,20 @@ experience since 2013, enterprise project leadership, architecture work, and men
 
 - **Introduction:** role, location, core work, and links to projects and email.
 - **Services:** workflow automation, systems integration, and custom internal tools.
-- **Selected work:** four professional case studies and the ROOC independent app.
-  Each identifies the contribution, technical decision, and result. No invented
-  performance numbers or delivery guarantees.
-- **Career history:** all nine roles, with the optional career game retained.
+- **Selected work:** four professional case studies (the Django workflow platform,
+  the Flutter inventory apps, the grid dashboard, and SSO) and the ROOC independent
+  app. Each has a three-step flow and identifies the contribution, technical
+  decision, and result. No invented performance numbers or delivery guarantees.
+- **Career history:** six entries grouped as on the resume, plus education and
+  credentials. A Timeline / Play it switch offers the optional "automation line"
+  career game, drawn in the site's own palette.
 - **Skills:** current work, production experience, and working knowledge.
 - **Working style, about, and contact:** short explanations and direct links.
 
 The existing portfolio is the source for career and project claims. The ROOC
 screenshot uses sample data. The app requires sign-in; its link is labeled accordingly.
-AI experience is described as AI-assisted development using Codex and Claude Code.
+AI experience is described as AI-assisted development using Codex, Claude Code, and
+GitHub Copilot, plus AI-supported document processing in the current platform work.
 
 ## Stack and preview
 

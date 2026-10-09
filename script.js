@@ -112,28 +112,27 @@
   const experiences = [
     {
       buildingLabel: "NGCP",
-      role: "Resource Optimization and Market Interface Lead Specialist",
+      role: "Lead Specialist, Resource Optimization & Market Interface",
       company: "National Grid Corporation of the Philippines",
-      dates: "July 2024 - Present",
+      dates: "Jul 2024 - Present",
       points: [
-        "Lead business process improvements and support ISO compliance.",
-        "Develop and maintain custom internal applications with Python/Django and APIs.",
+        "Lead ISO-aligned process improvement and internal application delivery for business workflows, compliance activities, operational reporting, and team productivity.",
+        "Build a modular Django enterprise platform combining workflow modules, background processing, and PostgreSQL/Oracle data integrations on Windows Server infrastructure.",
+        "Develop AI-supported document processing within the platform, alongside operational data integrations and internal business workflows.",
         "Automate repetitive business tasks with n8n.",
-        "Improve testing and deployment practices across the development lifecycle.",
-        "Use Codex and Claude Code to support development, with code review and validation.",
+        "Partner with stakeholders from requirements through production support, and improve SDLC, QA, and DevOps practices.",
       ],
       stack: [
         "n8n",
         "Python",
-        "Django 5",
+        "Django",
+        "PostgreSQL",
+        "Oracle DB",
         "REST APIs",
-        "JavaScript",
         "Node.js",
         "SvelteKit",
-        "Oracle DB",
-        "MySQL",
+        "Windows Server",
         "Business Process Analysis",
-        "HTML/CSS",
       ],
     },
     {
@@ -142,22 +141,21 @@
       company: "Realtair, Inc. (Remote)",
       dates: "Oct 2023 - Apr 2024",
       points: [
-        "Developed and maintained features for the Deposits app.",
-        "Collaborated with stakeholders and support teams to keep the product stable.",
-        "Reviewed and optimized AWS SNS, SQS, EC2, and RDS configurations.",
+        "Developed and maintained the Deposits application and resolved business-critical issues across C#/.NET MVC, React, TypeScript, and MSSQL services.",
+        "Reviewed AWS SNS/SQS messaging, EC2/RDS infrastructure, and CI/CD for application stability and performance.",
       ],
-      stack: ["C#", ".NET MVC", "React.js", "TypeScript", "AWS", "MSSQL", "CI/CD", "Git"],
+      stack: ["C#", ".NET MVC", "React", "TypeScript", "AWS", "MSSQL", "CI/CD"],
     },
     {
       buildingLabel: "GoTeam",
       role: "Senior Full-Stack Developer",
-      company: "GoTeam (Remote)",
+      company: "GoTeam / Comtrac (Remote)",
       dates: "Feb 2023 - Sep 2023",
       points: [
-        "Maintained and improved Comtrac's Investigation Management platform.",
-        "Contributed to application architecture using the CQRS design pattern.",
+        "Maintained and improved an Investigation Management platform using Vue.js 3, C#/.NET, Azure, CI/CD, and Git.",
+        "Contributed to CQRS-based application architecture supporting the platform.",
       ],
-      stack: ["Vue.js 3", "Composition API", "C# .NET", "Azure", "CI/CD", "Git"],
+      stack: ["Vue.js 3", "C# / .NET", "CQRS", "Azure", "CI/CD", "Git"],
     },
     {
       buildingLabel: "Theoria",
@@ -165,60 +163,34 @@
       company: "Theoria Medical (Remote, USA)",
       dates: "Sep 2022 - Feb 2023",
       points: [
-        "Developed and maintained internal healthcare management apps.",
-        "Mentored mid-level and junior developers.",
-        "Built front-end features for internal healthcare applications.",
+        "Built internal healthcare management applications using React, TypeScript, MongoDB, and GraphQL.",
+        "Mentored junior and mid-level developers and supported scalable feature delivery.",
       ],
-      stack: ["React.js", "TypeScript", "MongoDB", "GraphQL", "Jira", "Git", "Tailwind CSS"],
+      stack: ["React", "TypeScript", "MongoDB", "GraphQL", "Tailwind CSS"],
     },
     {
       buildingLabel: "NGCP",
-      role: "Resource Optimization and Market Interface Division Lead Specialist",
+      role: "Lead/Senior Specialist, Software Development",
       company: "National Grid Corporation of the Philippines",
-      dates: "Nov 2020 - Sep 2022",
+      dates: "Jan 2016 - Sep 2022",
       points: [
-        "Migrated and modernized legacy business systems.",
-        "Led development of Project Sentinel and the 5-Min Real-time Dashboard.",
+        "Led enterprise application development and legacy modernization, including the Single Sign-On/Active Directory, Market Data Interchange, and Project Sentinel initiatives.",
+        "Delivered the 5-Minute Real-Time Dashboard and operational applications involving SCADA data integrations.",
+        "Owned the full SDLC for micro-apps, background job automation, and internal platforms.",
       ],
-      stack: ["Laravel", "Vue.js 2", "Node.js", "Oracle DB", "MongoDB", "SCADA", "Bootstrap"],
+      stack: ["Laravel", "Vue.js", "Node.js", "Oracle DB", "MongoDB", "SCADA", "Bootstrap"],
     },
     {
-      buildingLabel: "NGCP",
-      role: "Information Standards Senior Specialist",
-      company: "National Grid Corporation of the Philippines",
-      dates: "Jan 2016 - Nov 2020",
+      buildingLabel: "Earlier",
+      role: "Earlier experience",
+      company: "Teradata, Commission on Audit, NGCP",
+      dates: "2013 - 2015",
       points: [
-        "Led multiple enterprise software projects including Single Sign-On and Market Data Interchange.",
-        "Oversaw the full SDLC of micro-apps and background job automation.",
+        "Teradata: customized marketing operations applications for enterprise clients.",
+        "Commission on Audit: developed internal systems including the COA Data Warehouse and Asset Monitoring tools.",
+        "NGCP: developed and deployed the Central Receiving and Monitoring Center App.",
       ],
-      stack: ["Laravel", "Node.js", "Vue.js", "Oracle DB", "MongoDB", "Bootstrap"],
-    },
-    {
-      buildingLabel: "Teradata",
-      role: "Technical Consultant",
-      company: "Teradata",
-      dates: "Jun 2015 - Sep 2015",
-      points: [
-        "Customized marketing operations applications for major enterprise clients.",
-        "Implemented enhancements using C# and JavaScript.",
-      ],
-      stack: ["C#", "JavaScript"],
-    },
-    {
-      buildingLabel: "COA",
-      role: "Computer Programmer II",
-      company: "Commission on Audit",
-      dates: "Dec 2013 - May 2015",
-      points: ["Developed internal systems including COA Data Warehouse and Asset Monitoring tools."],
-      stack: ["C#", ".NET MVC", "MSSQL", "AngularJS", "Bootstrap"],
-    },
-    {
-      buildingLabel: "NGCP",
-      role: "Web Developer",
-      company: "National Grid Corporation of the Philippines",
-      dates: "Jun 2013 - Nov 2013",
-      points: ["Developed and deployed the Central Receiving and Monitoring Center App."],
-      stack: ["C#", ".NET", "MSSQL", "jQuery", "Bootstrap"],
+      stack: ["C#", ".NET MVC", "MSSQL", "AngularJS", "JavaScript", "jQuery", "Bootstrap"],
     },
   ]
 
@@ -311,7 +283,7 @@
       baseHeight: 148,
     }
 
-    const heights = [210, 188, 175, 196, 228, 240, 160, 172, 150]
+    const heights = [204, 178, 190, 170, 222, 158]
     const keyState = { left: false, right: false }
     const touchState = { left: false, right: false }
     const world = {
@@ -332,9 +304,9 @@
       items: [],
       visited: new Set(),
       completed: false,
-      coins: 0,
-      qblocks: [],
-      flagpole: null,
+      tasks: 0,
+      taskBlocks: [],
+      gate: null,
     }
 
     let rafId = null
@@ -344,7 +316,7 @@
 
       world.items = experiences.map((job, index) => {
         const building = document.createElement("article")
-        const variant = index % 2 === 0 ? "variant-brick" : "variant-metal"
+        const variant = index % 2 === 0 ? "variant-a" : "variant-b"
         building.className = `experience-building ${variant}`
 
         const label = document.createElement("div")
@@ -364,8 +336,12 @@
         building.style.width = `${layout.width}px`
         building.style.height = `${height}px`
 
+        // Status lamp: idle until the station has been visited.
+        const lamp = document.createElement("span")
+        lamp.className = "building-lamp"
+
         label.append(sign, years)
-        building.append(label)
+        building.append(label, lamp)
         building.title = `Walk to ${job.buildingLabel}`
         building.addEventListener("click", () => {
           walkTo(x + layout.width / 2 - 20)
@@ -382,37 +358,36 @@
         }
       })
 
-      // Decorative pipes in the gaps between buildings
-      const pipes = [
-        { gapAfter: 1, height: 58 },
-        { gapAfter: 4, height: 74 },
-        { gapAfter: 7, height: 64 },
+      // Decorative stacks of work packets waiting on the line between stations
+      const crates = [
+        { gapAfter: 2, height: 56 },
+        { gapAfter: 4, height: 28 },
       ]
-      pipes.forEach((pipe) => {
+      crates.forEach((crate) => {
         const node = document.createElement("div")
-        node.className = "experience-pipe"
-        node.style.left = `${layout.startX + pipe.gapAfter * layout.spacing + layout.width + 14}px`
-        node.style.height = `${pipe.height}px`
+        node.className = "experience-crate"
+        node.style.left = `${layout.startX + crate.gapAfter * layout.spacing + layout.width + 22}px`
+        node.style.height = `${crate.height}px`
         fragment.appendChild(node)
       })
 
-      // Bumpable ? blocks (world x of each block's center)
-      world.qblocks = [112, 338, 968, 1598].map((center) => {
+      // Task blocks to jump into (world x of each block's center)
+      world.taskBlocks = [112, 548, 968].map((center) => {
         const node = document.createElement("div")
-        node.className = "experience-qblock"
-        node.textContent = "?"
+        node.className = "experience-taskblock"
+        node.textContent = "⚙"
         node.style.left = `${center - 17}px`
         fragment.appendChild(node)
         return { center, node, used: false }
       })
 
-      // Flagpole past the last building marks the end of the journey
-      const pole = document.createElement("div")
-      pole.className = "experience-flagpole"
-      pole.innerHTML = '<span class="flagpole-ball"></span><span class="flagpole-flag"></span>'
-      pole.style.left = `${layout.startX + (experiences.length - 1) * layout.spacing + layout.width + 36}px`
-      fragment.appendChild(pole)
-      world.flagpole = pole
+      // Release gate past the last station marks the end of the line
+      const gate = document.createElement("div")
+      gate.className = "experience-gate"
+      gate.innerHTML = '<span class="gate-lamp"></span><span class="gate-banner">SHIP</span>'
+      gate.style.left = `${layout.startX + (experiences.length - 1) * layout.spacing + layout.width + 40}px`
+      fragment.appendChild(gate)
+      world.gate = gate
 
       worldEl.innerHTML = ""
       worldEl.appendChild(fragment)
@@ -421,23 +396,34 @@
 
     function setDetails(job) {
       if (!job) {
-        roleEl.textContent = "Walk to a building"
-        companyEl.textContent = "Move close to any building to inspect the role, dates, responsibilities, and stack."
+        roleEl.textContent = "Walk to a station"
+        companyEl.textContent = "Move close to any station to inspect the role, dates, responsibilities, and stack."
         datesEl.textContent = "Latest roles are placed on the left."
-        pointsEl.innerHTML = [
-          "<li>Tip: hold the movement buttons on mobile for continuous walking.</li>",
-          "<li>Keyboard: ← / → or A / D to walk, W or Space to jump.</li>",
-          "<li>Tap any building to walk straight to it and collect its star.</li>",
-        ].join("")
-        stackEl.innerHTML = ""
+        fillList(pointsEl, "li", [
+          "Tip: hold the movement buttons on mobile for continuous walking.",
+          "Keyboard: ← / → or A / D to walk, W or Space to jump.",
+          "Tap any station to walk straight to it and log the role.",
+        ])
+        stackEl.textContent = ""
         return
       }
 
       roleEl.textContent = job.role
       companyEl.textContent = job.company
       datesEl.textContent = job.dates
-      pointsEl.innerHTML = job.points.map((point) => `<li>${point}</li>`).join("")
-      stackEl.innerHTML = job.stack.map((skill) => `<span class="experience-chip">${skill}</span>`).join("")
+      fillList(pointsEl, "li", job.points)
+      fillList(stackEl, "span", job.stack, "experience-chip")
+    }
+
+    function fillList(parent, tag, texts, className) {
+      parent.replaceChildren(
+        ...texts.map((text) => {
+          const node = document.createElement(tag)
+          if (className) node.className = className
+          node.textContent = text
+          return node
+        }),
+      )
     }
 
     function updateActiveBuilding() {
@@ -478,10 +464,11 @@
       if (world.visited.has(index)) return
       world.visited.add(index)
 
-      const flag = document.createElement("span")
-      flag.className = "building-flag"
-      flag.textContent = "★"
-      world.items[index].node.appendChild(flag)
+      const badge = document.createElement("span")
+      badge.className = "building-flag"
+      badge.textContent = "✓"
+      world.items[index].node.classList.add("visited")
+      world.items[index].node.appendChild(badge)
 
       updateHud()
       if (world.visited.size === world.items.length) celebrate()
@@ -489,18 +476,18 @@
 
     function updateHud() {
       if (hudProgressEl) hudProgressEl.textContent = `ROLES ${world.visited.size}/${world.items.length}`
-      if (hudCoinsEl) hudCoinsEl.textContent = `×${world.coins}`
+      if (hudCoinsEl) hudCoinsEl.textContent = `TASKS ${world.tasks}`
     }
 
     function celebrate() {
       if (world.completed) return
       world.completed = true
       if (hudEl) hudEl.classList.add("complete")
-      if (world.flagpole) world.flagpole.classList.add("down")
+      if (world.gate) world.gate.classList.add("open")
 
       const toast = document.createElement("div")
       toast.className = "experience-toast"
-      toast.textContent = "🏆 Career journey complete!"
+      toast.textContent = "✓ All roles logged. Shipped!"
       sceneEl.appendChild(toast)
       window.setTimeout(() => toast.remove(), 4200)
     }
@@ -508,14 +495,14 @@
     function jump() {
       if (world.personY > 0 || world.velocityY > 0) return
       world.velocityY = world.jumpImpulse
-      // Check for a ? block bump near the apex of the jump (t = impulse / gravity).
+      // Check for a task block bump near the apex of the jump (t = impulse / gravity).
       window.setTimeout(bumpNearbyBlock, 340)
     }
 
     function bumpNearbyBlock() {
       if (rafId === null || world.personY <= 0) return
       const headX = world.personX + 20
-      const block = world.qblocks.find((item) => Math.abs(item.center - headX) <= 28)
+      const block = world.taskBlocks.find((item) => Math.abs(item.center - headX) <= 28)
       if (!block) return
 
       block.node.classList.remove("bumped")
@@ -525,15 +512,16 @@
       if (block.used) return
       block.used = true
       block.node.classList.add("used")
-      block.node.textContent = ""
+      block.node.textContent = "✓"
 
-      const coin = document.createElement("span")
-      coin.className = "experience-coin"
-      coin.style.left = `${block.center - 9}px`
-      worldEl.appendChild(coin)
-      window.setTimeout(() => coin.remove(), 700)
+      const token = document.createElement("span")
+      token.className = "experience-token"
+      token.textContent = "+1"
+      token.style.left = `${block.center - 14}px`
+      worldEl.appendChild(token)
+      window.setTimeout(() => token.remove(), 700)
 
-      world.coins += 1
+      world.tasks += 1
       updateHud()
     }
 
@@ -777,33 +765,50 @@
     })
   }
 
-  // ---------------------- Experience: game toggle ----------------------
-  const gameToggle = qs("#game-toggle")
-  const gameWrap = qs("#experience-game")
+  // ---------------------- Experience: timeline / game switch ----------------------
+  /**
+   * The timeline is the default view; the game swaps in for it. Without
+   * scripting the switch stays hidden and only the timeline is shown.
+   */
+  const viewTimelineBtn = qs("#view-timeline")
+  const viewGameBtn = qs("#view-game")
+  const timelineView = qs("#experience-timeline")
+  const gameView = qs("#experience-game")
+  const experienceSection = qs("#experience")
 
-  if (gameToggle && gameWrap) {
+  if (viewTimelineBtn && viewGameBtn && timelineView && gameView) {
     let game = null
 
-    gameToggle.addEventListener("click", () => {
-      const opening = gameWrap.hasAttribute("hidden")
+    const showView = (view) => {
+      const playing = view === "game"
+      timelineView.hidden = playing
+      gameView.hidden = !playing
+      viewTimelineBtn.setAttribute("aria-pressed", String(!playing))
+      viewGameBtn.setAttribute("aria-pressed", String(playing))
 
-      if (opening) {
-        gameWrap.removeAttribute("hidden")
-        // Build on first open, once the scene has a real width to measure.
-        if (!game) {
-          game = initCareerGame() || {}
-        } else if (game.remeasure) {
-          game.remeasure()
-        }
-        gameWrap.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "nearest" })
-      } else {
-        gameWrap.setAttribute("hidden", "")
+      if (!playing) return
+      // Build on first open, once the scene has a real width to measure.
+      if (!game) {
+        game = initCareerGame() || {}
+      } else if (game.remeasure) {
+        game.remeasure()
       }
+    }
 
-      gameToggle.setAttribute("aria-expanded", String(opening))
-      gameToggle.classList.toggle("open", opening)
-      const label = qs(".game-toggle-text", gameToggle)
-      if (label) label.textContent = opening ? "Hide the game" : "Or walk through it as a game"
+    viewTimelineBtn.addEventListener("click", () => showView("timeline"))
+    viewGameBtn.addEventListener("click", () => showView("game"))
+
+    // Shortcut from the hero: open the game view and jump to the section.
+    qsa("[data-play-game]").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault()
+        showView("game")
+        if (experienceSection) {
+          const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          experienceSection.scrollIntoView({ behavior: reduce ? "instant" : "smooth", block: "start" })
+        }
+        viewGameBtn.focus({ preventScroll: true })
+      })
     })
   }
 })()
