@@ -1,0 +1,11 @@
+# Line endings are pinned to LF for the site and tooling files.
+#
+# tools/sync-experience.mjs reads index.html and compares it against generated
+# markup joined with \n. With core.autocrlf=true and nothing pinned here, a
+# fresh Windows clone checks out CRLF and `npm run check:experience` fails
+# before any edit has been made.
+
+*.html text eol=lf
+*.css  text eol=lf
+*.js   text eol=lf
+*.mjs  text eol=lf
