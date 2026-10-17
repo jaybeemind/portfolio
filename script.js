@@ -251,34 +251,50 @@
   renderTimeline()
 
   /**
-   * Keeps the timeline skimmable: each role shows its title, company, and stack,
-   * and the bullet points open on request. Without scripting every point shows.
+   * Keeps the timeline skimmable: each role shows its first two points, and the
+   * rest open on request. Without scripting every point shows.
    */
+  const visiblePoints = 2
+
   function enhanceTimeline() {
     qsa("#experience-timeline .timeline-item").forEach((item, index) => {
       const points = qs(".timeline-points", item)
+      const stack = qs(".timeline-stack", item)
       if (!points) return
+
+      // Lead with what was done, then the tools.
+      if (stack) points.after(stack)
+
+      const extra = Array.from(points.children).slice(visiblePoints)
+      if (!extra.length) return
+
+      const extraList = document.createElement("ul")
+      extraList.className = "timeline-points"
+      extraList.append(...extra)
 
       const more = document.createElement("div")
       more.className = "timeline-more"
       more.id = `timeline-more-${index}`
       more.inert = true
-      more.appendChild(points)
+      more.appendChild(extraList)
+      points.after(more)
 
+      const label = `${extra.length} more`
       const toggle = document.createElement("button")
       toggle.type = "button"
       toggle.className = "timeline-toggle"
       toggle.setAttribute("aria-expanded", "false")
       toggle.setAttribute("aria-controls", more.id)
-      toggle.innerHTML = '<span aria-hidden="true">+</span> What I did'
+      toggle.innerHTML = `<span aria-hidden="true">+</span> <b>${label}</b>`
       toggle.addEventListener("click", () => {
         const open = !item.classList.contains("open")
         item.classList.toggle("open", open)
         toggle.setAttribute("aria-expanded", String(open))
+        qs("b", toggle).textContent = open ? "Show less" : label
         more.inert = !open
       })
 
-      item.append(toggle, more)
+      more.after(toggle)
     })
   }
 
