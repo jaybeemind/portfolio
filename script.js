@@ -856,8 +856,7 @@
         event.preventDefault()
         showView("game")
         if (experienceSection) {
-          const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          experienceSection.scrollIntoView({ behavior: reduce ? "instant" : "smooth", block: "start" })
+          experienceSection.scrollIntoView({ behavior: motionOn() ? "smooth" : "instant", block: "start" })
         }
         viewGameBtn.focus({ preventScroll: true })
       })
@@ -867,11 +866,11 @@
   // ============================================================
   //  MOTION
   //  Everything below is decoration layered on readable markup.
-  //  html.motion-off (system setting or the nav toggle) keeps the
-  //  fades but drops movement, loops, and scroll-linked effects.
+  //  Motion starts on. html.motion-off (set from the nav toggle and
+  //  remembered) keeps the fades but drops movement, loops, and
+  //  scroll-linked effects.
   // ============================================================
   const root = document.documentElement
-  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
   const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)")
   const motionOn = () => !root.classList.contains("motion-off")
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
@@ -904,17 +903,6 @@
     motionToggle.setAttribute("aria-label", "Animations")
     motionToggle.addEventListener("click", () => applyMotion(!motionOn(), true))
   }
-
-  // Follow the system setting live, unless the reader has made their own choice.
-  motionQuery.addEventListener("change", (event) => {
-    let saved = null
-    try {
-      saved = localStorage.getItem("motion")
-    } catch (error) {
-      saved = null
-    }
-    if (!saved) applyMotion(!event.matches, false)
-  })
 
   // ---------------------- Motion: split headings into words ----------------------
   /**
