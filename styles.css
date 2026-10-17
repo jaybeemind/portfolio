@@ -1175,6 +1175,8 @@ html:not(.js) .marquee-list {flex-wrap:wrap;flex-shrink:1;width:100%;animation:n
  .hero-stats {grid-template-columns:1fr 1fr;}
  .hero-stats > div:last-child {grid-column:1 / -1;}
  .footer-container {flex-direction:column;gap:10px;}
+ .contact-panel {padding:36px 24px;}
+ .contact-email {font-size:.95rem;padding:14px 20px;gap:10px;overflow-wrap:normal;}
 }
 @media print {
  :root {--color-heading:#000;--color-text:#222;--color-text-muted:#444;--color-accent:#222;--color-border:#bbb;}
