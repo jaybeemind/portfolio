@@ -263,6 +263,19 @@ body[data-accent="blue"] .backdrop {--glow-color:#8db4ff;--glow-x:70%;--glow-y:2
 .credentials dt {font-weight:600;color:var(--color-heading);}
 .credentials dd {font-size:.875rem;color:var(--color-text-muted);}
 
+/* Reference: one quote from a former lead, words rising in like a heading. */
+.reference .section-heading {margin-bottom:28px;}
+.quote {max-width:980px;}
+.quote-mark {width:56px;height:auto;margin-bottom:26px;fill:var(--sec);filter:drop-shadow(0 0 18px color-mix(in srgb,var(--sec) 45%,transparent));}
+.quote-lead {font-family:var(--font-display);font-size:clamp(1.55rem,3.3vw,2.6rem);font-weight:500;line-height:1.22;letter-spacing:-.025em;color:var(--color-heading);text-wrap:pretty;}
+.quote-hl {color:var(--sec);}
+.quote-more {max-width:62ch;margin-top:26px;font-size:1.125rem;color:var(--color-text-muted);}
+.quote figcaption {display:flex;align-items:center;gap:16px;margin-top:36px;padding-top:26px;border-top:1px solid var(--color-border);}
+.quote-avatar {display:grid;place-items:center;flex-shrink:0;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--color-accent-3),#f59e0b 60%,var(--color-accent));color:#1f1405;font-family:var(--font-display);font-weight:700;letter-spacing:-.02em;}
+.quote-who {display:grid;gap:2px;}
+.quote-who strong {color:var(--color-heading);font-weight:600;}
+.quote-who span {font-size:.875rem;color:var(--color-text-muted);}
+
 /* Stack: three rows of tools drifting past in alternating directions. */
 .skills .section-heading {margin-bottom:40px;}
 .marquee-group {display:grid;gap:18px;}
