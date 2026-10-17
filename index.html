@@ -88,19 +88,18 @@
 
     <link
       rel="stylesheet"
-      href="styles.css?v=20261017.7"
+      href="styles.css?v=20261017.8"
     />
 
-    <!-- Scripting enables reveals and the optional game. Motion follows the
-         reader's system setting unless they flip the toggle in the nav. -->
+    <!-- Scripting enables reveals and the optional game. Motion starts on;
+         once the reader flips the toggle in the nav, their choice is kept. -->
     <script>
       (function () {
         var root = document.documentElement
         var saved = null
         try { saved = localStorage.getItem("motion") } catch (e) {}
-        var reduce = saved ? saved === "off" : window.matchMedia("(prefers-reduced-motion: reduce)").matches
         root.classList.add("js")
-        if (reduce) root.classList.add("motion-off")
+        if (saved === "off") root.classList.add("motion-off")
       })()
     </script>
   </head>
@@ -548,6 +547,6 @@
 
  <dialog class="lightbox" id="lightbox" aria-label="ROOC dashboard screenshot"><img class="lightbox-image" id="lightbox-image" alt=""><button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close screenshot">&times;</button></dialog>
  <footer class="footer"><div class="section-container footer-container"><p>&copy; <span id="year">2026</span> John Berlyn Isip</p><a href="#hero">Back to top ↑</a></div></footer>
- <script src="script.js?v=20261017.7"></script>
+ <script src="script.js?v=20261017.8"></script>
  </body>
 </html>

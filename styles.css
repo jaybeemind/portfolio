@@ -1,5 +1,5 @@
 /* Portfolio: a short, motion-led pitch. Dark-first, mobile-first, no build step.
-   Motion runs unless the reader prefers less; html.motion-off strips it back to fades. */
+   Motion starts on; html.motion-off (the nav toggle) strips it back to fades. */
 @property --glow-color {syntax:'<color>';inherits:true;initial-value:#8db4ff;}
 @property --glow-x {syntax:'<percentage>';inherits:true;initial-value:70%;}
 @property --glow-y {syntax:'<percentage>';inherits:true;initial-value:20%;}
@@ -1074,35 +1074,26 @@ html:not(.js) .marquee-list {flex-wrap:wrap;flex-shrink:1;width:100%;animation:n
   }
 }
 
-/* Limb swing stays on under reduced motion — without it the walking
+/* Limb swing stays on with motion off — without it the walking
    character appears to slide, which reads as broken rather than calm.
    Only the decorative extras are toned down. */
-@media (prefers-reduced-motion: reduce) {
-  .experience-person.walking::after {
-    display: none;
-  }
+.motion-off .experience-person.walking::after {
+  display: none;
+}
 
-  /* Outranks the site-wide reduced-motion reset further down. */
-  .experience-person.walking .person-arm,
-  .experience-person.walking .person-leg {
-    animation-duration: 0.42s !important;
-    animation-iteration-count: infinite !important;
-  }
+.motion-off .experience-world::before,
+.motion-off .building-flag,
+.motion-off .experience-toast,
+.motion-off .experience-taskblock.bumped {
+  animation: none;
+}
 
-  .experience-world::before,
-  .building-flag,
-  .experience-toast,
-  .experience-taskblock.bumped {
-    animation: none;
-  }
-
-  .experience-gate::after {
-    transition: none;
-  }
+.motion-off .experience-gate::after {
+  transition: none;
 }
 
 
-/* Reduced motion: chosen in the nav, or inherited from the system setting.
+/* Reduced motion: chosen with the nav toggle and remembered.
    Content still fades in, but nothing travels, loops, or tracks the scroll. */
 .motion-off {scroll-behavior:auto;}
 .motion-off [data-reveal],.motion-off .timeline-item {transform:none!important;transition:opacity .5s ease!important;}
