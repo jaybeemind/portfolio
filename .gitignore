@@ -1,7 +1,7 @@
-# Agent and skill definitions — local tooling, not part of the site
-.claude/agents/
-.claude/skills/
+# Agent instructions, skills, and tooling config - local only, not part of the site
+.claude/
 .agents/
+AGENTS.md
 
 # Build-time tooling deps (tools/ only; the site itself ships no dependencies)
 node_modules/
