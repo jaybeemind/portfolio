@@ -19,6 +19,8 @@ Copy is kept to a line or two per idea, and the detail opens on request.
   three-step flow and a one-line result, then the ROOC independent app.
 - **Career:** the generated timeline shows role, company, and stack; "What I did"
   opens the bullet points. The Timeline / Play it switch still offers the game.
+- **Reference:** a quote from Cesar Vega, who managed JB directly at GoTeam /
+  Comtrac, taken from his LinkedIn recommendation (July 2023).
 - **Stack, about, and contact:** scrolling tool rows, a short bio, and the email CTA.
 
 No invented performance numbers or delivery guarantees. The ROOC screenshot uses
