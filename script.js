@@ -1,6 +1,7 @@
 /* ============================================================
    PORTFOLIO – script.js
-   Vanilla JS: navigation, mobile menu, screenshot viewer,
+   Vanilla JS: navigation, mobile menu, motion toggle, scroll
+   reveals and scroll-linked transitions, screenshot viewer,
    career timeline + optional side-scrolling career game
    ============================================================ */
 
@@ -248,6 +249,40 @@
   }
 
   renderTimeline()
+
+  /**
+   * Keeps the timeline skimmable: each role shows its title, company, and stack,
+   * and the bullet points open on request. Without scripting every point shows.
+   */
+  function enhanceTimeline() {
+    qsa("#experience-timeline .timeline-item").forEach((item, index) => {
+      const points = qs(".timeline-points", item)
+      if (!points) return
+
+      const more = document.createElement("div")
+      more.className = "timeline-more"
+      more.id = `timeline-more-${index}`
+      more.inert = true
+      more.appendChild(points)
+
+      const toggle = document.createElement("button")
+      toggle.type = "button"
+      toggle.className = "timeline-toggle"
+      toggle.setAttribute("aria-expanded", "false")
+      toggle.setAttribute("aria-controls", more.id)
+      toggle.innerHTML = '<span aria-hidden="true">+</span> What I did'
+      toggle.addEventListener("click", () => {
+        const open = !item.classList.contains("open")
+        item.classList.toggle("open", open)
+        toggle.setAttribute("aria-expanded", String(open))
+        more.inert = !open
+      })
+
+      item.append(toggle, more)
+    })
+  }
+
+  enhanceTimeline()
 
   // ---------------------- Experience: optional career game ----------------------
   /**
@@ -812,4 +847,314 @@
       })
     })
   }
+
+  // ============================================================
+  //  MOTION
+  //  Everything below is decoration layered on readable markup.
+  //  html.motion-off (system setting or the nav toggle) keeps the
+  //  fades but drops movement, loops, and scroll-linked effects.
+  // ============================================================
+  const root = document.documentElement
+  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)")
+  const motionOn = () => !root.classList.contains("motion-off")
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value))
+
+  // ---------------------- Motion: toggle ----------------------
+  const motionToggle = qs("#motion-toggle")
+  const flowSvg = qs("#flow-svg")
+
+  function applyMotion(on, save) {
+    root.classList.toggle("motion-off", !on)
+    if (motionToggle) {
+      motionToggle.setAttribute("aria-pressed", String(on))
+      motionToggle.title = on ? "Turn animations off" : "Turn animations on"
+    }
+    if (flowSvg && typeof flowSvg.pauseAnimations === "function") {
+      on ? flowSvg.unpauseAnimations() : flowSvg.pauseAnimations()
+    }
+    if (save) {
+      try {
+        localStorage.setItem("motion", on ? "on" : "off")
+      } catch (error) {
+        // Storage can be blocked; the choice then lasts for this visit only.
+      }
+    }
+    if (!on) settleCounters()
+    requestScrollUpdate()
+  }
+
+  if (motionToggle) {
+    motionToggle.setAttribute("aria-label", "Animations")
+    motionToggle.addEventListener("click", () => applyMotion(!motionOn(), true))
+  }
+
+  // Follow the system setting live, unless the reader has made their own choice.
+  motionQuery.addEventListener("change", (event) => {
+    let saved = null
+    try {
+      saved = localStorage.getItem("motion")
+    } catch (error) {
+      saved = null
+    }
+    if (!saved) applyMotion(!event.matches, false)
+  })
+
+  // ---------------------- Motion: split headings into words ----------------------
+  /**
+   * Wraps each word in a clipping span so headings can rise into place word by
+   * word. Nested markup such as the hero's accent span is preserved.
+   */
+  function splitWords(el) {
+    let index = 0
+
+    const walk = (node) => {
+      Array.from(node.childNodes).forEach((child) => {
+        if (child.nodeType === Node.ELEMENT_NODE) {
+          walk(child)
+          return
+        }
+        if (child.nodeType !== Node.TEXT_NODE || !child.textContent.trim()) return
+
+        const fragment = document.createDocumentFragment()
+        child.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return
+          if (/^\s+$/.test(part)) {
+            fragment.appendChild(document.createTextNode(" "))
+            return
+          }
+          const outer = document.createElement("span")
+          const inner = document.createElement("span")
+          outer.className = "w"
+          inner.textContent = part
+          inner.style.setProperty("--wi", index++)
+          outer.appendChild(inner)
+          fragment.appendChild(outer)
+        })
+        child.replaceWith(fragment)
+      })
+    }
+
+    walk(el)
+  }
+
+  qsa("[data-split]").forEach(splitWords)
+
+  // ---------------------- Motion: reveal on scroll ----------------------
+  // Siblings that reveal together are staggered by their order in the parent.
+  qsa("[data-reveal]").forEach((el) => {
+    const siblings = Array.from(el.parentElement.children).filter((node) => node.hasAttribute("data-reveal"))
+    el.style.setProperty("--d", Math.min(siblings.indexOf(el), 6) * 90)
+  })
+
+  const revealTargets = qsa("[data-reveal], [data-split], .timeline-item, .section-heading .eyebrow")
+
+  function reveal(el) {
+    el.classList.add("in")
+    if (el.matches(".hero-stats > div, .hero-stats > div *")) runCounters(el)
+  }
+
+  if ("IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          reveal(entry.target)
+          revealObserver.unobserve(entry.target)
+        })
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
+    )
+    revealTargets.forEach((el) => revealObserver.observe(el))
+  } else {
+    revealTargets.forEach(reveal)
+  }
+
+  // ---------------------- Motion: counters ----------------------
+  const careerStart = 2013
+  qsa("[data-count-years]").forEach((el) => {
+    el.dataset.count = String(new Date().getFullYear() - careerStart)
+    el.textContent = el.dataset.count
+  })
+
+  function runCounters(scope) {
+    qsa("[data-count]", scope).forEach((el) => {
+      const target = Number(el.dataset.count)
+      if (!motionOn() || el.dataset.counted) {
+        el.textContent = String(target)
+        return
+      }
+      el.dataset.counted = "true"
+      const start = performance.now()
+      const duration = 1400
+      const step = (now) => {
+        const t = clamp((now - start) / duration, 0, 1)
+        const eased = 1 - Math.pow(1 - t, 3)
+        el.textContent = String(Math.round(target * eased))
+        if (t < 1) window.requestAnimationFrame(step)
+      }
+      el.textContent = "0"
+      window.requestAnimationFrame(step)
+    })
+  }
+
+  function settleCounters() {
+    qsa("[data-count]").forEach((el) => {
+      el.textContent = el.dataset.count
+    })
+  }
+
+  // ---------------------- Motion: section accent ----------------------
+  // The backdrop glow drifts to the accent of whichever section holds the middle of the screen.
+  if ("IntersectionObserver" in window) {
+    const accentObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.target.dataset.accent) {
+            document.body.dataset.accent = entry.target.dataset.accent
+          }
+        })
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    )
+    qsa("section[data-accent]").forEach((section) => accentObserver.observe(section))
+  }
+
+  // ---------------------- Motion: scroll-linked effects ----------------------
+  const progressBar = qs(".scroll-progress")
+  const hero = qs("#hero")
+  const cases = Array.from(qsa(".case-stack .case"))
+  const featureShot = qs(".feature-shot .case-shot-link")
+  const timelineEl = qs("#experience-timeline")
+  const timelineItems = Array.from(qsa("#experience-timeline .timeline-item"))
+  const stackQuery = window.matchMedia("(min-width: 761px)")
+  let scrollQueued = false
+
+  function updateScrollEffects() {
+    scrollQueued = false
+    const vh = window.innerHeight
+    const maxScroll = document.documentElement.scrollHeight - vh
+    const animate = motionOn()
+
+    if (progressBar) progressBar.style.setProperty("--progress", maxScroll > 0 ? (window.scrollY / maxScroll).toFixed(4) : 0)
+
+    if (hero) hero.style.setProperty("--hero-p", animate ? clamp(window.scrollY / hero.offsetHeight, 0, 1).toFixed(3) : 0)
+
+    // Stacked case studies: as the next card slides over, the one beneath settles back.
+    const stacking = animate && stackQuery.matches
+    cases.forEach((card, index) => {
+      const next = cases[index + 1]
+      if (!stacking || !next) {
+        card.style.removeProperty("--stack-scale")
+        card.style.removeProperty("--stack-dim")
+        return
+      }
+      const stickTop = parseFloat(getComputedStyle(card).top) || 0
+      const covered = clamp(1 - (next.getBoundingClientRect().top - stickTop) / card.offsetHeight, 0, 1)
+      card.style.setProperty("--stack-scale", (1 - covered * 0.06).toFixed(4))
+      card.style.setProperty("--stack-dim", (1 - covered * 0.45).toFixed(4))
+    })
+
+    // The ROOC screenshot tilts back and flattens as it reaches the middle of the screen.
+    if (featureShot) {
+      if (animate) {
+        const rect = featureShot.getBoundingClientRect()
+        const offset = clamp((rect.top + rect.height / 2 - vh / 2) / (vh / 2), 0, 1)
+        featureShot.style.setProperty("--tilt", `${(offset * 16).toFixed(2)}deg`)
+      } else {
+        featureShot.style.removeProperty("--tilt")
+      }
+    }
+
+    // Career rail fills toward the reading line; each role lights when the charge reaches it.
+    if (timelineEl && !timelineEl.hidden) {
+      const rect = timelineEl.getBoundingClientRect()
+      const fill = clamp((vh * 0.62 - rect.top) / rect.height, 0, 1)
+      timelineEl.style.setProperty("--fill", animate ? fill.toFixed(4) : 1)
+      timelineItems.forEach((item) => {
+        const reached = item.getBoundingClientRect().top - rect.top <= fill * rect.height + 8
+        item.classList.toggle("lit", !animate || reached)
+      })
+    }
+  }
+
+  function requestScrollUpdate() {
+    if (scrollQueued) return
+    scrollQueued = true
+    window.requestAnimationFrame(updateScrollEffects)
+  }
+
+  window.addEventListener("scroll", requestScrollUpdate, { passive: true })
+  window.addEventListener("resize", requestScrollUpdate)
+  if (viewTimelineBtn) viewTimelineBtn.addEventListener("click", requestScrollUpdate)
+  updateScrollEffects()
+
+  // ---------------------- Motion: marquee rows ----------------------
+  // Each row is doubled so the loop is seamless; the copy is hidden from assistive tech.
+  qsa(".marquee-track").forEach((track) => {
+    const list = qs(".marquee-list", track)
+    if (!list) return
+    // A short row is padded with repeats until it spans the track, or the loop shows a gap.
+    // Measured item by item so it also works while the row is wrapped with motion off.
+    const originals = Array.from(list.children)
+    const rowWidth = originals.reduce((sum, item) => sum + item.offsetWidth + 12, 0)
+    const needed = Math.max(window.innerWidth, window.screen.width || 0)
+    for (let width = rowWidth; rowWidth > 0 && width < needed; width += rowWidth) {
+      originals.forEach((item) => {
+        const repeat = item.cloneNode(true)
+        repeat.setAttribute("aria-hidden", "true")
+        list.appendChild(repeat)
+      })
+    }
+    const clone = list.cloneNode(true)
+    clone.setAttribute("aria-hidden", "true")
+    track.appendChild(clone)
+    // Constant speed regardless of row length: about 40px per second.
+    track.style.setProperty("--marquee-duration", `${Math.max(20, Math.round(list.scrollWidth / 40))}s`)
+  })
+
+  // ---------------------- Motion: pointer effects ----------------------
+  // Card spotlight follows the cursor.
+  qsa("[data-spotlight]").forEach((card) => {
+    card.addEventListener("pointermove", (event) => {
+      const rect = card.getBoundingClientRect()
+      card.style.setProperty("--mx", `${((event.clientX - rect.left) / rect.width) * 100}%`)
+      card.style.setProperty("--my", `${((event.clientY - rect.top) / rect.height) * 100}%`)
+    })
+  })
+
+  // Primary calls to action lean gently toward the cursor.
+  qsa("[data-magnetic]").forEach((el) => {
+    el.addEventListener("pointermove", (event) => {
+      if (!motionOn() || !finePointer.matches) return
+      const rect = el.getBoundingClientRect()
+      const dx = event.clientX - (rect.left + rect.width / 2)
+      const dy = event.clientY - (rect.top + rect.height / 2)
+      el.style.transform = `translate(${(dx * 0.18).toFixed(1)}px, ${(dy * 0.3).toFixed(1)}px)`
+    })
+    el.addEventListener("pointerleave", () => {
+      el.style.transform = ""
+    })
+  })
+
+  // ---------------------- Contact: copy email ----------------------
+  const copyBtn = qs("#copy-email")
+  if (copyBtn) {
+    copyBtn.addEventListener("click", async () => {
+      const original = "Copy email"
+      try {
+        await navigator.clipboard.writeText(copyBtn.dataset.copy)
+        copyBtn.textContent = "Copied ✓"
+        copyBtn.classList.add("copied")
+      } catch (error) {
+        copyBtn.textContent = "Select the address above"
+      }
+      window.setTimeout(() => {
+        copyBtn.textContent = original
+        copyBtn.classList.remove("copied")
+      }, 2200)
+    })
+  }
+
+  applyMotion(motionOn(), false)
 })()
