@@ -54,7 +54,6 @@ python -m http.server 4173 --bind 127.0.0.1
 | `index.html` | Content, metadata, and readable career history |
 | `styles.css` | Responsive design, print styles, and career game |
 | `script.js` | Navigation, motion, career data, screenshot viewer, and game |
-| `tools/sync-experience.mjs` | Keeps the HTML history aligned with career data |
 
 ## Updating career history
 
@@ -70,5 +69,6 @@ The generated HTML keeps the full history available without JavaScript. The
 same data renders the interactive game. Navigation also works without scripting;
 the game is only offered when scripting is available.
 
-Screenshot capture tooling is documented in `tools/README.md`. Keep credentials
-in the ignored `.env.local`; do not include it in deployment assets.
+The sync and screenshot capture scripts live in a local-only `tools/` folder
+that is not part of this repository. Keep credentials in the ignored
+`.env.local`; do not include it in deployment assets.

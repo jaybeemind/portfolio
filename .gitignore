@@ -3,6 +3,9 @@
 .agents/
 AGENTS.md
 
+# Dev-only scripts (screenshot capture, career-history sync) - local only
+tools/
+
 # Build-time tooling deps (tools/ only; the site itself ships no dependencies)
 node_modules/
 
