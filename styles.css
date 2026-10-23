@@ -311,6 +311,9 @@ html:not(.js) .marquee-list {flex-wrap:wrap;flex-shrink:1;width:100%;animation:n
 .talk h3 {font-size:clamp(1.6rem,2.6vw,2.2rem);letter-spacing:-.03em;margin-bottom:18px;}
 .talk-theme {max-width:40ch;margin-bottom:20px;padding-left:18px;border-left:2px solid var(--sec);font-family:var(--font-display);font-size:1.125rem;font-weight:500;line-height:1.35;color:var(--color-heading);}
 .talk-copy > p:not(.talk-eyebrow):not(.talk-theme) {max-width:48ch;margin-bottom:24px;}
+.talk-link {display:inline-block;margin:-2px 0 26px;font-size:.875rem;font-weight:600;color:var(--sec);}
+.talk-link span {display:inline-block;color:inherit;transition:transform .3s var(--ease-out);}
+.talk-link:hover span {transform:translate(2px,-2px);}
 .talk-shot-link {display:block;border-radius:14px;overflow:hidden;border:1px solid var(--color-border-strong);box-shadow:0 40px 80px -30px rgba(0,0,0,.8);transition:box-shadow .4s;}
 .talk-shot-link:hover {box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 2px var(--sec);}
 .talk-gallery {margin-top:56px;columns:3 230px;column-gap:18px;}
