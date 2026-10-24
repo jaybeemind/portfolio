@@ -120,7 +120,8 @@
         "Lead internal application delivery for the operator of the Philippines' national electricity transmission grid, owning the full SDLC from requirements through architecture, release, and production support.",
         "Architected and built a modular Django enterprise platform that consolidates manual operational processes into configurable workflow modules, with background processing and live PostgreSQL and Oracle integrations on Windows Server infrastructure.",
         "Develop AI-supported document processing within the platform to extract and route information from recurring compliance and reporting documents.",
-        "Automate repetitive business tasks with n8n, and lead ISO-aligned process improvement across business workflows, compliance activities, and operational reporting.",
+        "Run a self-hosted n8n instance on-prem for business automation, including a scheduled workflow that checks each day whether Power Outlook data is current and emails key personnel when it is stale or confirms when it has updated.",
+        "Lead ISO-aligned process improvement across business workflows, compliance activities, and operational reporting.",
         "Modernize legacy internal tools onto current Python/Django, Node.js, and SvelteKit stacks, and raise SDLC, QA, and DevOps standards for the team.",
       ],
       stack: [
