@@ -1418,6 +1418,7 @@ html:not(.js) .marquee-list {flex-wrap:wrap;flex-shrink:1;width:100%;animation:n
 .desk-stage[data-station="a"] .desk-still[data-still="a"],.desk-stage[data-station="b"] .desk-still[data-still="b"] {opacity:1;}
 .desk-clip {visibility:hidden;}
 .desk-clip.is-on {visibility:visible;}
+.desk-clip.is-front {z-index:1;}
 .desk-scrim {position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,10,16,.6),transparent 16%,transparent 58%,rgba(7,10,16,.72));}
 .desk-scrim::before,.desk-scrim::after {content:"";position:absolute;inset:0;transition:opacity .3s linear;}
 /* Solid under the content column, gone before it reaches his face. */

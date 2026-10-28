@@ -972,12 +972,12 @@
   // ---------------------- Desk stage: the lo-fi background ----------------------
   // JB at his desk, filmed from two sides. Station A: coffee, JB on the left, monitor on the
   // right. Station B: typing, mirrored. Sections take the stations in turn, so what you read
-  // sits where he is looking. When the section under the reading line changes he turns to the
-  // other monitor; in between he types, or rests with his coffee and takes the odd sip.
+  // sits where he is looking. While you scroll he works; once you stop he sips his coffee,
+  // like a lo-fi stream; when the section under the reading line changes he turns to the
+  // other monitor.
   //
-  // The four clips are cut from one source so every seam is pose-matched. Each turn opens on
-  // the frames its idle loop cycles through, so a turn can start from whatever pose the loop is
-  // in. A dark wipe inside each turn hides the one cut. tools/desk-clips/ renders them.
+  // Every clip starts and ends on its station's rest frame, so any clip can follow any other
+  // at a station and a turn always leaves from rest. tools/desk-clips/ renders them.
   function initDesk(stage) {
     const frameEl = qs("#desk-frame", stage)
     const holo = qs("#desk-holo", stage)
@@ -985,23 +985,23 @@
     const hudScene = qs("#desk-hud-scene", stage)
     const wideQuery = window.matchMedia("(min-width: 1100px) and (min-aspect-ratio: 5/4)")
     const FPS = 24
+    // Clips per station. An empty name means there is no footage for it yet; it is skipped.
     const CLIPS = {
-      idleA: { file: "desk-idle-a", loop: true, rate: 1 },
-      idleB: { file: "desk-idle-b", loop: true, rate: 1 },
-      aToB: { file: "desk-a-to-b", rate: 1.3, cut: 63.5 }, // cut: the frame where the wipe covers the cut
-      bToA: { file: "desk-b-to-a", rate: 1.3, cut: 98.5 },
+      a: { work: "desk-a-work", sip: "desk-a-sip", turn: "desk-a-to-b", label: "reviewing" },
+      b: { work: "desk-b-work", sip: "", turn: "desk-b-to-a", label: "typing" },
     }
-    // The coffee loop as runs of source frames: [a, b] plays a..b, [a, a, n] holds a for n frames.
-    // A long rest with the mug down, one sip, back to rest. Same runs as tools/desk-clips/render.mjs.
-    const COFFEE = [[0, 0, 120], [0, 20], [19, 15], [16, 20], [19, 1]]
-    const SIP_AT = COFFEE[0][2]
+    // Turns play a little fast, and swap the layout to the new side at the frame where he crosses.
+    const TURNS = { "desk-a-to-b": { rate: 1.3, swap: 63.5 }, "desk-b-to-a": { rate: 1.3, swap: 59.5 } }
+    // He sips only once the reader has stopped scrolling for a moment, then waits before the next.
+    const IDLE_MS = 1800
+    const SIP_GAP_MS = [6000, 11000]
     // Where his eyeline meets the monitor, as fractions of the source frame.
     const EYELINE = { a: [0.69, 0.44], b: [0.31, 0.4] }
     // Narrow screens crop the frame to JB himself (object-position x, in %).
     const FOCUS = { a: 24, b: 76 }
     const EMBLEMS = { services: "workflow", approach: "orbit", work: "laptop", experience: "db", reference: "quote", skills: "cube", about: "browser", speaking: "db", contact: "workflow" }
     const SOURCES = { laptop: ".object-laptop .laptop", cube: ".object-api .code-cube", db: ".object-db .database", workflow: ".object-workflow .workflow-tile", orbit: ".sculpture-automate .service-orbit", browser: ".sculpture-build .mini-browser", quote: ".quote-mark" }
-    const STATES = { a: "reviewing", sip: "sipping coffee", b: "typing", moving: "switching monitors", paused: "paused" }
+    const STATES = { sip: "sipping coffee", moving: "switching monitors", paused: "paused" }
     const connection = navigator.connection
     const lowData = !!(connection && (connection.saveData || /(^|-)(2g|3g)$/.test(connection.effectiveType || "")))
 
@@ -1035,67 +1035,122 @@
       emblems[name] = wrap
     })
 
-    const vids = {}
+    const vids = {} // clip name -> video element
     let station = "a" // where JB is
     let target = "a" // where the section under the reading line wants him
     let active = scenes[0]
+    let current = "" // the clip on screen
     let moving = false
     let live = false // clips are on screen
     let started = false // clips requested
-    let cutFrame = 0
+    let lastScroll = performance.now()
+    let nextSipAt = 0
     let holoY = 0
     let holoScale = 1
 
-    // Source frame shown at a given frame of the coffee loop.
-    function coffeeFrame(index) {
-      let rest = index
-      for (const [a, b, hold] of COFFEE) {
-        const length = hold || Math.abs(b - a) + 1
-        if (rest < length) return hold ? a : a + Math.sign(b - a) * rest
-        rest -= length
-      }
-      return 0
-    }
-    const loopFrame = (v, ahead = 0) => (Math.floor(v.currentTime * FPS) + ahead) % Math.round(v.duration * FPS)
+    const other = (side) => (side === "a" ? "b" : "a")
+    const ready = (name) => !!name && !!vids[name] && vids[name].readyState >= 3
+    const isSip = (name) => !!name && (name === CLIPS.a.sip || name === CLIPS.b.sip)
 
-    const idleOf = (side) => (side === "a" ? "idleA" : "idleB")
-    const turnFrom = (side) => (side === "a" ? "aToB" : "bToA")
-    const isReady = (v) => !!v && v.readyState >= 3
-
-    function whenReady(v) {
-      return new Promise((resolve) => {
-        if (isReady(v)) return resolve(v)
-        v.addEventListener("canplay", () => resolve(v), { once: true })
-      })
+    // What to play when the current clip gets back to rest.
+    function chooseNext() {
+      const set = CLIPS[station]
+      if (target !== station) return set.turn
+      const now = performance.now()
+      if (ready(set.sip) && now - lastScroll >= IDLE_MS && now >= nextSipAt) return set.sip
+      return set.work
     }
 
-    function seek(v, frame) {
+    function rewind(v) {
       return new Promise((resolve) => {
-        const time = (frame + 0.5) / FPS
-        if (Math.abs(v.currentTime - time) < 0.5 / FPS) return resolve()
+        if (v.currentTime < 0.5 / FPS) return resolve()
         v.addEventListener("seeked", () => resolve(), { once: true })
-        v.currentTime = time
+        v.currentTime = 0
       })
     }
 
-    // A seeked frame is ready to paint, so the incoming clip can be shown before it plays.
-    function swapTo(v) {
-      Object.values(vids).forEach((other) => {
-        other.classList.toggle("is-on", other === v)
-        if (other !== v) other.pause()
+    // A rewound clip's first frame is ready to paint, so it can go on screen before it plays.
+    // With fade, it dissolves in over the clip that was showing.
+    function swapTo(v, fade) {
+      const old = Object.values(vids).filter((o) => o !== v && o.classList.contains("is-on"))
+      const hide = (o) => {
+        if (o === vids[current]) return
+        o.classList.remove("is-on", "is-front")
+        o.pause()
+      }
+      old.forEach((o) => o.classList.remove("is-front"))
+      if (!v) return old.forEach(hide)
+      v.classList.add("is-on", "is-front")
+      if (fade) {
+        v.style.transition = "none"
+        v.style.opacity = "0"
+        v.getBoundingClientRect()
+        v.style.transition = "opacity .35s linear"
+        v.style.opacity = "1"
+        window.setTimeout(() => old.forEach(hide), 400)
+      } else {
+        v.style.transition = ""
+        v.style.opacity = ""
+        old.forEach(hide)
+      }
+    }
+
+    function start(name, fade) {
+      const v = vids[name]
+      const from = station
+      rewind(v).then(() => {
+        if (!live) return
+        current = name
+        swapTo(v, fade)
+        v.loop = false
+        v.playbackRate = TURNS[name] ? TURNS[name].rate : 1
+        const attempt = v.play()
+        if (attempt) attempt.catch(() => stopLive())
+        moving = !!TURNS[name]
+        stage.dataset.moving = String(moving)
+        if (moving) watchSwap(v, TURNS[name].swap, other(from))
+        if (isSip(name)) nextSipAt = Infinity
+        update()
       })
     }
 
-    function play(v, rate) {
-      v.playbackRate = rate || 1
-      const attempt = v.play()
-      if (attempt) attempt.catch(() => stopLive())
+    // Every clip ends on rest, so whatever comes next can start straight away.
+    function advance(fade) {
+      if (!live) return
+      if (target !== station && !ready(CLIPS[station].turn)) setStation(target) // turn not loaded: cut across
+      const name = chooseNext()
+      if (!ready(name)) {
+        current = ""
+        return swapTo(null) // the stills show until it loads
+      }
+      start(name, fade)
+    }
+
+    function finished(name) {
+      if (TURNS[name]) {
+        moving = false
+        stage.dataset.moving = "false"
+      }
+      if (isSip(name)) nextSipAt = performance.now() + SIP_GAP_MS[0] + Math.random() * (SIP_GAP_MS[1] - SIP_GAP_MS[0])
+      advance()
+    }
+
+    // A work clip loops natively until something else is due, then runs out to rest.
+    function onTime(name) {
+      if (name !== current) return
+      if (!TURNS[name] && !isSip(name)) vids[name].loop = chooseNext() === name
+      hud()
     }
 
     function load() {
       if (started || lowData) return
       started = true
-      Object.entries(CLIPS).forEach(([name, clip]) => {
+      // One at a time, in the order they will be needed, so the first loop arrives quickly.
+      const names = []
+      ;[station, other(station)].forEach((side) => ["work", "sip", "turn"].forEach((key) => {
+        if (CLIPS[side][key]) names.push(CLIPS[side][key])
+      }))
+      names.forEach((name) => {
         const v = document.createElement("video")
         v.className = "desk-clip"
         v.muted = true
@@ -1104,18 +1159,17 @@
         v.setAttribute("playsinline", "")
         v.disablePictureInPicture = true
         v.preload = "none"
-        v.loop = !!clip.loop
-        v.src = `img/desk/${clip.file}.mp4`
+        v.src = `img/desk/${name}.mp4`
+        v.addEventListener("ended", () => { if (live && name === current) finished(name) })
+        v.addEventListener("timeupdate", () => onTime(name))
         frameEl.appendChild(v)
         vids[name] = v
       })
-      vids.idleA.addEventListener("timeupdate", hud)
-      // One at a time, in the order they will be needed, so the first loop arrives quickly.
-      const order = station === "a" ? ["idleA", "aToB", "idleB", "bToA"] : ["idleB", "bToA", "idleA", "aToB"]
-      order.reduce((chain, name) => chain.then(() => fetchClip(vids[name])), Promise.resolve())
-      whenReady(vids[idleOf(station)]).then(() => {
-        if (motionOn() && !document.hidden) goLive()
-      })
+      names.reduce((chain, name) => chain.then(() => fetchClip(vids[name])), Promise.resolve())
+      const first = vids[CLIPS[station].work]
+      const go = () => { if (motionOn() && !document.hidden) goLive() }
+      if (first.readyState >= 3) go()
+      else first.addEventListener("canplay", go, { once: true })
     }
 
     function fetchClip(v) {
@@ -1128,26 +1182,23 @@
     }
 
     function goLive() {
-      const idle = vids[idleOf(station)]
-      if (!isReady(idle)) return
+      if (live || !ready(CLIPS[target].work)) return
       live = true
       stage.dataset.live = "true"
-      seek(idle, 0).then(() => {
-        if (!live) return
-        swapTo(idle)
-        play(idle, CLIPS[idleOf(station)].rate)
-        update()
-        turn()
-      })
+      setStation(target) // no need to turn on the way in
+      advance()
     }
 
     function stopLive() {
       live = false
       moving = false
+      current = ""
       stage.dataset.live = "false"
       stage.dataset.moving = "false"
+      Object.values(vids).forEach((v) => v.pause())
       swapTo(null)
       setStation(target)
+      update()
     }
 
     function setStation(side) {
@@ -1156,64 +1207,26 @@
       frame()
     }
 
-    // Straight to the other side with no turn: motion off, or the turn has not loaded yet.
-    function jump() {
-      setStation(target)
-      const idle = vids[idleOf(station)]
-      if (live && isReady(idle)) {
-        seek(idle, 0).then(() => {
-          swapTo(idle)
-          play(idle, CLIPS[idleOf(station)].rate)
-        })
-      } else {
-        swapTo(null)
-      }
-      update()
-    }
-
-    function turn() {
-      if (moving || target === station) return
-      if (!live) return jump()
-      const from = station
-      const to = from === "a" ? "b" : "a"
-      const idle = vids[idleOf(from)]
-      const clip = vids[turnFrom(from)]
-      const next = vids[idleOf(to)]
-      if (!isReady(clip) || !isReady(next)) return jump()
-      moving = true
-      stage.dataset.moving = "true"
-      update()
-      // Enter the turn at the idle loop's current pose, a couple of frames ahead to cover the seek.
-      // A->B opens on source frames 0-20 (the lift and sip); B->A opens on typing, 239 back to 200.
-      const at = loopFrame(idle, 2)
-      const half = Math.round(idle.duration * FPS) / 2
-      const entry = from === "a" ? coffeeFrame(at) : half - (at <= half ? at : 2 * half - at)
-      cutFrame = CLIPS[turnFrom(from)].cut
-      Promise.all([seek(clip, entry), seek(next, 0)]).then(() => {
-        if (!live) return
-        swapTo(clip)
-        play(clip, CLIPS[turnFrom(from)].rate)
-        watchCut(clip, to)
-        clip.addEventListener("ended", () => {
-          if (!live) return
-          swapTo(next)
-          play(next, CLIPS[idleOf(to)].rate)
-          moving = false
-          stage.dataset.moving = "false"
-          update()
-          turn() // the reader may have moved on again
-        }, { once: true })
-      })
-    }
-
-    // Swap the layout to the new side as the wipe crosses the frame.
-    function watchCut(clip, to) {
+    // Swap the layout to the new side as he crosses the frame.
+    function watchSwap(v, swap, to) {
       const check = () => {
-        if (!moving) return
-        if (clip.currentTime * FPS >= cutFrame) return setStation(to)
+        if (!moving || vids[current] !== v) return
+        if (v.currentTime * FPS >= swap) return setStation(to)
         window.requestAnimationFrame(check)
       }
       window.requestAnimationFrame(check)
+    }
+
+    // A new section: if he is only working, dissolve out of the loop into the turn now; if he
+    // is mid-sip, the turn follows the sip. With the clips off, just switch sides.
+    function turn() {
+      if (!live) {
+        setStation(target)
+        return
+      }
+      if (moving || target === station) return
+      const v = vids[current]
+      if (current === CLIPS[station].work && v && v.duration - v.currentTime > 0.6) advance(true)
     }
 
     // Cover math for object-fit: cover, so the emblem lands on the same spot in the frame.
@@ -1272,9 +1285,8 @@
     }
 
     function hud() {
-      let state = !live ? "paused" : moving ? "moving" : station
-      if (state === "a" && loopFrame(vids.idleA) >= SIP_AT) state = "sip"
-      if (hudState.textContent !== STATES[state]) hudState.textContent = STATES[state]
+      const text = !live ? STATES.paused : moving ? STATES.moving : isSip(current) ? STATES.sip : CLIPS[station].label
+      if (hudState.textContent !== text) hudState.textContent = text
     }
 
     function setMotion(on) {
@@ -1300,12 +1312,11 @@
     }
     if (wideQuery.addEventListener) wideQuery.addEventListener("change", onWide)
     window.addEventListener("resize", frame)
+    window.addEventListener("scroll", () => { lastScroll = performance.now() }, { passive: true })
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) Object.values(vids).forEach((v) => v.pause())
-      else if (live) {
-        const current = Object.values(vids).find((v) => v.classList.contains("is-on"))
-        if (current) play(current, current.playbackRate)
-      } else if (started && motionOn()) goLive()
+      else if (live && vids[current]) vids[current].play().catch(() => stopLive())
+      else if (started && motionOn()) goLive()
     })
     // Clips load after the page, so they never compete with the content.
     const begin = () => window.setTimeout(() => { if (motionOn()) load() }, 400)

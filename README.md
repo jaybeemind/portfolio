@@ -42,20 +42,20 @@ motion off, content still fades in but nothing travels, loops, or tracks scroll.
 
 Behind the page, JB works at his desk, filmed from two sides: station A (coffee,
 monitor on the right) and station B (typing, monitor on the left). Sections take
-the stations in turn. When the section under the reading line changes, he turns
-to the other monitor. In between, he sips or types on a loop. On wide screens,
-each section's title sits as a lower third on his side, its content sits in his
-eyeline, and the section's 3D object floats in front of the monitor he faces
-until the content scrolls up to it.
+the stations in turn. While you scroll he works. Once you stop for a moment, he
+sips his coffee, then waits a while before the next sip, like a lo-fi stream.
+When the section under the reading line changes, he turns to the other monitor.
+On wide screens, each section's title sits as a lower third on his side, its
+content sits in his eyeline, and the section's 3D object floats in front of the
+monitor he faces until the content scrolls up to it.
 
-The four clips in `img/desk/` are cut from one generated video and rendered at
-1080p, sharpened from the 720p source. At the coffee desk he rests with the mug
-down, takes one sip with a moment at the mouth, and goes back to work; a slow
-camera drift keeps the rest alive. Each turn opens on the frames its idle loop
-cycles through, so a turn starts from whatever pose he is in. A dark wipe, the monitor passing
-the lens, hides the one cut that replaces a warped stretch of the source. Clips
-load after the page, one at a time. With motion off or Save-Data on, the stills
-switch instead.
+Every clip in `img/desk/` starts and ends on its station's rest frame, so any
+clip can follow any other at a station: work, sip, or the turn to the other side.
+A turn waits for a sip to finish, and dissolves straight out of the work loop.
+The clips are rendered at 1080p, sharpened from the 720p source, and load after
+the page, one at a time. With motion off or Save-Data on, the stills switch
+instead. `CLIPS` in `script.js` lists them per station; an empty name means
+there is no footage for it yet (station B has no sip).
 
 ## Stack and preview
 
