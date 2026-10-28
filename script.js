@@ -973,11 +973,11 @@
   // JB at his desk, filmed from two sides. Station A: coffee, JB on the left, monitor on the
   // right. Station B: typing, mirrored. Sections take the stations in turn, so what you read
   // sits where he is looking. When the section under the reading line changes he turns to the
-  // other monitor; in between he sips or types on a loop.
+  // other monitor; in between he types, or rests with his coffee and takes the odd sip.
   //
-  // The four clips are cut from one source so every seam is pose-matched. Both idle loops are
-  // palindromes, and each turn opens on the frames its idle loop cycles through, so a turn can
-  // start from whatever pose the loop is in. A dark wipe inside each turn hides the one cut.
+  // The four clips are cut from one source so every seam is pose-matched. Each turn opens on
+  // the frames its idle loop cycles through, so a turn can start from whatever pose the loop is
+  // in. A dark wipe inside each turn hides the one cut. tools/desk-clips/ renders them.
   function initDesk(stage) {
     const frameEl = qs("#desk-frame", stage)
     const holo = qs("#desk-holo", stage)
@@ -986,18 +986,22 @@
     const wideQuery = window.matchMedia("(min-width: 1100px) and (min-aspect-ratio: 5/4)")
     const FPS = 24
     const CLIPS = {
-      idleA: { file: "desk-idle-a", loop: true, rate: 0.8 },
+      idleA: { file: "desk-idle-a", loop: true, rate: 1 },
       idleB: { file: "desk-idle-b", loop: true, rate: 1 },
-      aToB: { file: "desk-a-to-b", rate: 1.3, cut: 62.5 }, // cut: the frame where the wipe covers the cut
+      aToB: { file: "desk-a-to-b", rate: 1.3, cut: 63.5 }, // cut: the frame where the wipe covers the cut
       bToA: { file: "desk-b-to-a", rate: 1.3, cut: 98.5 },
     }
+    // The coffee loop as runs of source frames: [a, b] plays a..b, [a, a, n] holds a for n frames.
+    // A long rest with the mug down, one sip, back to rest. Same runs as tools/desk-clips/render.mjs.
+    const COFFEE = [[0, 0, 120], [0, 20], [19, 15], [16, 20], [19, 1]]
+    const SIP_AT = COFFEE[0][2]
     // Where his eyeline meets the monitor, as fractions of the source frame.
     const EYELINE = { a: [0.69, 0.44], b: [0.31, 0.4] }
     // Narrow screens crop the frame to JB himself (object-position x, in %).
     const FOCUS = { a: 24, b: 76 }
     const EMBLEMS = { services: "workflow", approach: "orbit", work: "laptop", experience: "db", reference: "quote", skills: "cube", about: "browser", speaking: "db", contact: "workflow" }
     const SOURCES = { laptop: ".object-laptop .laptop", cube: ".object-api .code-cube", db: ".object-db .database", workflow: ".object-workflow .workflow-tile", orbit: ".sculpture-automate .service-orbit", browser: ".sculpture-build .mini-browser", quote: ".quote-mark" }
-    const STATES = { a: "sipping coffee", b: "typing", moving: "switching monitors", paused: "paused" }
+    const STATES = { a: "reviewing", sip: "sipping coffee", b: "typing", moving: "switching monitors", paused: "paused" }
     const connection = navigator.connection
     const lowData = !!(connection && (connection.saveData || /(^|-)(2g|3g)$/.test(connection.effectiveType || "")))
 
@@ -1041,6 +1045,18 @@
     let cutFrame = 0
     let holoY = 0
     let holoScale = 1
+
+    // Source frame shown at a given frame of the coffee loop.
+    function coffeeFrame(index) {
+      let rest = index
+      for (const [a, b, hold] of COFFEE) {
+        const length = hold || Math.abs(b - a) + 1
+        if (rest < length) return hold ? a : a + Math.sign(b - a) * rest
+        rest -= length
+      }
+      return 0
+    }
+    const loopFrame = (v, ahead = 0) => (Math.floor(v.currentTime * FPS) + ahead) % Math.round(v.duration * FPS)
 
     const idleOf = (side) => (side === "a" ? "idleA" : "idleB")
     const turnFrom = (side) => (side === "a" ? "aToB" : "bToA")
@@ -1093,6 +1109,7 @@
         frameEl.appendChild(v)
         vids[name] = v
       })
+      vids.idleA.addEventListener("timeupdate", hud)
       // One at a time, in the order they will be needed, so the first loop arrives quickly.
       const order = station === "a" ? ["idleA", "aToB", "idleB", "bToA"] : ["idleB", "bToA", "idleA", "aToB"]
       order.reduce((chain, name) => chain.then(() => fetchClip(vids[name])), Promise.resolve())
@@ -1167,11 +1184,10 @@
       stage.dataset.moving = "true"
       update()
       // Enter the turn at the idle loop's current pose, a couple of frames ahead to cover the seek.
-      const length = Math.round(idle.duration * FPS)
-      const half = length / 2
-      const loopFrame = (Math.floor(idle.currentTime * FPS) + 2) % length
-      const pose = loopFrame <= half ? loopFrame : length - loopFrame
-      const entry = from === "a" ? pose : half - pose
+      // A->B opens on source frames 0-20 (the lift and sip); B->A opens on typing, 239 back to 200.
+      const at = loopFrame(idle, 2)
+      const half = Math.round(idle.duration * FPS) / 2
+      const entry = from === "a" ? coffeeFrame(at) : half - (at <= half ? at : 2 * half - at)
       cutFrame = CLIPS[turnFrom(from)].cut
       Promise.all([seek(clip, entry), seek(next, 0)]).then(() => {
         if (!live) return
@@ -1252,7 +1268,13 @@
         eyeline = clamp((active.body.getBoundingClientRect().top - (holoY + 30 * holoScale)) / (vh * 0.14), 0, 1)
       }
       stage.style.setProperty("--holo-on", eyeline.toFixed(3))
-      hudState.textContent = !live ? STATES.paused : moving ? STATES.moving : STATES[station]
+      hud()
+    }
+
+    function hud() {
+      let state = !live ? "paused" : moving ? "moving" : station
+      if (state === "a" && loopFrame(vids.idleA) >= SIP_AT) state = "sip"
+      if (hudState.textContent !== STATES[state]) hudState.textContent = STATES[state]
     }
 
     function setMotion(on) {

@@ -48,9 +48,11 @@ each section's title sits as a lower third on his side, its content sits in his
 eyeline, and the section's 3D object floats in front of the monitor he faces
 until the content scrolls up to it.
 
-The four clips in `img/desk/` are cut from one generated video. Both idle loops
-are palindromes, and each turn opens on the frames its idle loop cycles through,
-so a turn starts from whatever pose he is in. A dark wipe, the monitor passing
+The four clips in `img/desk/` are cut from one generated video and rendered at
+1080p, sharpened from the 720p source. At the coffee desk he rests with the mug
+down, takes one sip with a moment at the mouth, and goes back to work; a slow
+camera drift keeps the rest alive. Each turn opens on the frames its idle loop
+cycles through, so a turn starts from whatever pose he is in. A dark wipe, the monitor passing
 the lens, hides the one cut that replaces a warped stretch of the source. Clips
 load after the page, one at a time. With motion off or Save-Data on, the stills
 switch instead.

@@ -1410,8 +1410,9 @@ html:not(.js) .marquee-list {flex-wrap:wrap;flex-shrink:1;width:100%;animation:n
 .desk-stage {display:none;}
 .js .desk-stage {display:block;position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none;background:var(--color-bg);--cover-l:0;--cover-r:0;--frame-x:50%;--holo-on:0;}
 .js .backdrop::before {display:none;}
-.desk-frame {position:absolute;inset:0;filter:saturate(.9) contrast(1.06) brightness(.84);}
-.desk-frame::after {content:"";position:absolute;inset:0;background:radial-gradient(ellipse 88% 82% at 50% 44%,transparent 52%,rgba(4,6,12,.6) 100%),linear-gradient(170deg,rgba(76,58,160,.16),rgba(20,60,110,.1) 60%,rgba(8,10,18,.22));}
+/* A slow camera drift keeps the held frames of the coffee loop alive. */
+.desk-frame {position:absolute;inset:0;filter:saturate(.97) contrast(1.04) brightness(.94);transform-origin:32% 52%;animation:desk-drift 11s ease-in-out infinite alternate;}
+.desk-frame::after {content:"";position:absolute;inset:0;background:radial-gradient(ellipse 90% 84% at 50% 44%,transparent 56%,rgba(4,6,12,.45) 100%),linear-gradient(170deg,rgba(76,58,160,.09),rgba(20,60,110,.06) 60%,rgba(8,10,18,.14));}
 .desk-still,.desk-clip {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--frame-x) 50%;transition:object-position 1.6s var(--ease-in-out);}
 .desk-still {opacity:0;transition:opacity .6s var(--ease-out),object-position 1.6s var(--ease-in-out);}
 .desk-stage[data-station="a"] .desk-still[data-still="a"],.desk-stage[data-station="b"] .desk-still[data-still="b"] {opacity:1;}
@@ -1419,9 +1420,10 @@ html:not(.js) .marquee-list {flex-wrap:wrap;flex-shrink:1;width:100%;animation:n
 .desk-clip.is-on {visibility:visible;}
 .desk-scrim {position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,10,16,.6),transparent 16%,transparent 58%,rgba(7,10,16,.72));}
 .desk-scrim::before,.desk-scrim::after {content:"";position:absolute;inset:0;transition:opacity .3s linear;}
-.desk-scrim::before {background:linear-gradient(90deg,rgba(7,10,16,.95),rgba(7,10,16,.9) 50%,rgba(7,10,16,.5) 66%,transparent 84%);opacity:var(--cover-l);}
-.desk-scrim::after {background:linear-gradient(270deg,rgba(7,10,16,.95),rgba(7,10,16,.9) 50%,rgba(7,10,16,.5) 66%,transparent 84%);opacity:var(--cover-r);}
-.desk-grain {position:absolute;inset:-60%;opacity:.13;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");animation:desk-grain 1s steps(5) infinite;}
+/* Solid under the content column, gone before it reaches his face. */
+.desk-scrim::before {background:linear-gradient(90deg,rgba(7,10,16,.95),rgba(7,10,16,.9) 52%,rgba(7,10,16,.42) 63%,transparent 72%);opacity:var(--cover-l);}
+.desk-scrim::after {background:linear-gradient(270deg,rgba(7,10,16,.95),rgba(7,10,16,.9) 52%,rgba(7,10,16,.42) 63%,transparent 72%);opacity:var(--cover-r);}
+.desk-grain {position:absolute;inset:-60%;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");animation:desk-grain 1s steps(5) infinite;}
 
 /* The section's 3D emblem, floating where his eyeline meets the monitor. */
 .desk-holo {position:absolute;left:var(--holo-x,70%);top:var(--holo-y,45%);width:0;height:0;opacity:var(--holo-on);transition:opacity .5s linear;}
@@ -1450,8 +1452,9 @@ html:not(.js) .marquee-list {flex-wrap:wrap;flex-shrink:1;width:100%;animation:n
 .desk-stage[data-live="false"] .desk-hud i {background:var(--color-border-strong);box-shadow:none;animation:none;}
 @keyframes desk-grain {0%,100% {transform:translate(0,0);}20% {transform:translate(-6%,3%);}40% {transform:translate(4%,-5%);}60% {transform:translate(-3%,6%);}80% {transform:translate(5%,2%);}}
 @keyframes holo-float {0%,100% {translate:0 0;}50% {translate:0 -12px;}}
+@keyframes desk-drift {from {transform:scale(1);}to {transform:scale(1.012) translateY(-.3%);}}
 @keyframes desk-live {0%,100% {opacity:1;}50% {opacity:.35;}}
-.motion-off .desk-grain,.motion-off .desk-holo *,.motion-off .desk-hud i {animation:none!important;}
+.motion-off .desk-frame,.motion-off .desk-grain,.motion-off .desk-holo *,.motion-off .desk-hud i {animation:none!important;}
 .motion-off .desk-holo .code-cube {transform:rotateX(-18deg) rotateY(-25deg) rotateZ(8deg);}
 
 /* Two-shot layout on wide screens: each section's title is a lower third on JB's side,
