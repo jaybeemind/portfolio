@@ -1402,3 +1402,99 @@ html:not(.js) .marquee-list {flex-wrap:wrap;flex-shrink:1;width:100%;animation:n
 @media (max-width:760px) {.system-map {padding:18px;}.case-flow li {padding:14px 12px;gap:14px;}.case-flow li + li::before {left:33px;}.case-flow li + li .flow-copy::before {left:31px;}.qualification-grid {grid-template-columns:1fr;}.qualification-card {padding:24px;}}
 @media (max-width:380px) {.system-map {padding:14px;}.case-flow li {grid-template-columns:34px minmax(0,1fr);gap:12px;}.flow-icon {width:32px;height:36px;}.flow-icon svg {width:23px;height:23px;}.case-flow li + li::before {left:28px;}.case-flow li + li .flow-copy::before {left:26px;}.map-heading {font-size:9px;}.flow-copy p {font-size:.78rem;}}
 @media print {.system-map,.qualification-card {background:#fff;color:#222;box-shadow:none;break-inside:avoid;}.flow-icon,.flow-copy::before {animation:none!important;}.flow-copy > span,.flow-copy p,.qualification-card h4,.qualification-type,.qualification-institution,.qualification-context,.qualification-meta {color:#222;}}
+
+/* Desk stage: the lo-fi background. JB at his desk, filmed from two sides, behind the whole page.
+   Station A: coffee, JB on the left, monitor on the right. Station B: typing, mirrored.
+   script.js plays the clips and sets --cover-l/--cover-r (how much content sits on each side),
+   --frame-x (narrow screens crop to JB) and the eyeline position of the 3D emblem. */
+.desk-stage {display:none;}
+.js .desk-stage {display:block;position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none;background:var(--color-bg);--cover-l:0;--cover-r:0;--frame-x:50%;--holo-on:0;}
+.js .backdrop::before {display:none;}
+.desk-frame {position:absolute;inset:0;filter:saturate(.9) contrast(1.06) brightness(.84);}
+.desk-frame::after {content:"";position:absolute;inset:0;background:radial-gradient(ellipse 88% 82% at 50% 44%,transparent 52%,rgba(4,6,12,.6) 100%),linear-gradient(170deg,rgba(76,58,160,.16),rgba(20,60,110,.1) 60%,rgba(8,10,18,.22));}
+.desk-still,.desk-clip {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--frame-x) 50%;transition:object-position 1.6s var(--ease-in-out);}
+.desk-still {opacity:0;transition:opacity .6s var(--ease-out),object-position 1.6s var(--ease-in-out);}
+.desk-stage[data-station="a"] .desk-still[data-still="a"],.desk-stage[data-station="b"] .desk-still[data-still="b"] {opacity:1;}
+.desk-clip {visibility:hidden;}
+.desk-clip.is-on {visibility:visible;}
+.desk-scrim {position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,10,16,.6),transparent 16%,transparent 58%,rgba(7,10,16,.72));}
+.desk-scrim::before,.desk-scrim::after {content:"";position:absolute;inset:0;transition:opacity .3s linear;}
+.desk-scrim::before {background:linear-gradient(90deg,rgba(7,10,16,.95),rgba(7,10,16,.9) 50%,rgba(7,10,16,.5) 66%,transparent 84%);opacity:var(--cover-l);}
+.desk-scrim::after {background:linear-gradient(270deg,rgba(7,10,16,.95),rgba(7,10,16,.9) 50%,rgba(7,10,16,.5) 66%,transparent 84%);opacity:var(--cover-r);}
+.desk-grain {position:absolute;inset:-60%;opacity:.13;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");animation:desk-grain 1s steps(5) infinite;}
+
+/* The section's 3D emblem, floating where his eyeline meets the monitor. */
+.desk-holo {position:absolute;left:var(--holo-x,70%);top:var(--holo-y,45%);width:0;height:0;opacity:var(--holo-on);transition:opacity .5s linear;}
+.desk-holo::before {content:"";position:absolute;left:-230px;top:-230px;width:460px;height:460px;border-radius:50%;background:radial-gradient(closest-side,rgba(94,234,212,.16),rgba(141,180,255,.09) 55%,transparent);transform:scale(var(--holo-s,1));}
+.holo-emblem {--k:1;position:absolute;left:0;top:0;transform:translate(-50%,-50%) scale(calc(var(--holo-s,1) * var(--k) * .9));opacity:0;transition:opacity .7s var(--ease-out),transform 1s var(--ease-out);}
+.holo-emblem.is-on {opacity:1;transform:translate(-50%,-50%) scale(calc(var(--holo-s,1) * var(--k)));}
+.holo-emblem[data-emblem="laptop"] {--k:.62;}
+.holo-emblem[data-emblem="workflow"] {--k:.95;}
+.holo-emblem[data-emblem="cube"],.holo-emblem[data-emblem="orbit"] {--k:1.35;}
+.holo-emblem[data-emblem="db"] {--k:1.25;}
+.holo-body {position:relative;display:grid;place-items:center;width:200px;height:170px;perspective:700px;filter:drop-shadow(0 0 16px rgba(94,234,212,.3)) drop-shadow(0 18px 40px rgba(0,0,0,.5));animation:holo-float 7s ease-in-out infinite;}
+.holo-emblem[data-emblem="laptop"] .holo-body {width:320px;height:300px;place-items:start;}
+.holo-emblem[data-emblem="laptop"] .laptop {width:320px;height:230px;}
+.holo-emblem[data-emblem="workflow"] .workflow-tile {transform:rotateY(-14deg) rotateZ(-4deg);}
+.holo-emblem[data-emblem="quote"] .quote-mark {width:110px;margin:0;fill:var(--color-accent-3);}
+.holo-emblem .service-orbit,.holo-emblem .mini-browser {top:30px;}
+.desk-stage[data-station="b"] .holo-emblem[data-emblem="workflow"] .workflow-tile {transform:rotateY(14deg) rotateZ(4deg);}
+
+/* Lo-fi stream overlay on JB's side: what he is doing, and what is on screen. */
+.desk-hud {position:absolute;top:calc(var(--nav-height) + 20px);left:clamp(20px,4.5vw,84px);display:flex;align-items:center;gap:10px;font:10px/1.2 var(--font-mono);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;color:rgba(214,226,243,.8);text-shadow:0 1px 8px rgba(0,0,0,.7);transition:left 1.4s var(--ease-in-out),transform 1.4s var(--ease-in-out);}
+.desk-stage[data-station="b"] .desk-hud {left:calc(100% - clamp(20px,4.5vw,84px));transform:translateX(-100%);}
+.desk-hud i {width:6px;height:6px;border-radius:50%;background:#ff6b7a;box-shadow:0 0 10px #ff6b7a;animation:desk-live 2.4s ease-in-out infinite;}
+.desk-hud b {font-weight:400;color:var(--color-accent-2);}
+.desk-hud b::before {content:"/";margin-right:10px;color:rgba(214,226,243,.4);}
+.desk-stage[data-moving="true"] .desk-hud i {background:var(--color-accent-3);box-shadow:0 0 10px var(--color-accent-3);}
+.desk-stage[data-live="false"] .desk-hud i {background:var(--color-border-strong);box-shadow:none;animation:none;}
+@keyframes desk-grain {0%,100% {transform:translate(0,0);}20% {transform:translate(-6%,3%);}40% {transform:translate(4%,-5%);}60% {transform:translate(-3%,6%);}80% {transform:translate(5%,2%);}}
+@keyframes holo-float {0%,100% {translate:0 0;}50% {translate:0 -12px;}}
+@keyframes desk-live {0%,100% {opacity:1;}50% {opacity:.35;}}
+.motion-off .desk-grain,.motion-off .desk-holo *,.motion-off .desk-hud i {animation:none!important;}
+.motion-off .desk-holo .code-cube {transform:rotateX(-18deg) rotateY(-25deg) rotateZ(8deg);}
+
+/* Two-shot layout on wide screens: each section's title is a lower third on JB's side,
+   and its content sits in his eyeline, on the side he is facing. */
+@media (min-width:1100px) {
+ .desk-wide .section {padding:14vh clamp(28px,4.5vw,84px) 26vh;}
+ .desk-wide .section > .section-container {max-width:none;}
+ .desk-wide .section[data-station]:not(.hero):not(.skills) > .section-container,
+ .desk-wide .skills[data-station] {display:grid;grid-template-columns:minmax(0,1fr) min(60%,980px);grid-template-rows:repeat(11,auto) 1fr;column-gap:clamp(32px,4vw,72px);align-items:start;}
+ /* Short sections still hold the title low for a screen's worth of scrolling: the last row soaks up the height. */
+ .desk-wide .section[data-station]:not(.hero):not(.skills) > .section-container {min-height:82vh;}
+ .desk-wide .skills[data-station] {min-height:122vh;}
+ .desk-wide .section[data-station="b"]:not(.hero):not(.skills) > .section-container,
+ .desk-wide .skills[data-station="b"] {grid-template-columns:min(60%,980px) minmax(0,1fr);}
+ .desk-wide .section[data-station]:not(.hero):not(.skills) > .section-container > * {grid-column:2;min-width:0;}
+ .desk-wide .section[data-station="b"]:not(.hero):not(.skills) > .section-container > * {grid-column:1;}
+ .desk-wide .section[data-station]:not(.hero):not(.skills) > .section-container > .section-heading,
+ .desk-wide .skills[data-station] > .section-container {grid-column:1;grid-row:1 / -1;align-self:end;position:sticky;bottom:9vh;margin:0;text-shadow:0 2px 18px rgba(0,0,0,.55);}
+ .desk-wide .section[data-station="b"]:not(.hero):not(.skills) > .section-container > .section-heading,
+ .desk-wide .skills[data-station="b"] > .section-container {grid-column:2;}
+ .desk-wide .skills[data-station] > .section-container .section-heading {margin:0;}
+ .desk-wide .skills[data-station] > .marquee-group {grid-column:2;grid-row:1;min-width:0;}
+ .desk-wide .skills[data-station="b"] > .marquee-group {grid-column:1;}
+ .desk-wide .section-heading + *,.desk-wide .skills > .marquee-group,.desk-wide .contact-panel {margin-top:28vh;}
+ .desk-wide .section-heading h2 {font-size:clamp(2rem,3.1vw,3.1rem);}
+ .desk-wide .heading-split {display:block;}
+ .desk-wide .heading-split > p {margin-top:18px;}
+ .desk-wide .marquee-label {padding-inline:0;}
+
+ .desk-wide .hero {min-height:100svh;padding-top:calc(var(--nav-height) + 20px);padding-bottom:26vh;}
+ .desk-wide .hero-grid {min-height:calc(100svh - var(--nav-height) - 20px - 7vh);grid-template-columns:minmax(0,1fr) min(60%,980px);column-gap:clamp(32px,4vw,72px);align-items:end;}
+ .desk-wide .hero-content {text-shadow:0 2px 18px rgba(0,0,0,.6);}
+ .desk-wide .hero h1 {font-size:clamp(2.5rem,3.4vw,3.9rem);}
+ .desk-wide .hero-intro {font-size:.98rem;line-height:1.7;}
+ .desk-wide .hero-visual {align-self:center;}
+ .desk-wide .hero-stats,.desk-wide .logo-strip {width:min(60%,980px);margin-left:auto;}
+}
+
+/* Narrow screens: the stage stays behind the content, cropped to JB, under one even scrim. */
+@media (max-width:1099px) {
+ .desk-scrim::before {background:rgba(7,10,16,.84);}
+ .desk-scrim::after {display:none;}
+ .desk-holo,.desk-hud {display:none;}
+}
+@media print {.desk-stage {display:none!important;}}
+.holo-emblem:not(.is-on) * {animation-play-state:paused!important;}

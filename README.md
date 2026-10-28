@@ -38,6 +38,23 @@ Motion follows the reader's reduced-motion setting by default. The **Motion**
 button in the nav overrides it and remembers the choice in `localStorage`. With
 motion off, content still fades in but nothing travels, loops, or tracks scroll.
 
+### Desk stage
+
+Behind the page, JB works at his desk, filmed from two sides: station A (coffee,
+monitor on the right) and station B (typing, monitor on the left). Sections take
+the stations in turn. When the section under the reading line changes, he turns
+to the other monitor. In between, he sips or types on a loop. On wide screens,
+each section's title sits as a lower third on his side, its content sits in his
+eyeline, and the section's 3D object floats in front of the monitor he faces
+until the content scrolls up to it.
+
+The four clips in `img/desk/` are cut from one generated video. Both idle loops
+are palindromes, and each turn opens on the frames its idle loop cycles through,
+so a turn starts from whatever pose he is in. A dark wipe, the monitor passing
+the lens, hides the one cut that replaces a warped stretch of the source. Clips
+load after the page, one at a time. With motion off or Save-Data on, the stills
+switch instead.
+
 ## Stack and preview
 
 Static HTML, CSS, and vanilla JavaScript. The shipped site has no runtime

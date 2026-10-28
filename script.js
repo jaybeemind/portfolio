@@ -880,9 +880,11 @@
   const motionToggle = qs("#motion-toggle")
   const flowSvg = qs("#flow-svg")
   const orbitalScene = qs(".orbital-scene")
+  let desk = null
 
   function applyMotion(on, save) {
     root.classList.toggle("motion-off", !on)
+    if (desk) desk.setMotion(on)
     if (!on && orbitalScene) {
       orbitalScene.style.removeProperty("--look-x")
       orbitalScene.style.removeProperty("--look-y")
@@ -966,6 +968,335 @@
     }
     document.addEventListener("visibilitychange", updateActivity)
   }
+
+  // ---------------------- Desk stage: the lo-fi background ----------------------
+  // JB at his desk, filmed from two sides. Station A: coffee, JB on the left, monitor on the
+  // right. Station B: typing, mirrored. Sections take the stations in turn, so what you read
+  // sits where he is looking. When the section under the reading line changes he turns to the
+  // other monitor; in between he sips or types on a loop.
+  //
+  // The four clips are cut from one source so every seam is pose-matched. Both idle loops are
+  // palindromes, and each turn opens on the frames its idle loop cycles through, so a turn can
+  // start from whatever pose the loop is in. A dark wipe inside each turn hides the one cut.
+  function initDesk(stage) {
+    const frameEl = qs("#desk-frame", stage)
+    const holo = qs("#desk-holo", stage)
+    const hudState = qs("#desk-hud-state", stage)
+    const hudScene = qs("#desk-hud-scene", stage)
+    const wideQuery = window.matchMedia("(min-width: 1100px) and (min-aspect-ratio: 5/4)")
+    const FPS = 24
+    const CLIPS = {
+      idleA: { file: "desk-idle-a", loop: true, rate: 0.8 },
+      idleB: { file: "desk-idle-b", loop: true, rate: 1 },
+      aToB: { file: "desk-a-to-b", rate: 1.3, cut: 62.5 }, // cut: the frame where the wipe covers the cut
+      bToA: { file: "desk-b-to-a", rate: 1.3, cut: 98.5 },
+    }
+    // Where his eyeline meets the monitor, as fractions of the source frame.
+    const EYELINE = { a: [0.69, 0.44], b: [0.31, 0.4] }
+    // Narrow screens crop the frame to JB himself (object-position x, in %).
+    const FOCUS = { a: 24, b: 76 }
+    const EMBLEMS = { services: "workflow", approach: "orbit", work: "laptop", experience: "db", reference: "quote", skills: "cube", about: "browser", speaking: "db", contact: "workflow" }
+    const SOURCES = { laptop: ".object-laptop .laptop", cube: ".object-api .code-cube", db: ".object-db .database", workflow: ".object-workflow .workflow-tile", orbit: ".sculpture-automate .service-orbit", browser: ".sculpture-build .mini-browser", quote: ".quote-mark" }
+    const STATES = { a: "sipping coffee", b: "typing", moving: "switching monitors", paused: "paused" }
+    const connection = navigator.connection
+    const lowData = !!(connection && (connection.saveData || /(^|-)(2g|3g)$/.test(connection.effectiveType || "")))
+
+    const scenes = Array.from(qsa("main > section[id]")).map((section, index) => {
+      const station = index % 2 ? "b" : "a"
+      section.dataset.station = station
+      const heading = qs(".section-heading", section)
+      const eyebrow = qs(".eyebrow", section)
+      // The content that covers his eyeline: everything after the title.
+      let body = heading ? heading.nextElementSibling : qs(".section-container", section)
+      if (section.id === "hero") body = qs(".hero-visual", section)
+      if (section.id === "skills") body = qs(".marquee-group", section)
+      return { section, station, body, emblem: EMBLEMS[section.id] || "", label: section.id === "hero" ? "Intro" : (eyebrow ? eyebrow.textContent.trim() : section.id) }
+    })
+
+    // The emblems are copies of the 3D objects already on the page.
+    const emblems = {}
+    Object.entries(SOURCES).forEach(([name, selector]) => {
+      const source = qs(selector)
+      if (!source) return
+      const wrap = document.createElement("div")
+      const body = document.createElement("div")
+      const copy = source.cloneNode(true)
+      copy.removeAttribute("data-reveal")
+      wrap.className = "holo-emblem"
+      wrap.dataset.emblem = name
+      body.className = "holo-body"
+      body.appendChild(copy)
+      wrap.appendChild(body)
+      holo.appendChild(wrap)
+      emblems[name] = wrap
+    })
+
+    const vids = {}
+    let station = "a" // where JB is
+    let target = "a" // where the section under the reading line wants him
+    let active = scenes[0]
+    let moving = false
+    let live = false // clips are on screen
+    let started = false // clips requested
+    let cutFrame = 0
+    let holoY = 0
+    let holoScale = 1
+
+    const idleOf = (side) => (side === "a" ? "idleA" : "idleB")
+    const turnFrom = (side) => (side === "a" ? "aToB" : "bToA")
+    const isReady = (v) => !!v && v.readyState >= 3
+
+    function whenReady(v) {
+      return new Promise((resolve) => {
+        if (isReady(v)) return resolve(v)
+        v.addEventListener("canplay", () => resolve(v), { once: true })
+      })
+    }
+
+    function seek(v, frame) {
+      return new Promise((resolve) => {
+        const time = (frame + 0.5) / FPS
+        if (Math.abs(v.currentTime - time) < 0.5 / FPS) return resolve()
+        v.addEventListener("seeked", () => resolve(), { once: true })
+        v.currentTime = time
+      })
+    }
+
+    // A seeked frame is ready to paint, so the incoming clip can be shown before it plays.
+    function swapTo(v) {
+      Object.values(vids).forEach((other) => {
+        other.classList.toggle("is-on", other === v)
+        if (other !== v) other.pause()
+      })
+    }
+
+    function play(v, rate) {
+      v.playbackRate = rate || 1
+      const attempt = v.play()
+      if (attempt) attempt.catch(() => stopLive())
+    }
+
+    function load() {
+      if (started || lowData) return
+      started = true
+      Object.entries(CLIPS).forEach(([name, clip]) => {
+        const v = document.createElement("video")
+        v.className = "desk-clip"
+        v.muted = true
+        v.defaultMuted = true
+        v.playsInline = true
+        v.setAttribute("playsinline", "")
+        v.disablePictureInPicture = true
+        v.preload = "none"
+        v.loop = !!clip.loop
+        v.src = `img/desk/${clip.file}.mp4`
+        frameEl.appendChild(v)
+        vids[name] = v
+      })
+      // One at a time, in the order they will be needed, so the first loop arrives quickly.
+      const order = station === "a" ? ["idleA", "aToB", "idleB", "bToA"] : ["idleB", "bToA", "idleA", "aToB"]
+      order.reduce((chain, name) => chain.then(() => fetchClip(vids[name])), Promise.resolve())
+      whenReady(vids[idleOf(station)]).then(() => {
+        if (motionOn() && !document.hidden) goLive()
+      })
+    }
+
+    function fetchClip(v) {
+      return new Promise((resolve) => {
+        v.addEventListener("canplaythrough", resolve, { once: true })
+        v.addEventListener("error", resolve, { once: true })
+        v.preload = "auto"
+        v.load()
+      })
+    }
+
+    function goLive() {
+      const idle = vids[idleOf(station)]
+      if (!isReady(idle)) return
+      live = true
+      stage.dataset.live = "true"
+      seek(idle, 0).then(() => {
+        if (!live) return
+        swapTo(idle)
+        play(idle, CLIPS[idleOf(station)].rate)
+        update()
+        turn()
+      })
+    }
+
+    function stopLive() {
+      live = false
+      moving = false
+      stage.dataset.live = "false"
+      stage.dataset.moving = "false"
+      swapTo(null)
+      setStation(target)
+    }
+
+    function setStation(side) {
+      station = side
+      stage.dataset.station = side
+      frame()
+    }
+
+    // Straight to the other side with no turn: motion off, or the turn has not loaded yet.
+    function jump() {
+      setStation(target)
+      const idle = vids[idleOf(station)]
+      if (live && isReady(idle)) {
+        seek(idle, 0).then(() => {
+          swapTo(idle)
+          play(idle, CLIPS[idleOf(station)].rate)
+        })
+      } else {
+        swapTo(null)
+      }
+      update()
+    }
+
+    function turn() {
+      if (moving || target === station) return
+      if (!live) return jump()
+      const from = station
+      const to = from === "a" ? "b" : "a"
+      const idle = vids[idleOf(from)]
+      const clip = vids[turnFrom(from)]
+      const next = vids[idleOf(to)]
+      if (!isReady(clip) || !isReady(next)) return jump()
+      moving = true
+      stage.dataset.moving = "true"
+      update()
+      // Enter the turn at the idle loop's current pose, a couple of frames ahead to cover the seek.
+      const length = Math.round(idle.duration * FPS)
+      const half = length / 2
+      const loopFrame = (Math.floor(idle.currentTime * FPS) + 2) % length
+      const pose = loopFrame <= half ? loopFrame : length - loopFrame
+      const entry = from === "a" ? pose : half - pose
+      cutFrame = CLIPS[turnFrom(from)].cut
+      Promise.all([seek(clip, entry), seek(next, 0)]).then(() => {
+        if (!live) return
+        swapTo(clip)
+        play(clip, CLIPS[turnFrom(from)].rate)
+        watchCut(clip, to)
+        clip.addEventListener("ended", () => {
+          if (!live) return
+          swapTo(next)
+          play(next, CLIPS[idleOf(to)].rate)
+          moving = false
+          stage.dataset.moving = "false"
+          update()
+          turn() // the reader may have moved on again
+        }, { once: true })
+      })
+    }
+
+    // Swap the layout to the new side as the wipe crosses the frame.
+    function watchCut(clip, to) {
+      const check = () => {
+        if (!moving) return
+        if (clip.currentTime * FPS >= cutFrame) return setStation(to)
+        window.requestAnimationFrame(check)
+      }
+      window.requestAnimationFrame(check)
+    }
+
+    // Cover math for object-fit: cover, so the emblem lands on the same spot in the frame.
+    function frame() {
+      const wide = wideQuery.matches
+      const focus = wide ? 50 : FOCUS[station]
+      stage.style.setProperty("--frame-x", `${focus}%`)
+      const w = stage.clientWidth
+      const h = stage.clientHeight
+      const scale = Math.max(w / 1280, h / 720)
+      const ox = (w - 1280 * scale) * (focus / 100)
+      const oy = (h - 720 * scale) / 2
+      const [u, v] = EYELINE[station]
+      holoY = oy + v * 720 * scale
+      holoScale = (720 * scale) / 520
+      holo.style.setProperty("--holo-x", `${(ox + u * 1280 * scale).toFixed(1)}px`)
+      holo.style.setProperty("--holo-y", `${holoY.toFixed(1)}px`)
+      holo.style.setProperty("--holo-s", holoScale.toFixed(3))
+    }
+
+    function setScene(scene) {
+      active = scene
+      target = scene.station
+      hudScene.textContent = scene.label
+      Object.entries(emblems).forEach(([name, el]) => el.classList.toggle("is-on", name === scene.emblem))
+      turn()
+      update()
+    }
+
+    // How much of each side the content covers decides the scrim. The emblem shows once he
+    // has arrived, until the section's content scrolls up into his eyeline.
+    function update() {
+      const vh = window.innerHeight
+      let left = 0
+      let right = 0
+      if (wideQuery.matches) {
+        scenes.forEach((scene) => {
+          if (!scene.body) return
+          const top = scene.body.getBoundingClientRect().top
+          const bottom = scene.section.getBoundingClientRect().bottom
+          const cover = clamp((Math.min(bottom, vh) - Math.max(top, 0)) / (vh * 0.6), 0, 1) * (scene.section.id === "hero" ? 0.55 : 1)
+          if (scene.station === "a") right = Math.max(right, cover)
+          else left = Math.max(left, cover)
+        })
+      } else {
+        left = clamp(0.5 + window.scrollY / vh, 0, 1)
+      }
+      stage.style.setProperty("--cover-l", left.toFixed(3))
+      stage.style.setProperty("--cover-r", right.toFixed(3))
+      let eyeline = 0
+      if (wideQuery.matches && !moving && active.emblem && active.station === station && active.body) {
+        eyeline = clamp((active.body.getBoundingClientRect().top - (holoY + 30 * holoScale)) / (vh * 0.14), 0, 1)
+      }
+      stage.style.setProperty("--holo-on", eyeline.toFixed(3))
+      hudState.textContent = !live ? STATES.paused : moving ? STATES.moving : STATES[station]
+    }
+
+    function setMotion(on) {
+      if (!on) return stopLive()
+      if (!started) return load()
+      if (!live) goLive()
+    }
+
+    function onWide() {
+      root.classList.toggle("desk-wide", wideQuery.matches)
+      frame()
+      update()
+    }
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const scene = entry.isIntersecting && scenes.find((item) => item.section === entry.target)
+          if (scene) setScene(scene)
+        })
+      }, { rootMargin: "-30% 0px -69% 0px" })
+      scenes.forEach((scene) => observer.observe(scene.section))
+    }
+    if (wideQuery.addEventListener) wideQuery.addEventListener("change", onWide)
+    window.addEventListener("resize", frame)
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) Object.values(vids).forEach((v) => v.pause())
+      else if (live) {
+        const current = Object.values(vids).find((v) => v.classList.contains("is-on"))
+        if (current) play(current, current.playbackRate)
+      } else if (started && motionOn()) goLive()
+    })
+    // Clips load after the page, so they never compete with the content.
+    const begin = () => window.setTimeout(() => { if (motionOn()) load() }, 400)
+    if (document.readyState === "complete") begin()
+    else window.addEventListener("load", begin, { once: true })
+
+    stage.dataset.live = "false"
+    onWide()
+    return { setMotion, update }
+  }
+
+  const deskStage = qs("#desk-stage")
+  if (deskStage) desk = initDesk(deskStage)
 
   // ---------------------- Motion: split headings into words ----------------------
   /**
@@ -1143,6 +1474,8 @@
         item.classList.toggle("lit", !animate || reached)
       })
     }
+
+    if (desk) desk.update()
   }
 
   function requestScrollUpdate() {
