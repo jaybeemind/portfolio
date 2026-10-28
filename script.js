@@ -879,9 +879,14 @@
   // ---------------------- Motion: toggle ----------------------
   const motionToggle = qs("#motion-toggle")
   const flowSvg = qs("#flow-svg")
+  const orbitalScene = qs(".orbital-scene")
 
   function applyMotion(on, save) {
     root.classList.toggle("motion-off", !on)
+    if (!on && orbitalScene) {
+      orbitalScene.style.removeProperty("--look-x")
+      orbitalScene.style.removeProperty("--look-y")
+    }
     if (motionToggle) {
       motionToggle.setAttribute("aria-pressed", String(on))
       motionToggle.title = on ? "Turn animations off" : "Turn animations on"
@@ -903,6 +908,63 @@
   if (motionToggle) {
     motionToggle.setAttribute("aria-label", "Animations")
     motionToggle.addEventListener("click", () => applyMotion(!motionOn(), true))
+  }
+
+  // ---------------------- Orbital developer workspace ----------------------
+  if (orbitalScene) {
+    const viewport = qs(".orbital-viewport", orbitalScene)
+    const buttons = Array.from(qsa("[data-focus]", orbitalScene))
+    const detail = qs("#scene-detail")
+    const descriptions = {
+      all: "Move your pointer to change perspective.",
+      frontend: "Interfaces for real workflows. Vue, React, and SvelteKit.",
+      backend: "APIs and business logic. Python, Django, .NET, and Node.js.",
+      data: "Connected systems and reliable records. PostgreSQL and Oracle DB.",
+    }
+    buttons.forEach((button, index) => {
+      button.addEventListener("click", () => {
+        orbitalScene.dataset.focus = button.dataset.focus
+        buttons.forEach(item => item.setAttribute("aria-pressed", String(item === button)))
+        detail.textContent = descriptions[button.dataset.focus]
+      })
+      button.addEventListener("keydown", event => {
+        let next
+        if (event.key === "ArrowRight") next = (index + 1) % buttons.length
+        if (event.key === "ArrowLeft") next = (index + buttons.length - 1) % buttons.length
+        if (event.key === "Home") next = 0
+        if (event.key === "End") next = buttons.length - 1
+        if (next === undefined) return
+        event.preventDefault()
+        buttons[next].focus()
+        buttons[next].click()
+      })
+    })
+    viewport.addEventListener("pointermove", event => {
+      if (!motionOn() || !finePointer.matches) return
+      const rect = viewport.getBoundingClientRect()
+      const x = clamp((event.clientX - rect.left) / rect.width - .5, -.5, .5)
+      const y = clamp((event.clientY - rect.top) / rect.height - .5, -.5, .5)
+      orbitalScene.style.setProperty("--look-x", `${x * 16}deg`)
+      orbitalScene.style.setProperty("--look-y", `${-y * 12}deg`)
+    })
+    viewport.addEventListener("pointerleave", () => {
+      orbitalScene.style.removeProperty("--look-x")
+      orbitalScene.style.removeProperty("--look-y")
+    })
+    // Stop decorative animation when its scene is outside the viewport or tab is hidden.
+    const sculptures = [orbitalScene, ...qsa(".service-sculpture, .system-map")]
+    const visible = new Set(sculptures)
+    const updateActivity = () => sculptures.forEach(el => {
+      el.classList.toggle("scene-paused", document.hidden || !visible.has(el))
+    })
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target) : visible.delete(entry.target))
+        updateActivity()
+      })
+      sculptures.forEach(el => observer.observe(el))
+    }
+    document.addEventListener("visibilitychange", updateActivity)
   }
 
   // ---------------------- Motion: split headings into words ----------------------
