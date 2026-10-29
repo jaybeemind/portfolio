@@ -40,11 +40,12 @@ motion off, content still fades in but nothing travels, loops, or tracks scroll.
 
 ### Desk stage
 
-Behind the page, JB works at his desk, filmed from two sides: station A (coffee,
-monitor on the right) and station B (typing, monitor on the left). Sections take
-the stations in turn. While you scroll he works. Once you stop for a moment, he
-sips his coffee, then waits a while before the next sip, like a lo-fi stream.
-When the section under the reading line changes, he turns to the other monitor.
+Behind the page, JB works at his desk between two monitors: station A (at the
+monitor on the right) and station B (typing at the monitor on the left). Sections
+take the stations in turn. While you scroll he works. Once you stop for a moment,
+he sips his coffee, then waits a while before the next sip, like a lo-fi stream.
+When the section under the reading line changes, he swivels his chair to the
+other monitor.
 On wide screens, each section's title sits as a lower third on his side, its
 content sits in his eyeline, and the section's 3D object floats in front of the
 monitor he faces until the content scrolls up to it.
@@ -52,10 +53,12 @@ monitor he faces until the content scrolls up to it.
 Every clip in `img/desk/` starts and ends on its station's rest frame, so any
 clip can follow any other at a station: work, sip, or the turn to the other side.
 A turn waits for a sip to finish, and dissolves straight out of the work loop.
-The clips are rendered at 1080p, sharpened from the 720p source, and load after
-the page, one at a time. With motion off or Save-Data on, the stills switch
-instead. `CLIPS` in `script.js` lists them per station; an empty name means
-there is no footage for it yet (station B has no sip).
+The footage was generated in Google Flow, each shot from a rest frame to a rest
+frame, then cut to 1080p with its first and last frames blended onto one shared
+rest frame per station, so the clips chain without a jump. They load after the
+page, one at a time. With motion off or Save-Data on, the stills switch instead.
+`CLIPS` in `script.js` lists them per station; an empty name means there is no
+footage for it, and that clip is skipped.
 
 ## Stack and preview
 

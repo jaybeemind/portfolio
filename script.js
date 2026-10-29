@@ -970,11 +970,11 @@
   }
 
   // ---------------------- Desk stage: the lo-fi background ----------------------
-  // JB at his desk, filmed from two sides. Station A: coffee, JB on the left, monitor on the
-  // right. Station B: typing, mirrored. Sections take the stations in turn, so what you read
-  // sits where he is looking. While you scroll he works; once you stop he sips his coffee,
-  // like a lo-fi stream; when the section under the reading line changes he turns to the
-  // other monitor.
+  // JB at his desk between two monitors. Station A: JB on the left, at the monitor on the
+  // right. Station B: mirrored, at the other monitor. Sections take the stations in turn, so
+  // what you read sits where he is looking. While you scroll he works; once you stop he sips
+  // his coffee, like a lo-fi stream; when the section under the reading line changes he
+  // swivels his chair to the other monitor.
   //
   // Every clip starts and ends on its station's rest frame, so any clip can follow any other
   // at a station and a turn always leaves from rest. tools/desk-clips/ renders them.
@@ -988,13 +988,18 @@
     // Clips per station. An empty name means there is no footage for it yet; it is skipped.
     const CLIPS = {
       a: { work: "desk-a-work", sip: "desk-a-sip", turn: "desk-a-to-b", label: "reviewing" },
-      b: { work: "desk-b-work", sip: "", turn: "desk-b-to-a", label: "typing" },
+      b: { work: "desk-b-work", sip: "desk-b-sip", turn: "desk-b-to-a", label: "typing" },
     }
-    // Turns play a little fast, and swap the layout to the new side at the frame where he crosses.
-    const TURNS = { "desk-a-to-b": { rate: 1.3, swap: 63.5 }, "desk-b-to-a": { rate: 1.3, swap: 59.5 } }
+    // Turns play a little fast, and swap the layout to the new side at the frame where the
+    // chair back fills the shot.
+    const TURNS = { "desk-a-to-b": { rate: 1.2, swap: 54 }, "desk-b-to-a": { rate: 1.2, swap: 57 } }
     // He sips only once the reader has stopped scrolling for a moment, then waits before the next.
     const IDLE_MS = 1800
     const SIP_GAP_MS = [6000, 11000]
+    // The frames of each sip where the mug is off the desk. A new section there hurries the sip
+    // until the mug is down; anywhere else in a sip the turn dissolves in straight away.
+    const SIPS = { "desk-a-sip": [60, 140], "desk-b-sip": [72, 148] }
+    const HURRY = 2
     // Where his eyeline meets the monitor, as fractions of the source frame.
     const EYELINE = { a: [0.69, 0.44], b: [0.31, 0.4] }
     // Narrow screens crop the frame to JB himself (object-position x, in %).
@@ -1045,6 +1050,7 @@
     let started = false // clips requested
     let lastScroll = performance.now()
     let nextSipAt = 0
+    let hurrying = null // the sip being hurried along so the turn can start
     let holoY = 0
     let holoScale = 1
 
@@ -1130,6 +1136,7 @@
       if (TURNS[name]) {
         moving = false
         stage.dataset.moving = "false"
+        nextSipAt = performance.now() + SIP_GAP_MS[0] // he settles in at the new monitor first
       }
       if (isSip(name)) nextSipAt = performance.now() + SIP_GAP_MS[0] + Math.random() * (SIP_GAP_MS[1] - SIP_GAP_MS[0])
       advance()
@@ -1217,8 +1224,9 @@
       window.requestAnimationFrame(check)
     }
 
-    // A new section: if he is only working, dissolve out of the loop into the turn now; if he
-    // is mid-sip, the turn follows the sip. With the clips off, just switch sides.
+    // A new section: if he is working, or mid-sip with the mug on the desk, dissolve into the
+    // turn now; with the mug in hand, hurry the sip until it is down. With the clips off, just
+    // switch sides.
     function turn() {
       if (!live) {
         setStation(target)
@@ -1226,7 +1234,32 @@
       }
       if (moving || target === station) return
       const v = vids[current]
-      if (current === CLIPS[station].work && v && v.duration - v.currentTime > 0.6) advance(true)
+      if (!v) return
+      if (current === CLIPS[station].work) {
+        if (v.duration - v.currentTime > 0.6) advance(true)
+        return
+      }
+      if (!isSip(current)) return
+      const [lift, down] = SIPS[current] || [0, 0]
+      const at = v.currentTime * FPS
+      if (at < lift || at >= down) advance(true)
+      else hurry(v, down)
+    }
+
+    // If the reader comes back to this station first, the sip carries on at its own pace.
+    function hurry(v, down) {
+      if (hurrying === v) return
+      hurrying = v
+      v.playbackRate = HURRY
+      const check = () => {
+        const done = !live || vids[current] !== v || target === station || v.currentTime * FPS >= down
+        if (!done) return window.requestAnimationFrame(check)
+        hurrying = null
+        if (!live || vids[current] !== v) return
+        if (target === station) v.playbackRate = 1
+        else advance(true)
+      }
+      window.requestAnimationFrame(check)
     }
 
     // Cover math for object-fit: cover, so the emblem lands on the same spot in the frame.
