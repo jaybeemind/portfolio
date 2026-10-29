@@ -973,11 +973,12 @@
   // JB at his desk between two monitors. Station A: JB on the left, at the monitor on the
   // right. Station B: mirrored, at the other monitor. Sections take the stations in turn, so
   // what you read sits where he is looking. While you scroll he works; once you stop he sips
-  // his coffee, like a lo-fi stream; when the section under the reading line changes he
-  // swivels his chair to the other monitor.
+  // his coffee, like a lo-fi stream. Around each change of section the scroll steers his
+  // chair and the camera to the other monitor: scroll on and he swings across, scroll back
+  // and he swings back, as fast as you go; stop, and he settles on the side you are reading.
   //
   // Every clip starts and ends on its station's rest frame, so any clip can follow any other
-  // at a station and a turn always leaves from rest. tools/desk-clips/ renders them.
+  // at a station. tools/desk-clips/ renders them.
   function initDesk(stage) {
     const frameEl = qs("#desk-frame", stage)
     const holo = qs("#desk-holo", stage)
@@ -990,17 +991,29 @@
       a: { work: "desk-a-work", sip: "desk-a-sip", turn: "desk-a-to-b", label: "reviewing" },
       b: { work: "desk-b-work", sip: "desk-b-sip", turn: "desk-b-to-a", label: "typing" },
     }
-    // Turns play a little fast, and swap the layout to the new side at the frame where the
-    // chair back fills the shot.
-    const TURNS = { "desk-a-to-b": { rate: 1.3, swap: 60 }, "desk-b-to-a": { rate: 1.3, swap: 61 } }
-    // A reader scrolling fast speeds him up: at `pace` screens a second or more, a turn or a
-    // hurried sip plays at `max`, so he keeps up with the sections going by.
+    // The turns, steered by the scroll. Each also comes reversed (name-rev) so he can swing back,
+    // and the layout swaps sides at the frame where the chair back fills the shot.
+    const TURNS = {
+      "desk-a-to-b": { from: "a", to: "b", frames: 161, swap: 60 },
+      "desk-b-to-a": { from: "b", to: "a", frames: 153, swap: 61 },
+    }
+    // A turn spans STEER screens of scrolling around its change of section, which falls on the
+    // swap frame. He catches up with the scroll within CATCH seconds, at up to SWING times
+    // normal speed; once the reader stops, he carries on at GLIDE to the side being read.
+    const STEER = 1.2
+    const SWING = 4
+    const READ = 0.3 // the reading line, as a fraction of the viewport from the top
+    const CATCH = 0.15
+    const GLIDE = 1.3
+    const GLIDE_AFTER = 600 // ms without scrolling before he settles back against the scroll
+    const ENGAGE = 4 // frames the scroll must lead him by before he leaves his desk
+    // A reader scrolling fast hurries a sip too: at `pace` screens a second it plays at `max`.
     const RUSH = { pace: 1.5, max: 3 }
     // He sips only once the reader has stopped scrolling for a moment, then waits before the next.
     const IDLE_MS = 1800
     const SIP_GAP_MS = [6000, 11000]
-    // The frame of each sip where his hand leaves the keyboard or mouse. A new section before it
-    // dissolves into the turn; after it the sip is hurried back to rest, so no arm fades out.
+    // The frame of each sip where his hand leaves the keyboard or mouse. A turn before it
+    // dissolves in; after it the sip is hurried back to rest first, so no arm fades out.
     const SIPS = { "desk-a-sip": 12, "desk-b-sip": 30 }
     const HURRY = 2
     const FADE_MS = 250
@@ -1054,7 +1067,14 @@
     let started = false // clips requested
     let lastScroll = performance.now()
     let lastY = window.scrollY
+    let scrollDir = 1
     let pace = 0 // how fast the reader is scrolling, in screens a second
+    let steer = null // the turn under way: { clip, rev, v, rate, seeking, locked }
+    let driving = false
+    let geo = null
+    let geoAt = 0
+    let anchor = null // where in a zone he came to rest: { at, side, p }
+    let starting = 0 // the latest clip asked for; an older start that resolves late is dropped
     let nextSipAt = 0
     let hurrying = null // the sip being hurried along so the turn can start
     let holoY = 0
@@ -1063,11 +1083,11 @@
     const other = (side) => (side === "a" ? "b" : "a")
     const ready = (name) => !!name && !!vids[name] && vids[name].readyState >= 3
     const isSip = (name) => !!name && (name === CLIPS.a.sip || name === CLIPS.b.sip)
+    const isWork = (name) => !!name && (name === CLIPS.a.work || name === CLIPS.b.work)
 
-    // What to play when the current clip gets back to rest.
+    // What to play at rest when the current clip gets back to it.
     function chooseNext() {
       const set = CLIPS[station]
-      if (target !== station) return set.turn
       const now = performance.now()
       if (ready(set.sip) && now - lastScroll >= IDLE_MS && now >= nextSipAt) return set.sip
       return set.work
@@ -1109,21 +1129,15 @@
 
     function start(name, fade) {
       const v = vids[name]
-      const from = station
+      const token = ++starting
       rewind(v).then(() => {
-        if (!live) return
+        if (!live || token !== starting) return
         current = name
         swapTo(v, fade)
         v.loop = false
-        v.playbackRate = TURNS[name] ? paced(TURNS[name].rate) : 1
+        v.playbackRate = 1
         const attempt = v.play()
         if (attempt) attempt.catch(() => stopLive())
-        moving = !!TURNS[name]
-        stage.dataset.moving = String(moving)
-        if (moving) {
-          watchSwap(v, TURNS[name].swap, other(from))
-          keepPace(v, TURNS[name].rate)
-        }
         if (isSip(name)) nextSipAt = Infinity
         update()
       })
@@ -1137,44 +1151,29 @@
       return base + Math.max(0, RUSH.max - base) * Math.min(1, p / RUSH.pace)
     }
 
-    // While he turns, or hurries a sip, his speed follows the reader's.
-    function keepPace(v, base) {
-      const tick = () => {
-        if (!live || vids[current] !== v || v.ended) return
-        if (!TURNS[current] && hurrying !== v) return
-        const rate = paced(base)
-        if (Math.abs(v.playbackRate - rate) > 0.05) v.playbackRate = rate
-        window.requestAnimationFrame(tick)
-      }
-      window.requestAnimationFrame(tick)
-    }
-
     // Every clip ends on rest, so whatever comes next can start straight away.
-    function advance(fade) {
+    function advance() {
       if (!live) return
-      if (target !== station && !ready(CLIPS[station].turn)) setStation(target) // turn not loaded: cut across
       const name = chooseNext()
       if (!ready(name)) {
         current = ""
         return swapTo(null) // the stills show until it loads
       }
-      start(name, fade)
+      start(name)
     }
 
     function finished(name) {
-      if (TURNS[name]) {
-        moving = false
-        stage.dataset.moving = "false"
-        nextSipAt = performance.now() + SIP_GAP_MS[0] // he settles in at the new monitor first
-      }
+      if (steer) return // the steering decides when a turn is over
       if (isSip(name)) nextSipAt = performance.now() + SIP_GAP_MS[0] + Math.random() * (SIP_GAP_MS[1] - SIP_GAP_MS[0])
+      const w = wanted(station)
+      if (w) return engage(w, false) // back at rest: straight into the turn
       advance()
     }
 
     // A work clip loops natively until something else is due, then runs out to rest.
     function onTime(name) {
       if (name !== current) return
-      if (!TURNS[name] && !isSip(name)) vids[name].loop = chooseNext() === name
+      if (isWork(name)) vids[name].loop = chooseNext() === name
       hud()
     }
 
@@ -1182,10 +1181,12 @@
       if (started || lowData) return
       started = true
       // One at a time, in the order they will be needed, so the first loop arrives quickly.
+      // The reversed turns come last: they are only needed to swing back.
       const names = []
       ;[station, other(station)].forEach((side) => ["work", "sip", "turn"].forEach((key) => {
         if (CLIPS[side][key]) names.push(CLIPS[side][key])
       }))
+      ;[station, other(station)].forEach((side) => { if (CLIPS[side].turn) names.push(`${CLIPS[side].turn}-rev`) })
       names.forEach((name) => {
         const v = document.createElement("video")
         v.className = "desk-clip"
@@ -1195,7 +1196,7 @@
         v.setAttribute("playsinline", "")
         v.disablePictureInPicture = true
         v.preload = "none"
-        v.src = `img/desk/${name}.mp4`
+        v.dataset.clip = name
         v.addEventListener("ended", () => { if (live && name === current) finished(name) })
         v.addEventListener("timeupdate", () => onTime(name))
         frameEl.appendChild(v)
@@ -1208,25 +1209,40 @@
       else first.addEventListener("canplay", go, { once: true })
     }
 
+    // Each clip is fetched whole and played from memory, so it can be sought anywhere even on a
+    // server without range requests: a turn swinging back seeks into its reversed copy. Where
+    // fetch is not allowed (the page opened from disk), the clip streams as usual.
     function fetchClip(v) {
-      return new Promise((resolve) => {
+      const url = `img/desk/${v.dataset.clip}.mp4`
+      const use = (src) => new Promise((resolve) => {
         v.addEventListener("canplaythrough", resolve, { once: true })
         v.addEventListener("error", resolve, { once: true })
         v.preload = "auto"
+        v.src = src
         v.load()
       })
+      if (location.protocol === "file:") return use(url)
+      return fetch(url)
+        .then((response) => (response.ok ? response.blob() : Promise.reject(new Error(String(response.status)))))
+        .then((blob) => use(URL.createObjectURL(blob)), () => use(url))
     }
 
     function goLive() {
       if (live || !ready(CLIPS[target].work)) return
       live = true
       stage.dataset.live = "true"
+      stage.dataset.moving = "false"
       setStation(target) // no need to turn on the way in
       advance()
+      if (!driving) {
+        driving = true
+        window.requestAnimationFrame(drive)
+      }
     }
 
     function stopLive() {
       live = false
+      steer = null
       moving = false
       current = ""
       stage.dataset.live = "false"
@@ -1238,55 +1254,206 @@
     }
 
     function setStation(side) {
+      if (side === station && stage.dataset.station === side) return
       station = side
       stage.dataset.station = side
       frame()
     }
 
-    // Swap the layout to the new side as he crosses the frame.
-    function watchSwap(v, swap, to) {
-      const check = () => {
-        if (!moving || vids[current] !== v) return
-        if (v.currentTime * FPS >= swap) return setStation(to)
-        window.requestAnimationFrame(check)
+    // ---- Steering: the scroll drives the turns ----
+    // Each change of section has a zone of scrolling around it. Within it, p runs from 0 (the
+    // upper section's side) to 1 (the lower one's), and the change itself is at p = sw.
+    function zones() {
+      const now = performance.now()
+      if (geo && now - geoAt < 1000) return geo
+      const vh = window.innerHeight
+      const y0 = window.scrollY
+      const rects = scenes.map((scene) => scene.section.getBoundingClientRect())
+      geo = []
+      for (let k = 0; k + 1 < scenes.length; k++) {
+        const above = scenes[k].station
+        const below = scenes[k + 1].station
+        const clip = CLIPS[above].turn
+        const t = TURNS[clip]
+        if (!t || above === below) continue
+        const sw = t.swap / (t.frames - 1)
+        const len = Math.min(STEER * vh, 0.8 * Math.min(rects[k].height, rects[k + 1].height))
+        const at = rects[k + 1].top + y0 - READ * vh
+        geo.push({ clip, above, below, sw, at, start: at - sw * len, len })
       }
-      window.requestAnimationFrame(check)
+      geoAt = now
+      return geo
     }
 
-    // A new section: if he is working, or about to sip with his hand still down, dissolve into
-    // the turn now; once his hand is on the way to the mug, hurry the sip back to rest instead,
-    // so no arm fades out. With the clips off, just switch sides.
-    function turn() {
-      if (!live) {
-        setStation(target)
+    function zoneAt(y) {
+      const z = zones().find((item) => y > item.start && y < item.start + item.len)
+      return z ? { ...z, p: (y - z.start) / z.len } : null
+    }
+
+    // The side of the section at the reading line.
+    function sideAt(y) {
+      let side = scenes[0].station
+      zones().forEach((z) => { if (y >= z.at) side = z.below })
+      return side
+    }
+
+    // Where the scroll wants him in a zone, for a turn at c (0..1 along its forward copy).
+    // While the reader scrolls, the part of the zone between lo and hi maps onto the whole turn
+    // and he only moves the way they are going; once they stop he settles on the side being
+    // read, at once if that is the way he was going, otherwise after a pause.
+    function goalIn(z, c) {
+      const quiet = performance.now() - lastScroll
+      const settle = z.p >= z.sw ? 1 : 0
+      if (quiet > GLIDE_AFTER) return settle
+      if (quiet > 200 && (settle === 1) === (scrollDir > 0)) return settle
+      const q = clamp((z.p - steer.lo) / Math.max(0.01, steer.hi - steer.lo), 0, 1)
+      return scrollDir > 0 ? Math.max(c, q) : Math.min(c, q)
+    }
+
+    function goalFor(clip, c) {
+      const y = window.scrollY
+      const z = zoneAt(y)
+      if (z && z.clip === clip) return goalIn(z, c)
+      return sideAt(y) === TURNS[clip].to ? 1 : 0
+    }
+
+    // From rest at `side`: the turn the scroll asks for, which end of it he starts from, and
+    // the stretch of the zone that maps onto it. He leaves his desk once the reader has
+    // scrolled ENGAGE frames' worth past where he settled (the anchor), toward the other side.
+    function wanted(side) {
+      if (!live) return null
+      const y = window.scrollY
+      const z = zoneAt(y)
+      if (!z) return sideAt(y) !== side ? { clip: CLIPS[side].turn, end: 0, lo: 0, hi: 1 } : null
+      const end = side === z.above ? 0 : 1
+      const n = TURNS[z.clip].frames - 1
+      let a = anchor && anchor.at === z.at && anchor.side === side ? anchor.p : end
+      if (end === 0 ? z.p < a : z.p > a) a = z.p // the reader moved further his way: follow
+      anchor = { at: z.at, side, p: a }
+      const span = end === 0 ? { lo: a, hi: 1 } : { lo: 0, hi: a }
+      const w = { clip: z.clip, end, ...span }
+      if (performance.now() - lastScroll > GLIDE_AFTER) return (z.p >= z.sw ? 1 : 0) !== end ? w : null
+      if (end === 0 && scrollDir > 0 && (z.p - a) * n >= ENGAGE) return w
+      if (end === 1 && scrollDir < 0 && (a - z.p) * n >= ENGAGE) return w
+      return null
+    }
+
+    // Start a turn from rest: forward from its first frame, or reversed from its last.
+    function engage(w, fade) {
+      const name = w.end ? `${w.clip}-rev` : w.clip
+      if (!ready(name)) {
+        // Not loaded yet: cut across once the reader has moved on to the other side.
+        const side = sideAt(window.scrollY)
+        if (side !== station) {
+          setStation(side)
+          advance()
+        }
         return
       }
-      if (moving || target === station) return
+      steer = { clip: w.clip, rev: !!w.end, v: vids[name], lo: w.lo, hi: w.hi, rate: 1, seeking: false, locked: false }
+      moving = true
+      stage.dataset.moving = "true"
+      start(name, fade)
+    }
+
+    function arrive(side) {
+      steer = null
+      moving = false
+      stage.dataset.moving = "false"
+      setStation(side)
+      nextSipAt = performance.now() + SIP_GAP_MS[0] // he settles in at the new monitor first
+      const z = zoneAt(window.scrollY)
+      anchor = z ? { at: z.at, side, p: z.p } : null
+      const w = wanted(side)
+      if (w) return engage(w, false)
+      advance()
+    }
+
+    // Turn around mid-turn: carry on in the other copy of the turn, from the same frame.
+    function reverse(s, f) {
+      const name = s.rev ? s.clip : `${s.clip}-rev`
+      const v = vids[name]
+      if (!ready(name)) {
+        s.locked = true // the other copy has not loaded yet: finish this way
+        return
+      }
+      const n = TURNS[s.clip].frames - 1
+      const at = n - Math.round(f)
+      s.seeking = true
+      s.v.pause()
+      v.addEventListener("seeked", () => {
+        s.seeking = false
+        if (steer !== s || !live) return
+        if (Math.abs(v.currentTime * FPS - at) > 1.5) {
+          s.locked = true // the seek did not land: finish this way rather than jump
+          return
+        }
+        s.rev = !s.rev
+        s.v = v
+        current = name
+        swapTo(v, false)
+        v.playbackRate = Math.max(0.1, s.rate)
+        v.play().catch(() => {})
+      }, { once: true })
+      v.currentTime = (at + 0.3) / FPS
+    }
+
+    function steerTurn() {
+      const s = steer
+      const t = TURNS[s.clip]
+      const n = t.frames - 1
       const v = vids[current]
-      if (!v) return
-      if (current === CLIPS[station].work) {
-        if (v.duration - v.currentTime > 0.6) advance(true)
-        else v.loop = false // nearly back at rest: the turn follows straight on
+      if (v !== s.v || s.seeking) return
+      const f = Math.min(n, v.currentTime * FPS)
+      const c = s.rev ? 1 - f / n : f / n
+      setStation(c * n >= t.swap ? t.to : t.from)
+      const goal = s.locked ? (s.rev ? 0 : 1) : goalFor(s.clip, c)
+      // Within a couple of frames of rest is rest: the turn's ends are blended onto it.
+      if ((goal === 1 && c * n >= n - 2) || (goal === 0 && c * n <= 2)) return arrive(goal ? t.to : t.from)
+      const gap = (goal - c) * n
+      if (Math.abs(gap) >= 0.5 && (gap > 0) === s.rev) return reverse(s, f)
+      const quiet = performance.now() - lastScroll > 200
+      const rate = quiet && (goal === 0 || goal === 1) ? GLIDE : Math.min(SWING, Math.abs(gap) / FPS / CATCH)
+      s.rate += (rate - s.rate) * 0.25
+      if (s.rate < 0.07 || Math.abs(gap) < 0.5) {
+        if (!v.paused) v.pause()
         return
       }
-      if (!isSip(current)) return
-      if (v.currentTime * FPS < (SIPS[current] || 0)) advance(true)
-      else hurry(v)
+      if (Math.abs(v.playbackRate - s.rate) > 0.03) v.playbackRate = s.rate
+      if (v.paused) v.play().catch(() => {})
     }
 
-    // If the reader comes back to this station first, the sip carries on at its own pace.
-    // When it ends, the turn starts from rest.
+    // Once a frame while the clips are live: steer the turn under way, or start one from rest.
+    function drive() {
+      if (!live) {
+        driving = false
+        return
+      }
+      window.requestAnimationFrame(drive)
+      if (document.hidden) return
+      if (steer) return steerTurn()
+      const v = vids[current]
+      const w = v && wanted(station)
+      if (!w) return
+      // A sip with his hand already moving plays out, hurried; the turn follows from rest.
+      if (isSip(current) && v.currentTime * FPS >= (SIPS[current] || 0)) return hurry(v)
+      engage(w, !(v.currentTime * FPS < 1 || v.ended))
+    }
+
+    // If the reader comes back to this side first, the sip carries on at its own pace.
     function hurry(v) {
       if (hurrying === v) return
       hurrying = v
-      v.playbackRate = paced(HURRY)
-      keepPace(v, HURRY)
-      const check = () => {
-        if (live && vids[current] === v && target !== station) return window.requestAnimationFrame(check)
+      const tick = () => {
+        if (live && vids[current] === v && !steer && wanted(station)) {
+          const rate = paced(HURRY)
+          if (Math.abs(v.playbackRate - rate) > 0.05) v.playbackRate = rate
+          return window.requestAnimationFrame(tick)
+        }
         hurrying = null
         if (live && vids[current] === v) v.playbackRate = 1
       }
-      window.requestAnimationFrame(check)
+      window.requestAnimationFrame(tick)
     }
 
     // Cover math for object-fit: cover, so the emblem lands on the same spot in the frame.
@@ -1312,7 +1479,7 @@
       target = scene.station
       hudScene.textContent = scene.label
       Object.entries(emblems).forEach(([name, el]) => el.classList.toggle("is-on", name === scene.emblem))
-      turn()
+      if (!live) setStation(target) // the stills just switch sides; live, the scroll steers him
       update()
     }
 
@@ -1371,12 +1538,16 @@
       scenes.forEach((scene) => observer.observe(scene.section))
     }
     if (wideQuery.addEventListener) wideQuery.addEventListener("change", onWide)
-    window.addEventListener("resize", frame)
+    window.addEventListener("resize", () => {
+      geo = null
+      frame()
+    })
     window.addEventListener("scroll", () => {
       const now = performance.now()
       const dt = Math.min(100, Math.max(8, now - lastScroll)) / 1000
       const speed = Math.abs(window.scrollY - lastY) / (window.innerHeight || 1) / dt
       pace = Math.min(4, pace * Math.exp(-(now - lastScroll) / 300) * 0.7 + speed * 0.3)
+      if (window.scrollY !== lastY) scrollDir = window.scrollY > lastY ? 1 : -1
       lastY = window.scrollY
       lastScroll = now
     }, { passive: true })

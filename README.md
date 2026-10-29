@@ -44,25 +44,29 @@ Behind the page, JB works at his desk between two monitors: station A (at the
 monitor on the right) and station B (typing at the monitor on the left). Sections
 take the stations in turn. While you scroll he works. Once you stop for a moment,
 he sips his coffee, then waits a while before the next sip, like a lo-fi stream.
-When the section under the reading line changes, he swivels his chair to the
-other monitor.
+Around each change of section, the scroll steers his chair and the camera to the
+other monitor: scroll on and he swings across, scroll back and he swings back, as
+fast as you go. Stop partway and he settles on the side of the section you are
+reading.
 On wide screens, each section's title sits as a lower third on his side, its
 content sits in his eyeline, and the section's 3D object floats in front of the
 monitor he faces until the content scrolls up to it.
 
 Every clip in `img/desk/` starts and ends on its station's rest frame, so any
 clip can follow any other at a station: work, sip, or the turn to the other side.
-A turn dissolves straight out of the work loop the moment the section changes.
-Once his hand is on the way to the mug, the sip plays out faster instead, so no
-arm fades out. Turns, and hurried sips, speed up with the reader's scrolling:
-scroll fast and he swivels fast, keeping pace with the sections.
+A turn dissolves straight out of the work loop as the scroll reaches it. Once his
+hand is on the way to the mug, the sip plays out faster instead, so no arm fades
+out. Each turn also comes reversed (`-rev`), so swinging back is the same footage
+played the other way, picked up at the same frame.
 The footage was generated in Google Flow, each shot from a rest frame to a rest
 frame, then cut to 1080p with its first and last frames blended onto one shared
-rest frame per station, so the clips chain without a jump. The turns blend along
-the optical flow, following whole regions only, so the camera lands on rest
-without a double image and fingers and faces keep their shape. Every frame gets a
-light skin touch-up that evens out spots and keeps the skin's texture. They load after the
-page, one at a time. With motion off or Save-Data on, the stills switch instead.
+rest frame per station, so the clips chain without a jump. The blends follow the
+optical flow, whole regions only, so whatever is still moving slides into place
+instead of showing twice, and fingers and faces keep their shape. The takes lose
+detail as they play, so every frame is brought back to the rest frame's sharpness,
+and each gets a light skin touch-up that evens out spots and keeps the skin's
+texture. The clips load after the page, one at a time, each fetched whole so it can
+be sought anywhere. With motion off or Save-Data on, the stills switch instead.
 `CLIPS` in `script.js` lists them per station; an empty name means there is no
 footage for it, and that clip is skipped.
 
