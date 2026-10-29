@@ -976,9 +976,8 @@
   // his coffee, like a lo-fi stream; when the section under the reading line changes he
   // swivels his chair to the other monitor.
   //
-  // Every clip starts and ends on its station's rest frame, and the work loops also pass
-  // through it a few times, so any clip can follow any other at a station with a plain cut on
-  // that frame. Nothing dissolves. tools/desk-clips/ renders them.
+  // Every clip starts and ends on its station's rest frame, so any clip can follow any other
+  // at a station and a turn always leaves from rest. tools/desk-clips/ renders them.
   function initDesk(stage) {
     const frameEl = qs("#desk-frame", stage)
     const holo = qs("#desk-holo", stage)
@@ -993,15 +992,18 @@
     }
     // Turns play a little fast, and swap the layout to the new side at the frame where the
     // chair back fills the shot.
-    const TURNS = { "desk-a-to-b": { rate: 1.2, swap: 66 }, "desk-b-to-a": { rate: 1.2, swap: 69 } }
-    // The frames where each work loop passes through rest. A turn or a sip that is due cuts in
-    // at the next one, instead of waiting for the loop to end.
-    const EXITS = { "desk-a-work": [71, 131], "desk-b-work": [63, 90, 150] }
+    const TURNS = { "desk-a-to-b": { rate: 1.3, swap: 60 }, "desk-b-to-a": { rate: 1.3, swap: 61 } }
+    // A reader scrolling fast speeds him up: at `pace` screens a second or more, a turn or a
+    // hurried sip plays at `max`, so he keeps up with the sections going by.
+    const RUSH = { pace: 1.5, max: 3 }
     // He sips only once the reader has stopped scrolling for a moment, then waits before the next.
     const IDLE_MS = 1800
     const SIP_GAP_MS = [6000, 11000]
-    // A new section mid-sip hurries the sip back to rest, so the turn is not kept waiting.
+    // The frame of each sip where his hand leaves the keyboard or mouse. A new section before it
+    // dissolves into the turn; after it the sip is hurried back to rest, so no arm fades out.
+    const SIPS = { "desk-a-sip": 12, "desk-b-sip": 30 }
     const HURRY = 2
+    const FADE_MS = 250
     // Where his eyeline meets the monitor, as fractions of the source frame.
     const EYELINE = { a: [0.69, 0.44], b: [0.31, 0.4] }
     // Narrow screens crop the frame to JB himself (object-position x, in %).
@@ -1051,9 +1053,10 @@
     let live = false // clips are on screen
     let started = false // clips requested
     let lastScroll = performance.now()
+    let lastY = window.scrollY
+    let pace = 0 // how fast the reader is scrolling, in screens a second
     let nextSipAt = 0
     let hurrying = null // the sip being hurried along so the turn can start
-    let watching = 0 // the work loop's exit watch; a new clip ends the old watch
     let holoY = 0
     let holoScale = 1
 
@@ -1079,55 +1082,75 @@
     }
 
     // A rewound clip's first frame is ready to paint, so it can go on screen before it plays.
-    // Clips going off screen are rewound at once, so the next cut to them is on the same frame.
-    function swapTo(v) {
+    // With fade, it dissolves in over the clip that was showing.
+    function swapTo(v, fade) {
       const old = Object.values(vids).filter((o) => o !== v && o.classList.contains("is-on"))
-      old.forEach((o) => {
+      const hide = (o) => {
+        if (o === vids[current]) return
         o.classList.remove("is-on", "is-front")
         o.pause()
-        o.currentTime = 0
-      })
-      if (v) v.classList.add("is-on", "is-front")
+      }
+      old.forEach((o) => o.classList.remove("is-front"))
+      if (!v) return old.forEach(hide)
+      v.classList.add("is-on", "is-front")
+      if (fade) {
+        v.style.transition = "none"
+        v.style.opacity = "0"
+        v.getBoundingClientRect()
+        v.style.transition = `opacity ${FADE_MS}ms linear`
+        v.style.opacity = "1"
+        window.setTimeout(() => old.forEach(hide), FADE_MS + 50)
+      } else {
+        v.style.transition = ""
+        v.style.opacity = ""
+        old.forEach(hide)
+      }
     }
 
-    function start(name) {
+    function start(name, fade) {
       const v = vids[name]
       const from = station
       rewind(v).then(() => {
         if (!live) return
         current = name
-        swapTo(v)
+        swapTo(v, fade)
         v.loop = false
-        v.playbackRate = TURNS[name] ? TURNS[name].rate : 1
+        v.playbackRate = TURNS[name] ? paced(TURNS[name].rate) : 1
         const attempt = v.play()
         if (attempt) attempt.catch(() => stopLive())
         moving = !!TURNS[name]
         stage.dataset.moving = String(moving)
-        if (moving) watchSwap(v, TURNS[name].swap, other(from))
+        if (moving) {
+          watchSwap(v, TURNS[name].swap, other(from))
+          keepPace(v, TURNS[name].rate)
+        }
         if (isSip(name)) nextSipAt = Infinity
-        watchExits(name)
         update()
       })
     }
 
-    // At each rest frame of a work loop, cut to whatever is due. Needs frame callbacks; without
-    // them the loop just runs out to its end first.
-    function watchExits(name) {
-      const v = vids[name]
-      const exits = EXITS[name]
-      const id = ++watching
-      if (!exits || !v.requestVideoFrameCallback) return
-      const onFrame = (now, meta) => {
-        if (id !== watching || !live || current !== name) return
-        const at = Math.round(meta.mediaTime * FPS)
-        if (exits.some((m) => at >= m && at <= m + 1) && chooseNext() !== name) return advance()
-        v.requestVideoFrameCallback(onFrame)
+    // A clip's rate for how fast the reader is scrolling right now: base when reading, up to
+    // RUSH.max when racing through the page. The pace fades within a moment of the scrolling.
+    function paced(base) {
+      const now = performance.now()
+      const p = pace * Math.exp(-(now - lastScroll) / 300)
+      return base + Math.max(0, RUSH.max - base) * Math.min(1, p / RUSH.pace)
+    }
+
+    // While he turns, or hurries a sip, his speed follows the reader's.
+    function keepPace(v, base) {
+      const tick = () => {
+        if (!live || vids[current] !== v || v.ended) return
+        if (!TURNS[current] && hurrying !== v) return
+        const rate = paced(base)
+        if (Math.abs(v.playbackRate - rate) > 0.05) v.playbackRate = rate
+        window.requestAnimationFrame(tick)
       }
-      v.requestVideoFrameCallback(onFrame)
+      window.requestAnimationFrame(tick)
     }
 
     // Every clip ends on rest, so whatever comes next can start straight away.
-    function advance() {
+    function advance(fade) {
       if (!live) return
       if (target !== station && !ready(CLIPS[station].turn)) setStation(target) // turn not loaded: cut across
       const name = chooseNext()
@@ -1135,7 +1158,7 @@
         current = ""
         return swapTo(null) // the stills show until it loads
       }
-      start(name)
+      start(name, fade)
     }
 
     function finished(name) {
@@ -1230,22 +1253,34 @@
       window.requestAnimationFrame(check)
     }
 
-    // A new section: the work loop turns at its next rest frame (watchExits), and a sip is
-    // hurried back to rest. With the clips off, just switch sides.
+    // A new section: if he is working, or about to sip with his hand still down, dissolve into
+    // the turn now; once his hand is on the way to the mug, hurry the sip back to rest instead,
+    // so no arm fades out. With the clips off, just switch sides.
     function turn() {
       if (!live) {
         setStation(target)
         return
       }
       if (moving || target === station) return
-      if (isSip(current) && vids[current]) hurry(vids[current])
+      const v = vids[current]
+      if (!v) return
+      if (current === CLIPS[station].work) {
+        if (v.duration - v.currentTime > 0.6) advance(true)
+        else v.loop = false // nearly back at rest: the turn follows straight on
+        return
+      }
+      if (!isSip(current)) return
+      if (v.currentTime * FPS < (SIPS[current] || 0)) advance(true)
+      else hurry(v)
     }
 
     // If the reader comes back to this station first, the sip carries on at its own pace.
+    // When it ends, the turn starts from rest.
     function hurry(v) {
       if (hurrying === v) return
       hurrying = v
-      v.playbackRate = HURRY
+      v.playbackRate = paced(HURRY)
+      keepPace(v, HURRY)
       const check = () => {
         if (live && vids[current] === v && target !== station) return window.requestAnimationFrame(check)
         hurrying = null
@@ -1337,7 +1372,14 @@
     }
     if (wideQuery.addEventListener) wideQuery.addEventListener("change", onWide)
     window.addEventListener("resize", frame)
-    window.addEventListener("scroll", () => { lastScroll = performance.now() }, { passive: true })
+    window.addEventListener("scroll", () => {
+      const now = performance.now()
+      const dt = Math.min(100, Math.max(8, now - lastScroll)) / 1000
+      const speed = Math.abs(window.scrollY - lastY) / (window.innerHeight || 1) / dt
+      pace = Math.min(4, pace * Math.exp(-(now - lastScroll) / 300) * 0.7 + speed * 0.3)
+      lastY = window.scrollY
+      lastScroll = now
+    }, { passive: true })
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) Object.values(vids).forEach((v) => v.pause())
       else if (live && vids[current]) vids[current].play().catch(() => stopLive())

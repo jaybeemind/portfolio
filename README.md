@@ -52,17 +52,17 @@ monitor he faces until the content scrolls up to it.
 
 Every clip in `img/desk/` starts and ends on its station's rest frame, so any
 clip can follow any other at a station: work, sip, or the turn to the other side.
-The work loops also pass through the rest frame a few times (`EXITS` in
-`script.js`), and a turn or a sip cuts in at the next one. A sip in progress
-plays faster until it is back at rest. Nothing dissolves, so every change of
-clip is a plain cut on identical frames.
+A turn dissolves straight out of the work loop the moment the section changes.
+Once his hand is on the way to the mug, the sip plays out faster instead, so no
+arm fades out. Turns, and hurried sips, speed up with the reader's scrolling:
+scroll fast and he swivels fast, keeping pace with the sections.
 The footage was generated in Google Flow, each shot from a rest frame to a rest
-frame, then cut to 1080p. Its first and last frames are morphed along the optical
-flow (not cross-faded) onto one shared rest frame per station, so the clips chain
-without a jump and nothing moving in them turns into a double image. Every frame
-gets a light skin touch-up that evens out spots and keeps the skin's texture.
-They load after the page, one at a time. With motion off or Save-Data on, the
-stills switch instead.
+frame, then cut to 1080p with its first and last frames blended onto one shared
+rest frame per station, so the clips chain without a jump. The turns blend along
+the optical flow, following whole regions only, so the camera lands on rest
+without a double image and fingers and faces keep their shape. Every frame gets a
+light skin touch-up that evens out spots and keeps the skin's texture. They load after the
+page, one at a time. With motion off or Save-Data on, the stills switch instead.
 `CLIPS` in `script.js` lists them per station; an empty name means there is no
 footage for it, and that clip is skipped.
 
