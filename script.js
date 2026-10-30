@@ -856,9 +856,7 @@
       link.addEventListener("click", (event) => {
         event.preventDefault()
         showView("game")
-        if (experienceSection) {
-          experienceSection.scrollIntoView({ behavior: motionOn() ? "smooth" : "instant", block: "start" })
-        }
+        if (experienceSection) glideToSection(experienceSection)
         viewGameBtn.focus({ preventScroll: true })
       })
     })
@@ -911,6 +909,140 @@
     motionToggle.setAttribute("aria-label", "Animations")
     motionToggle.addEventListener("click", () => applyMotion(!motionOn(), true))
   }
+
+  // ---------------------- Motion: section glide ----------------------
+  // Links to a section and the section magnet share one eased scroll, so a second click
+  // takes over a glide still under way instead of leaning on the browser's anchor scroll.
+  // When the reader stops a little short of a section's start (or a little past it), the
+  // page eases the rest of the way, so the change of section is felt while scrolling.
+  const MAGNET_AHEAD = 0.25 // how far before a section's start the magnet reaches, in screens
+  const MAGNET_BEHIND = 0.1 // how far past a section's start it still settles back onto it
+  const MAGNET_QUIET = 160 // ms without scrolling before the magnet decides
+  const SCROLL_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "])
+  let glide = null // the running glide: { from, to, start, duration }
+  let glideFrame = 0
+  let glideEnded = 0
+  let magnetTimer = 0
+  let held = false // a finger or mouse button is down, so the reader is still steering
+  let heldScroll = false // the page scrolled while held, e.g. a scrollbar drag
+  let glideY = window.scrollY
+  let glideDir = 1
+
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
+  const easeOut = (t) => 1 - Math.pow(1 - t, 3) // taking over a glide in motion keeps its speed
+  const maxY = () => document.documentElement.scrollHeight - window.innerHeight
+
+  // Where the page rests with a section at the top, below the fixed nav.
+  function restY(section) {
+    const pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0
+    return clamp(Math.round(section.getBoundingClientRect().top + window.scrollY - pad), 0, maxY())
+  }
+
+  function stopGlide() {
+    if (glideFrame) window.cancelAnimationFrame(glideFrame)
+    glideFrame = 0
+    glide = null
+  }
+
+  function glideTo(to, duration) {
+    const curve = glide ? easeOut : ease
+    stopGlide()
+    if (Math.abs(to - window.scrollY) < 2) return
+    if (!motionOn()) {
+      window.scrollTo({ top: to, behavior: "instant" })
+      return
+    }
+    const run = { from: window.scrollY, to, start: performance.now(), duration }
+    glide = run
+    // Frames can stall (a throttled or backgrounded tab); the scroll still has to land.
+    window.setTimeout(() => {
+      if (glide !== run) return
+      stopGlide()
+      window.scrollTo({ top: to, behavior: "instant" })
+      glideEnded = performance.now()
+    }, duration + 250)
+    const step = (now) => {
+      const t = clamp((now - run.start) / run.duration, 0, 1)
+      window.scrollTo({ top: run.from + (run.to - run.from) * curve(t), behavior: "instant" })
+      if (t < 1) {
+        glideFrame = window.requestAnimationFrame(step)
+        return
+      }
+      glideFrame = 0
+      glide = null
+      glideEnded = performance.now()
+    }
+    glideFrame = window.requestAnimationFrame(step)
+  }
+
+  function glideToSection(section) {
+    const to = restY(section)
+    glideTo(to, Math.min(1100, 420 + Math.sqrt(Math.abs(to - window.scrollY)) * 9))
+  }
+
+  function magnet() {
+    magnetTimer = 0
+    if (held || glide || !motionOn() || performance.now() - glideEnded < MAGNET_QUIET * 2) return
+    const y = window.scrollY
+    const vh = window.innerHeight
+    let best = null
+    sections.forEach((section) => {
+      const to = restY(section)
+      const gap = Math.abs(to - y)
+      const reach = (to - y) * glideDir > 0 ? MAGNET_AHEAD * vh : MAGNET_BEHIND * vh
+      if (gap < 2 || gap > reach) return
+      if (best === null || gap < Math.abs(best - y)) best = to
+    })
+    if (best !== null) glideTo(best, 260 + Math.sqrt(Math.abs(best - y)) * 12)
+  }
+
+  function armMagnet() {
+    window.clearTimeout(magnetTimer)
+    magnetTimer = window.setTimeout(magnet, MAGNET_QUIET)
+  }
+
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY
+    if (y !== glideY) glideDir = y > glideY ? 1 : -1
+    glideY = y
+    if (held) heldScroll = true
+    if (!glide) armMagnet()
+  }, { passive: true })
+
+  // Any hand on the page takes over from a glide.
+  const grab = () => {
+    held = true
+    heldScroll = false
+    stopGlide()
+  }
+  const release = () => {
+    held = false
+    if (heldScroll) armMagnet()
+  }
+  window.addEventListener("wheel", stopGlide, { passive: true })
+  window.addEventListener("touchstart", grab, { passive: true })
+  window.addEventListener("touchend", release, { passive: true })
+  window.addEventListener("touchcancel", release, { passive: true })
+  window.addEventListener("mousedown", grab)
+  window.addEventListener("mouseup", release)
+  window.addEventListener("keydown", (event) => {
+    if (SCROLL_KEYS.has(event.key)) stopGlide()
+  })
+
+  // Links to a section glide there. Other in-page links keep the browser's own jump.
+  document.addEventListener("click", (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    const link = event.target.closest && event.target.closest('a[href^="#"]')
+    const hash = link && link.getAttribute("href")
+    const section = hash && hash.length > 1 && Array.from(sections).find((item) => `#${item.id}` === hash)
+    if (!section) return
+    event.preventDefault()
+    if (location.hash !== hash) history.pushState(null, "", hash)
+    glideToSection(section)
+    // Move the keyboard's starting point to the section, as the browser's jump would.
+    if (!section.hasAttribute("tabindex")) section.setAttribute("tabindex", "-1")
+    section.focus({ preventScroll: true })
+  })
 
   // ---------------------- Orbital developer workspace ----------------------
   if (orbitalScene) {

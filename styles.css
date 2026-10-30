@@ -34,6 +34,7 @@ p {text-wrap:pretty;}
 ::selection {background:var(--color-accent);color:var(--color-on-accent);}
 .skip-link {position:fixed;left:20px;top:-100px;z-index:3000;padding:12px 20px;background:var(--color-heading);color:var(--color-bg);border-radius:8px;}
 .skip-link:focus {top:12px;}
+section[tabindex="-1"]:focus {outline:none;}
 .js-only {display:none!important;}
 .js .js-only {display:inline-flex!important;}
 .accent {color:var(--color-accent);}
