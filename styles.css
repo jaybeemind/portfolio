@@ -165,8 +165,10 @@ body[data-accent="blue"] .backdrop {--glow-color:#8db4ff;--glow-x:70%;--glow-y:2
 .service-icon {width:52px;height:52px;margin-bottom:28px;fill:none;stroke:var(--sec);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
 .service-card h3 {font-size:1.6rem;margin-bottom:10px;}
 .service-card p {color:var(--color-text);margin-bottom:22px;}
-.tag-list {display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;}
-.tag-list li {font-family:var(--font-mono);font-size:.75rem;padding:4px 10px;border-radius:999px;border:1px solid var(--color-border);color:var(--color-text-muted);background:rgba(10,14,21,.5);}
+.tag-list {display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;container-type:inline-size;}
+/* A tag stays on one line. In a narrow card its text eases down a little, so the longest tag
+   (22 characters) still fits instead of breaking inside its pill. */
+.tag-list li {font-family:var(--font-mono);font-size:.75rem;font-size:clamp(.625rem,calc((100cqi - 20px) / 13.2),.75rem);white-space:nowrap;padding:4px 9px;border-radius:999px;border:1px solid var(--color-border);color:var(--color-text-muted);background:rgba(10,14,21,.5);}
 .card-link {display:inline-flex;gap:8px;margin-top:22px;font-size:.875rem;font-weight:600;color:var(--sec);}
 .card-link span {transition:transform .3s var(--ease-out);}
 .card-link:hover span {transform:translateX(4px);}
@@ -1492,6 +1494,11 @@ html:not(.js) .marquee-list {flex-wrap:wrap;flex-shrink:1;width:100%;animation:n
  .desk-wide .hero-intro {font-size:.98rem;line-height:1.7;}
  .desk-wide .hero-visual {align-self:center;}
  .desk-wide .hero-stats,.desk-wide .logo-strip {width:min(60%,980px);margin-left:auto;}
+}
+/* Until about 1500px the eyeline column fits three service cards only narrowly, so they take
+   less side padding and their tags keep to one line. */
+@media (min-width:1100px) and (max-width:1499px) {
+ .desk-wide .service-card {padding-inline:clamp(16px,calc(16px + (100vw - 1100px) / 10),20px);}
 }
 
 /* Narrow screens: the stage stays behind the content, cropped to JB, under one even scrim. */
