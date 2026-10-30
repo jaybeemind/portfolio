@@ -987,9 +987,10 @@
     const wideQuery = window.matchMedia("(min-width: 1100px) and (min-aspect-ratio: 5/4)")
     const FPS = 24
     // Clips per station. An empty name means there is no footage for it yet; it is skipped.
+    // `more` are other work actions; at rest he moves between them and the main loop.
     const CLIPS = {
-      a: { work: "desk-a-work", sip: "desk-a-sip", turn: "desk-a-to-b", label: "reviewing" },
-      b: { work: "desk-b-work", sip: "desk-b-sip", turn: "desk-b-to-a", label: "typing" },
+      a: { work: "desk-a-work", more: [], sip: "desk-a-sip", turn: "desk-a-to-b", label: "reviewing" },
+      b: { work: "desk-b-work", more: ["desk-b-type"], sip: "desk-b-sip", turn: "desk-b-to-a", label: "typing" },
     }
     // The turns, steered by the scroll. Each also comes reversed (name-rev) so he can swing back,
     // and the layout swaps sides at the frame where the chair back fills the shot.
@@ -1083,14 +1084,17 @@
     const other = (side) => (side === "a" ? "b" : "a")
     const ready = (name) => !!name && !!vids[name] && vids[name].readyState >= 3
     const isSip = (name) => !!name && (name === CLIPS.a.sip || name === CLIPS.b.sip)
-    const isWork = (name) => !!name && (name === CLIPS.a.work || name === CLIPS.b.work)
+    const works = (side) => [CLIPS[side].work, ...CLIPS[side].more].filter(Boolean)
+    const isWork = (name) => !!name && (works("a").includes(name) || works("b").includes(name))
 
     // What to play at rest when the current clip gets back to it.
     function chooseNext() {
       const set = CLIPS[station]
       const now = performance.now()
       if (ready(set.sip) && now - lastScroll >= IDLE_MS && now >= nextSipAt) return set.sip
-      return set.work
+      // Work: never the same action twice running when there is another to go to.
+      const options = works(station).filter((name) => ready(name) && name !== current)
+      return options.length ? options[Math.floor(Math.random() * options.length)] : set.work
     }
 
     function rewind(v) {
@@ -1187,6 +1191,7 @@
         if (CLIPS[side][key]) names.push(CLIPS[side][key])
       }))
       ;[station, other(station)].forEach((side) => { if (CLIPS[side].turn) names.push(`${CLIPS[side].turn}-rev`) })
+      ;[station, other(station)].forEach((side) => CLIPS[side].more.forEach((name) => names.push(name)))
       names.forEach((name) => {
         const v = document.createElement("video")
         v.className = "desk-clip"

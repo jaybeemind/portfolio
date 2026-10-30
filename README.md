@@ -54,6 +54,9 @@ monitor he faces until the content scrolls up to it.
 
 Every clip in `img/desk/` starts and ends on its station's rest frame, so any
 clip can follow any other at a station: work, sip, or the turn to the other side.
+Station B has two typing actions (`CLIPS.b.more`), and he moves between them at
+rest. The second was generated to hold still for a beat at both ends, so its joins
+fall on still frames.
 A turn dissolves straight out of the work loop as the scroll reaches it. Once his
 hand is on the way to the mug, the sip plays out faster instead, so no arm fades
 out. Each turn also comes reversed (`-rev`), so swinging back is the same footage
