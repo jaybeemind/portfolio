@@ -916,8 +916,8 @@
   // When the reader stops a little short of a section's start (or a little past it), the
   // page eases the rest of the way, so the change of section is felt while scrolling.
   const MAGNET_AHEAD = 0.25 // how far before a section's start the magnet reaches, in screens
-  const MAGNET_BEHIND = 0.1 // how far past a section's start it still settles back onto it
-  const MAGNET_QUIET = 160 // ms without scrolling before the magnet decides
+  const MAGNET_BEHIND = 0.05 // how far past a section's start it still settles back onto it
+  const MAGNET_QUIET = 240 // ms without scrolling before the magnet decides; outlasts a wheel notch
   const SCROLL_KEYS = new Set(["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "])
   let glide = null // the running glide: { from, to, start, duration }
   let glideFrame = 0
