@@ -995,7 +995,7 @@
     // The turns, steered by the scroll. Each also comes reversed (name-rev) so he can swing back,
     // and the layout swaps sides at the frame where the chair back fills the shot.
     const TURNS = {
-      "desk-a-to-b": { from: "a", to: "b", frames: 161, swap: 60 },
+      "desk-a-to-b": { from: "a", to: "b", frames: 186, swap: 70 },
       "desk-b-to-a": { from: "b", to: "a", frames: 153, swap: 61 },
     }
     // A turn spans STEER screens of scrolling around its change of section, which falls on the

@@ -63,9 +63,12 @@ out. Each turn also comes reversed (`-rev`), so swinging back is the same footag
 played the other way, picked up at the same frame.
 The footage was generated in Google Flow, each shot from a rest frame to a rest
 frame, then cut to 1080p with its first and last frames blended onto one shared
-rest frame per station, so the clips chain without a jump. The blends follow the
-optical flow, whole regions only, so whatever is still moving slides into place
-instead of showing twice, and fingers and faces keep their shape. The takes lose
+rest frame per station, so the clips chain without a jump. The turn to station B
+was made with Veo 3.1 Fast, which stays sharp as he settles; the rest with Omni
+1.1 Flash. The blends follow the optical flow, whole regions only, so whatever is
+still moving slides into place instead of showing twice, and fingers and faces
+keep their shape. They also put back the fine detail that mixing two frames
+cancels, so a blend is never a soft patch between two sharp ends. The takes lose
 detail as they play, so every frame is brought back to the rest frame's sharpness,
 and each gets a light skin touch-up that evens out spots and keeps the skin's
 texture. The clips load after the page, one at a time, each fetched whole so it can
