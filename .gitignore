@@ -1,20 +1,28 @@
-# Agent instructions, skills, and tooling config - local only, not part of the site
+# Only the site itself is tracked: what GitHub Pages needs to render it.
+# Everything below stays on this machine.
+
+# Agent instructions, skills and settings
 .claude/
 .agents/
+.codex/
+.cursor/
 AGENTS.md
+CLAUDE.md
 
-# Dev-only scripts (screenshot capture, career-history sync) - local only
+# Dev tooling, its dependencies and notes
 tools/
-
-# Build-time tooling deps (tools/ only; the site itself ships no dependencies)
 node_modules/
+package.json
+package-lock.json
+README.md
 
-# Credentials for tools/capture-rooc.mjs — never commit
-.env.local
+# Environment files
 .env
+.env.*
 
-# Screenshot capture output is ignored by default; un-ignore each image
-# deliberately once it has been reviewed. A run that grabs a page listing real
-# members then cannot be swept in by `git add -A`.
+# Screenshots are ignored until reviewed; only the ones the page uses are tracked.
 img/rooc/*
 !img/rooc/dashboard.webp
+
+# Not used by the page
+favicon.png
